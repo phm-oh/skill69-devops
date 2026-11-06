@@ -116,6 +116,62 @@
     </div>
   </header>
 
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-5">
+    <div class="bg-slate-900/95 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2"><span>🔧</span> ตั้งค่า IP สำหรับวันแข่งขัน</h2>
+          <p class="text-xs text-slate-400 mt-1">กรอกค่า IP ครั้งเดียว แล้วทุกค่าในภาพรวมจะอัปเดตให้ตรงกันโดยอัตโนมัติ</p>
+        </div>
+        <button id="reset-ip-config" class="px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-slate-700 transition cursor-pointer">
+          คืนค่าเริ่มต้น
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-7 gap-3">
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Gateway</span>
+          <input id="ip-gateway" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.1" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Proxmox</span>
+          <input id="ip-proxmox" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.30" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM1</span>
+          <input id="ip-vm1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.31" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM2</span>
+          <input id="ip-vm2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.32" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC1</span>
+          <input id="ip-pc1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.35" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC2</span>
+          <input id="ip-pc2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.36" />
+        </label>
+
+        <label class="block">
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC3</span>
+          <input id="ip-pc3" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.37" />
+        </label>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3.5">
+        <div class="text-[11px] font-semibold uppercase tracking-wide text-cyan-300 mb-1">ค่า IP ปัจจุบัน</div>
+        <div id="live-ip-summary" class="font-mono text-sm text-cyan-200">Gateway 172.16.48.1 • Proxmox 172.16.48.30 • VM1 172.16.48.31 • VM2 172.16.48.32 • PC 172.16.48.35 / 172.16.48.36 / 172.16.48.37</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Content Container -->
   <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 space-y-8 flex-1">
 
@@ -138,19 +194,19 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5">
         <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4">
           <div class="text-xs font-semibold text-slate-400 uppercase">Gateway กรรมการ</div>
-          <div class="text-lg font-bold font-mono text-white mt-1">172.16.48.1</div>
+          <div id="gateway-value" class="text-lg font-bold font-mono text-white mt-1">172.16.48.1</div>
           <div class="text-xs text-slate-400 mt-2">Default Gateway ของทุกเครื่องในทีม</div>
         </div>
 
         <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-4">
           <div class="text-xs font-semibold text-amber-300 uppercase">Proxmox Host (Node: oh)</div>
-          <div class="text-lg font-bold font-mono text-amber-200 mt-1">172.16.48.30</div>
-          <div class="text-xs text-slate-300 mt-2">Web UI: <code class="text-amber-300">https://172.16.48.30:8006</code></div>
+          <div id="proxmox-value" class="text-lg font-bold font-mono text-amber-200 mt-1">172.16.48.30</div>
+          <div class="text-xs text-slate-300 mt-2">Web UI: <code id="proxmox-webui" class="text-amber-300">https://172.16.48.30:8006</code></div>
         </div>
 
         <div class="bg-blue-950/30 border border-blue-500/40 rounded-xl p-4">
           <div class="text-xs font-semibold text-blue-300 uppercase">🟦 VM1 (gitlab-vm : 101)</div>
-          <div class="text-lg font-bold font-mono text-blue-200 mt-1">172.16.48.31</div>
+          <div id="vm1-value" class="text-lg font-bold font-mono text-blue-200 mt-1">172.16.48.31</div>
           <div class="text-xs text-slate-300 mt-2 space-y-0.5">
             <div>• DNS: <code class="text-blue-300">53</code>, Web <code class="text-blue-300">:5380</code></div>
             <div>• GitLab CE: <code class="text-blue-300">:8080</code></div>
@@ -160,7 +216,7 @@
 
         <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-xl p-4">
           <div class="text-xs font-semibold text-emerald-300 uppercase">🟩 VM2 (prod-vm : 102)</div>
-          <div class="text-lg font-bold font-mono text-emerald-200 mt-1">172.16.48.32</div>
+          <div id="vm2-value" class="text-lg font-bold font-mono text-emerald-200 mt-1">172.16.48.32</div>
           <div class="text-xs text-slate-300 mt-2 space-y-0.5">
             <div>• NPM Proxy: <code class="text-emerald-300">80, 443</code></div>
             <div>• NPM Admin: <code class="text-emerald-300">:81</code></div>
@@ -170,9 +226,9 @@
 
         <div class="bg-purple-950/25 border border-purple-500/30 rounded-xl p-4">
           <div class="text-xs font-semibold text-purple-300 uppercase">💻 PC ลูกข่าย (PC1 - PC3)</div>
-          <div class="text-lg font-bold font-mono text-purple-200 mt-1">.35 / .36 / .37</div>
+          <div id="pc-range-value" class="text-lg font-bold font-mono text-purple-200 mt-1">.35 / .36 / .37</div>
           <div class="text-xs text-slate-300 mt-2">
-            ชี้ Preferred DNS มาที่ <code class="text-purple-300 font-bold">172.16.48.31</code> ตัวเดียวเท่านั้น
+            ชี้ Preferred DNS มาที่ <code id="dns-target" class="text-purple-300 font-bold">172.16.48.31</code> ตัวเดียวเท่านั้น
           </div>
         </div>
       </div>
@@ -1884,6 +1940,83 @@ git push -u origin main</pre>
 
   <!-- Script for Copy & Tabs -->
   <script>
+    const defaultIpConfig = {
+      gateway: '172.16.48.1',
+      proxmox: '172.16.48.30',
+      vm1: '172.16.48.31',
+      vm2: '172.16.48.32',
+      pc1: '172.16.48.35',
+      pc2: '172.16.48.36',
+      pc3: '172.16.48.37'
+    };
+
+    function readIpConfig() {
+      return {
+        gateway: document.getElementById('ip-gateway')?.value.trim() || defaultIpConfig.gateway,
+        proxmox: document.getElementById('ip-proxmox')?.value.trim() || defaultIpConfig.proxmox,
+        vm1: document.getElementById('ip-vm1')?.value.trim() || defaultIpConfig.vm1,
+        vm2: document.getElementById('ip-vm2')?.value.trim() || defaultIpConfig.vm2,
+        pc1: document.getElementById('ip-pc1')?.value.trim() || defaultIpConfig.pc1,
+        pc2: document.getElementById('ip-pc2')?.value.trim() || defaultIpConfig.pc2,
+        pc3: document.getElementById('ip-pc3')?.value.trim() || defaultIpConfig.pc3
+      };
+    }
+
+    function updateIpDisplay() {
+      const config = readIpConfig();
+      const gatewayValue = document.getElementById('gateway-value');
+      const proxmoxValue = document.getElementById('proxmox-value');
+      const vm1Value = document.getElementById('vm1-value');
+      const vm2Value = document.getElementById('vm2-value');
+      const pcRangeValue = document.getElementById('pc-range-value');
+      const dnsTarget = document.getElementById('dns-target');
+      const proxmoxWebui = document.getElementById('proxmox-webui');
+      const liveIpSummary = document.getElementById('live-ip-summary');
+      const rawTextEl = document.getElementById('full-plaintext');
+
+      if (gatewayValue) gatewayValue.innerText = config.gateway;
+      if (proxmoxValue) proxmoxValue.innerText = config.proxmox;
+      if (vm1Value) vm1Value.innerText = config.vm1;
+      if (vm2Value) vm2Value.innerText = config.vm2;
+      if (dnsTarget) dnsTarget.innerText = config.vm1;
+      if (proxmoxWebui) proxmoxWebui.innerText = `https://${config.proxmox}:8006`;
+      if (pcRangeValue) pcRangeValue.innerText = `${config.pc1} / ${config.pc2} / ${config.pc3}`;
+      if (liveIpSummary) {
+        liveIpSummary.innerText = `Gateway ${config.gateway} • Proxmox ${config.proxmox} • VM1 ${config.vm1} • VM2 ${config.vm2} • PC ${config.pc1} / ${config.pc2} / ${config.pc3}`;
+      }
+
+      if (rawTextEl) {
+        if (!rawTextEl.dataset.baseText) {
+          rawTextEl.dataset.baseText = rawTextEl.innerText;
+        }
+
+        let generated = rawTextEl.dataset.baseText;
+        generated = generated.replaceAll('172.16.48.1', config.gateway);
+        generated = generated.replaceAll('172.16.48.30', config.proxmox);
+        generated = generated.replaceAll('172.16.48.31', config.vm1);
+        generated = generated.replaceAll('172.16.48.32', config.vm2);
+        generated = generated.replaceAll('172.16.48.35', config.pc1);
+        generated = generated.replaceAll('172.16.48.36', config.pc2);
+        generated = generated.replaceAll('172.16.48.37', config.pc3);
+        rawTextEl.innerText = generated;
+      }
+    }
+
+    function applyDefaultIpConfig() {
+      const keys = Object.keys(defaultIpConfig);
+      keys.forEach(key => {
+        const input = document.getElementById('ip-' + key);
+        if (input) input.value = defaultIpConfig[key];
+      });
+      updateIpDisplay();
+    }
+
+    document.querySelectorAll('.ip-input').forEach(input => {
+      input.addEventListener('input', updateIpDisplay);
+    });
+
+    document.getElementById('reset-ip-config')?.addEventListener('click', applyDefaultIpConfig);
+
     function showToast(title, desc) {
       const toast = document.getElementById('toast');
       document.getElementById('toast-title').innerText = title;
@@ -1895,6 +2028,8 @@ git push -u origin main</pre>
         toast.classList.add('translate-y-20', 'opacity-0');
       }, 2600);
     }
+
+    updateIpDisplay();
 
     function fallbackCopyText(text) {
       const textArea = document.createElement("textarea");
@@ -1942,7 +2077,8 @@ git push -u origin main</pre>
     }
 
     function copyFullNote() {
-      const fullText = document.getElementById('full-plaintext').innerText;
+      const rawTextEl = document.getElementById('full-plaintext');
+      const fullText = rawTextEl ? rawTextEl.innerText : '';
       copyTextToClipboard(fullText, 'คัดลอกเอกสารทั้งหมดสำเร็จ!', 'สามารถนำไปวางในไฟล์ Notepad (.txt) ได้ทันที');
     }
 
