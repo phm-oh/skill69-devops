@@ -1084,6 +1084,10 @@ ping gitlab.mydomain.lab</code></pre>
             </li>
             <li>ระบบจะแสดงค่า <strong>Runner authentication token</strong> (ขึ้นต้นด้วย <code class="text-amber-300">glrt-...</code>) ให้คัดลอก Token นี้เก็บไว้ใช้ในขั้นตอนถัดไป</li>
           </ol>
+          <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
+            ⚠️ <strong>ปัญหาที่เจอบ่อย:</strong> ถ้าใน <code class="text-white">.gitlab-ci.yml</code> ใช้ <code class="text-white">tags:</code> หรือ runner มี tag เก่ากว่าเดิม เช่น <code class="text-white">docker</code> แต่ลงทะเบียนไว้เป็น <code class="text-white">shell</code> หรือ <code class="text-white">dev</code> แล้ว pipeline จะไม่เริ่มเลย เพราะ runner ไม่ตรง tag จึงถูกคัดออกโดยอัตโนมัติ<br>
+            <span class="text-white font-bold">แก้ไขง่าย:</span> ให้ tag ใน <code class="text-white">.gitlab-ci.yml</code> ตรงกับ tag ที่ลงทะเบียนไว้ เช่น <code class="text-white">tags: [shell]</code> หรือ <code class="text-white">tags: [dev]</code> และถ้าจะให้สะดวกกว่า ให้เลือกใช้ <code class="text-white">Run untagged jobs</code> พร้อม tag ที่ชัดเจนไปเลย
+          </div>
         </div>
 
         <!-- Step 5.3: Install & Register GitLab Runner on VM1 -->
@@ -1147,6 +1151,13 @@ sudo systemctl enable --now gitlab-runner</code></pre>
             <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo su - gitlab-runner
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
 ssh-copy-id -p 2222 user1@172.16.48.32</code></pre>
+          </div>
+          <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
+            ⚠️ ถ้า <strong>SSH Login ครั้งแรกไม่ผ่าน</strong> หรือเคย login กับ VM2 แล้ว key เปลี่ยน/ล้าสมัย ให้ล้าง cache host key ก่อน:
+            <code class="text-white font-bold">ssh-keygen -R "[172.16.48.31]:2222"</code>
+            หรือถ้าต้องการล้าง host key ของ VM2 แบบตรงไปตรงมา ให้ใช้:
+            <code class="text-white font-bold">ssh-keygen -R "172.16.48.32"</code>
+            แล้วลอง login ใหม่อีกครั้ง
           </div>
           <p class="text-xs text-slate-400">* ตอนรัน <code class="text-amber-300">ssh-copy-id</code> ระบบจะถาม <code class="text-white">Are you sure you want to continue connecting (yes/no)?</code> ให้พิมพ์ <code class="text-emerald-300 font-bold">yes</code> แล้วกรอกรหัสผ่านของ <code class="text-emerald-300">user1</code> บนเครื่อง VM2</p>
 
