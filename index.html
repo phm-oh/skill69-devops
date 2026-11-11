@@ -1082,8 +1082,9 @@ ping gitlab.mydomain.lab</code></pre>
                 <li>เลื่อนลงล่างสุดแล้วกด <strong>Create runner</strong></li>
               </ul>
             </li>
-            <li>ระบบจะแสดงค่า <strong>Runner authentication token</strong> (ขึ้นต้นด้วย <code class="text-amber-300">glrt-...</code>) ให้คัดลอก Token นี้เก็บไว้ใช้ในขั้นตอนถัดไป</li>
+            <li>ระบบจะแสดงค่า <strong>Runner authentication token</strong> (ขึ้นต้นด้วย <code class="text-amber-300">glrt-...</code>) ให้คัดลอกไว้ใช้ในขั้นตอนถัดไป ใช้ค่านี้เท่านั้น ไม่ใช้ Registration token แบบเก่าหรือ token ตัวอย่าง</li>
           </ol>
+          <p class="text-xs text-slate-400">⚠️ Token ใช้ยืนยันตัว Runner ให้เก็บเป็นความลับ และอย่าวางลงในไฟล์หรือส่งให้ผู้อื่น</p>
           <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
             ⚠️ <strong>ปัญหาที่เจอบ่อย:</strong> ถ้าใน <code class="text-white">.gitlab-ci.yml</code> ใช้ <code class="text-white">tags:</code> หรือ runner มี tag เก่ากว่าเดิม เช่น <code class="text-white">docker</code> แต่ลงทะเบียนไว้เป็น <code class="text-white">shell</code> หรือ <code class="text-white">dev</code> แล้ว pipeline จะไม่เริ่มเลย เพราะ runner ไม่ตรง tag จึงถูกคัดออกโดยอัตโนมัติ<br>
             <span class="text-white font-bold">แก้ไขง่าย:</span> ให้ tag ใน <code class="text-white">.gitlab-ci.yml</code> ตรงกับ tag ที่ลงทะเบียนไว้ เช่น <code class="text-white">tags: [shell]</code> หรือ <code class="text-white">tags: [dev]</code> และถ้าจะให้สะดวกกว่า ให้เลือกใช้ <code class="text-white">Run untagged jobs</code> พร้อม tag ที่ชัดเจนไปเลย
@@ -1097,12 +1098,14 @@ ping gitlab.mydomain.lab</code></pre>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-orange-300">[VM1] 1. ติดตั้ง gitlab-runner และให้สิทธิ์รัน Docker</span>
+              <span class="text-xs font-mono text-orange-300">[VM1] 1. เพิ่มแหล่งแพ็กเกจ ติดตั้ง gitlab-runner และให้สิทธิ์รัน Docker</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
             <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo apt update
+sudo apt install -y curl ca-certificates
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
 sudo apt install -y gitlab-runner
 sudo usermod -aG docker gitlab-runner
 sudo systemctl restart docker
@@ -1121,7 +1124,7 @@ sudo systemctl enable --now gitlab-runner</code></pre>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-orange-300">[VM1] 3. คำสั่งลงทะเบียน Runner (เปลี่ยน glrt-xxxx เป็น Token จริงที่ได้จากหน้าเว็บ)</span>
+              <span class="text-xs font-mono text-orange-300">[VM1] 3. ลงทะเบียน Runner ด้วย Runner authentication token จากหน้าเว็บ</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
@@ -1129,11 +1132,26 @@ sudo systemctl enable --now gitlab-runner</code></pre>
             <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo gitlab-runner register \
   --non-interactive \
   --url "http://gitlab.mydomain.lab" \
-  --token "ใส่_TOKEN_ที่ก๊อปมาจากหน้าเว็บ_ตรงนี้" \
+  --token "วาง_Runner_authentication_token_glrt-..._ตรงนี้" \
   --executor "shell" \
   --description "vm1-shell-runner"</code></pre>
           </div>
-          <p class="text-xs text-slate-400">* หรือจะพิมพ์แค่ <code class="text-amber-300">sudo gitlab-runner register</code> แล้วตอบคำถามทีละบรรทัดก็ได้: ใส่ URL = <code class="text-emerald-300">http://gitlab.mydomain.lab</code>, ใส่ Token, ตั้งชื่อ, และบรรทัด Executor ให้พิมพ์ว่า <code class="text-emerald-300 font-bold">shell</code></p>
+          <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-2">
+            <p><strong class="text-white">ถ้าต้องการกรอกทีละ prompt แทนคำสั่งด้านบน:</strong> บน VM1 รัน <code class="text-amber-300">sudo gitlab-runner register</code> แล้วตอบตามที่หน้าจอถาม (ข้อความ prompt อาจต่างกันเล็กน้อยตามเวอร์ชัน):</p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>GitLab instance URL: <code class="text-emerald-300">http://gitlab.mydomain.lab</code> (ต้องเป็น <code>http</code> ตามคู่มือนี้)</li>
+              <li>Token: วาง <strong>Runner authentication token</strong> ที่คัดลอกจากหน้าเว็บทั้งชุด ซึ่งขึ้นต้นด้วย <code class="text-amber-300">glrt-</code></li>
+              <li>ถ้าถาม description ให้ใส่ <code class="text-emerald-300">vm1-shell-runner</code></li>
+              <li>ถ้าถาม executor ให้พิมพ์ <code class="text-emerald-300 font-bold">shell</code></li>
+            </ol>
+            <p class="text-slate-400">วิธีกรอกทีละ prompt ช่วยไม่ให้ token อยู่ในคำสั่งที่บันทึกใน shell history จึงเหมาะเมื่อกังวลเรื่องความลับ ส่วนคำสั่ง <code class="text-amber-300">--non-interactive</code> ด้านบนสะดวกกว่า แต่ token จะอยู่ในบรรทัดคำสั่งที่นำไปรัน</p>
+          </div>
+          <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-2">
+            <p><strong class="text-white">ตรวจสอบหลังลงทะเบียน:</strong> บน VM1 รันคำสั่งต่อไปนี้ หากไม่พบ error ให้กลับไปหน้าโปรเจกต์ GitLab ที่ <strong>Settings → CI/CD → Runners</strong> และตรวจว่ามี Runner ที่สร้างไว้</p>
+            <pre class="bg-slate-950 p-3 rounded text-emerald-300 overflow-x-auto"><code>sudo gitlab-runner verify
+sudo systemctl status gitlab-runner --no-pager</code></pre>
+            <p class="text-slate-400">ถ้า Runner ไม่แสดงหรือไม่ทำงาน ให้ตรวจว่า VM1 resolve <code>gitlab.mydomain.lab</code> ได้ และ URL/Token ถูกต้องก่อนเริ่มลงทะเบียนใหม่</p>
+          </div>
         </div>
 
         <!-- Step 5.4: SSH Key from gitlab-runner (VM1) to user1@VM2 -->
@@ -1852,10 +1870,12 @@ sudo docker compose up -d
 sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 
 2. เข้าหน้าเว็บ http://gitlab.mydomain.lab (Login: root) -> สร้าง Blank Project ชื่อ: task-app (เลือก Public และติ๊กออก Initialize repository with a README)
-3. ไปที่ Settings -> CI/CD -> Runners -> New project runner -> ติ๊กถูก [x] Run untagged jobs -> กด Create runner แล้วคัดลอก Token (glrt-...)
+3. ไปที่ Settings -> CI/CD -> Runners -> New project runner -> เลือก Linux -> ติ๊ก [x] Run untagged jobs -> Create runner -> คัดลอก Runner authentication token ที่ขึ้นต้น glrt-... (ไม่ใช้ Registration token แบบเก่า; เก็บ token เป็นความลับ)
 
 4. ติดตั้งและลงทะเบียน GitLab Runner บน VM1 (.31):
 sudo apt update
+sudo apt install -y curl ca-certificates
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
 sudo apt install -y gitlab-runner
 sudo usermod -aG docker gitlab-runner
 sudo systemctl restart docker
@@ -1865,9 +1885,20 @@ echo "172.16.48.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/host
 sudo gitlab-runner register \
   --non-interactive \
   --url "http://gitlab.mydomain.lab" \
-  --token "ใส่_TOKEN_ตรงนี้" \
+  --token "วาง_Runner_authentication_token_glrt-..._ตรงนี้" \
   --executor "shell" \
   --description "vm1-shell-runner"
+
+หมายเหตุ: คำสั่งแบบ --non-interactive มี token อยู่ในบรรทัดคำสั่ง ซึ่งอาจถูกเก็บใน shell history; ถ้ากังวลเรื่องความลับ ให้ใช้วิธีกรอกทีละ prompt ด้านล่าง
+ถ้ารัน sudo gitlab-runner register แบบโต้ตอบ ให้ตอบ prompt ตามนี้ (ชื่อ prompt อาจต่างกันเล็กน้อยตามเวอร์ชัน):
+  GitLab instance URL: http://gitlab.mydomain.lab
+  Token: วาง Runner authentication token ที่ขึ้นต้นด้วย glrt- จากหน้าเว็บ
+  Description (ถ้าถาม): vm1-shell-runner
+  Executor: shell
+ตรวจผลบน VM1:
+sudo gitlab-runner verify
+sudo systemctl status gitlab-runner --no-pager
+จากนั้นกลับไปหน้าโปรเจกต์ Settings -> CI/CD -> Runners ตรวจว่ามี Runner ที่ลงทะเบียนไว้
 
 5. สร้าง SSH Key ในชื่อ gitlab-runner บน VM1 ส่งไปที่ user1@172.16.48.32 พอร์ต 2222:
 sudo su - gitlab-runner
