@@ -59,15 +59,16 @@
   <!-- Top Sticky Header -->
   <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <!-- Top Title -->
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20">
           69
         </div>
         <div>
           <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            คู่มือปฏิบัติการ ปวส. 2569 <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">ฉบับสมบูรณ์</span>
+            คู่มือปฏิบัติการ ปวส. 2569 <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">ฉบับสมบูรณ์ (VLAN + PES CI/CD)</span>
           </h1>
-          <p class="text-xs text-slate-400">วงแลน <code class="text-amber-300">172.16.48.0/22</code> • แยกส่วน Proxmox / VM1 / VM2 ชัดเจน กด Copy ได้ทุกกล่อง</p>
+          <p class="text-xs text-slate-400">VLAN 10 Server (<code class="text-amber-300">192.168.10.0/24</code>) &bull; VLAN 20 Dev (<code class="text-emerald-300">192.168.20.0/24</code>) &bull; แยกส่วน Proxmox / VM1 / VM2 / PES ชัดเจน</p>
         </div>
       </div>
 
@@ -107,7 +108,10 @@
           <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span> 5. GitLab Runner & SSH
         </button>
         <button onclick="switchTab('dev')" id="tab-dev" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
-          <span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span> 6. โค้ดเว็บ + CI/CD + Git
+          <span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span> 6. โค้ดเว็บจำลอง (5 ไฟล์)
+        </button>
+        <button onclick="switchTab('pes')" id="tab-pes" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 7. แก้โปรเจกต์ PES + Deploy
         </button>
         <button onclick="switchTab('raw')" id="tab-raw" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
           <span>📄</span> ไฟล์ .txt รวม
@@ -120,54 +124,54 @@
     <div class="bg-slate-900/95 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2"><span>🔧</span> ตั้งค่า IP สำหรับวันแข่งขัน</h2>
-          <p class="text-xs text-slate-400 mt-1">กรอกค่า IP ครั้งเดียว แล้วทุกค่าในภาพรวมจะอัปเดตให้ตรงกันโดยอัตโนมัติ</p>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2"><span>🔧</span> ตั้งค่า IP สำหรับวันแข่งขัน (VLAN 10 Server &amp; VLAN 20 Dev)</h2>
+          <p class="text-xs text-slate-400 mt-1">กรอกค่า IP ครั้งเดียว แล้วทุกคำสั่งในทุกแท็บจะอัปเดตให้ตรงกันโดยอัตโนมัติทันที!</p>
         </div>
         <button id="reset-ip-config" class="px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-slate-700 transition cursor-pointer">
-          คืนค่าเริ่มต้น
+          คืนค่าเริ่มต้น (VLAN 10/20)
         </button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-7 gap-3">
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Gateway</span>
-          <input id="ip-gateway" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.1" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Gateway (VLAN 10)</span>
+          <input id="ip-gateway" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.10.1" />
         </label>
 
         <label class="block">
           <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Proxmox</span>
-          <input id="ip-proxmox" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.30" />
+          <input id="ip-proxmox" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.10.30" />
         </label>
 
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM1</span>
-          <input id="ip-vm1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.31" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM1 (GitLab/DNS)</span>
+          <input id="ip-vm1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.10.31" />
         </label>
 
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM2</span>
-          <input id="ip-vm2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.32" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">VM2 (Prod/NPM)</span>
+          <input id="ip-vm2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.10.32" />
         </label>
 
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC1</span>
-          <input id="ip-pc1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.35" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC1 (VLAN 20)</span>
+          <input id="ip-pc1" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.20.36" />
         </label>
 
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC2</span>
-          <input id="ip-pc2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.36" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC2 (VLAN 20)</span>
+          <input id="ip-pc2" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.20.37" />
         </label>
 
         <label class="block">
-          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC3</span>
-          <input id="ip-pc3" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="172.16.48.37" />
+          <span class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">PC3 (VLAN 20)</span>
+          <input id="ip-pc3" class="ip-input w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" value="192.168.20.38" />
         </label>
       </div>
 
       <div class="mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3.5">
         <div class="text-[11px] font-semibold uppercase tracking-wide text-cyan-300 mb-1">ค่า IP ปัจจุบัน</div>
-        <div id="live-ip-summary" class="font-mono text-sm text-cyan-200">Gateway 172.16.48.1 • Proxmox 172.16.48.30 • VM1 172.16.48.31 • VM2 172.16.48.32 • PC 172.16.48.35 / 172.16.48.36 / 172.16.48.37</div>
+        <div id="live-ip-summary" class="font-mono text-sm text-cyan-200">Gateway 192.168.10.1 • Proxmox 192.168.10.30 • VM1 192.168.10.31 • VM2 192.168.10.32 • PC 192.168.20.36 / 192.168.20.37 / 192.168.20.38</div>
       </div>
     </div>
   </div>
@@ -182,20 +186,20 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-800">
         <div>
           <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-            <span>🗺️</span> แท็บ 0: ภาพรวมผัง IP Address (172.16.48.0/22) และลำดับการทำงานตั้งแต่ต้นจนจบ
+            <span>🗺️</span> แท็บ 0: ภาพรวมผัง IP Address (VLAN 10 Server &bull; VLAN 20 Dev) และลำดับการทำงานตั้งแต่ต้นจนจบ
           </h2>
-          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">วงแลน <code class="text-amber-300 font-semibold">172.16.48.0/22</code> (Subnet Mask: <code class="text-amber-300">255.255.252.0</code>) • ใช้การ์ดแลนใบเดียว (<code class="text-amber-300">vmbr0</code>) เกาะวงเดียวกันทั้งหมด</p>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">วงเซิร์ฟเวอร์ VLAN 10: <code class="text-amber-300 font-semibold">192.168.10.0/24</code> (เกตเวย์ <code class="text-amber-300">192.168.10.1</code>) &bull; วงเครื่องลูก VLAN 20: <code class="text-emerald-300 font-semibold">192.168.20.0/24</code> (เกตเวย์ <code class="text-emerald-300">192.168.20.1</code>)</p>
         </div>
         <span class="inline-flex items-center gap-1.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg">
-          ⚠️ ระวัง! ห้ามพิมพ์ผิดเป็น 172.168.16.x เด็ดขาด
+          ⚠️ พอร์ตสวิตช์เป็น Access (Untagged) ห้ามใส่ VLAN Tag ใน Proxmox/VM!
         </span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5">
         <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4">
-          <div class="text-xs font-semibold text-slate-400 uppercase">Gateway กรรมการ</div>
-          <div id="gateway-value" class="text-lg font-bold font-mono text-white mt-1">172.16.48.1</div>
-          <div class="text-xs text-slate-400 mt-2">Default Gateway ของทุกเครื่องในทีม</div>
+          <div class="text-xs font-semibold text-slate-400 uppercase">Gateway (SVI สวิตช์ L3)</div>
+          <div id="gateway-value" class="text-lg font-bold font-mono text-white mt-1">192.168.10.1</div>
+          <div class="text-xs text-slate-400 mt-2">VLAN 10 = <code class="text-amber-300">.10.1</code> | VLAN 20 = <code class="text-emerald-300">.20.1</code></div>
         </div>
 
         <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-4">
@@ -486,7 +490,8 @@ sudo ufw default allow outgoing
 sudo ufw allow 2222/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
-sudo ufw allow from 172.16.48.0/22 to any port 53
+sudo ufw allow from 192.168.10.0/24 to any port 53
+sudo ufw allow from 192.168.20.0/24 to any port 53
 sudo ufw allow 5380/tcp
 sudo ufw allow 5000/tcp
 sudo ufw allow 8080/tcp
@@ -780,7 +785,10 @@ sudo ufw allow 2222/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 81/tcp
 sudo ufw allow 443/tcp
+sudo ufw allow 3000/tcp
+sudo ufw allow 7000/tcp
 sudo ufw allow 8080/tcp
+sudo ufw allow 8081/tcp
 sudo ufw enable</code></pre>
           </div>
         </div>
@@ -995,12 +1003,12 @@ sudo nano docker-compose.yml</code></pre>
           <h3 class="font-bold text-purple-300 text-base">STEP 4.3: ตั้งค่าการ์ดแลนเครื่อง PC ลูกข่าย และคำสั่งทดสอบ</h3>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 text-sm space-y-2">
-              <div class="font-bold text-white">ตั้งค่า IPv4 บนเครื่อง PC (Windows):</div>
+              <div class="font-bold text-white">ตั้งค่า IPv4 บนเครื่อง PC ลูกข่าย (VLAN 20 — พอร์ต 9–16):</div>
               <ul class="space-y-1 text-slate-300 text-xs sm:text-sm">
-                <li>• <strong>IP address:</strong> <code class="text-purple-300 font-mono">172.16.48.35</code> (PC2 = <code class="text-purple-300">.36</code>, PC3 = <code class="text-purple-300">.37</code>)</li>
-                <li>• <strong>Subnet mask:</strong> <code class="text-purple-300 font-mono">255.255.252.0</code></li>
-                <li>• <strong>Default gateway:</strong> <code class="text-purple-300 font-mono">172.16.48.1</code></li>
-                <li>• <strong>Preferred DNS server:</strong> <code class="text-emerald-400 font-mono font-bold">172.16.48.31</code> <strong class="text-rose-400">(ใส่ตัวเดียว! ห้ามใส่ 1.1.1.1 หรือ 8.8.8.8 ในช่อง Alternate DNS เด็ดขาด)</strong></li>
+                <li>• <strong>IP address:</strong> รับ DHCP (<code class="text-purple-300 font-mono">192.168.20.100+</code>) หรือตั้ง Static <code class="text-purple-300 font-mono">192.168.20.36</code> (PC2 = <code class="text-purple-300">.37</code>, PC3 = <code class="text-purple-300">.38</code>)</li>
+                <li>• <strong>Subnet mask:</strong> <code class="text-purple-300 font-mono">255.255.255.0</code></li>
+                <li>• <strong>Default gateway:</strong> <code class="text-emerald-400 font-mono font-bold">192.168.20.1</code> <span class="text-xs text-slate-400">(SVI VLAN 20 ของสวิตช์ TP-Link)</span></li>
+                <li>• <strong>Preferred DNS server:</strong> <code class="text-emerald-400 font-mono font-bold">192.168.10.31</code> <strong class="text-rose-400">(ใส่ตัวเดียว! ห้ามใส่ 1.1.1.1 หรือ 8.8.8.8 ในช่อง Alternate DNS เด็ดขาด)</strong></li>
               </ul>
             </div>
 
@@ -1525,7 +1533,384 @@ git push -u origin main</code></pre>
     </section>
 
     <!-- ===================================================================== -->
-    <!-- SECTION 7: RAW PLAINTEXT VIEW                                         -->
+    <!-- SECTION 7: PES FULL-STACK STEP-BY-STEP MODIFICATION & DEPLOY GUIDE    -->
+    <!-- ===================================================================== -->
+    <section id="sec-pes" class="section-block bg-slate-900 border-2 border-cyan-500/40 rounded-2xl overflow-hidden shadow-xl">
+      <div class="bg-gradient-to-r from-cyan-600/30 via-cyan-600/10 to-transparent px-6 py-4 border-b border-cyan-500/40 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-lg bg-cyan-500 text-slate-950 font-extrabold text-sm">ส่วนที่ 7 : โปรเจกต์จริง PES (Full-Stack)</span>
+          <h2 class="text-lg sm:text-xl font-bold text-cyan-200">ลำดับการแก้โปรเจกต์ต้นฉบับ <code class="text-white">PES</code> ของกรรมการ เพื่อทำ CI/CD 4 Stages ขึ้น VM2</h2>
+        </div>
+        <span class="text-xs font-mono text-cyan-200 bg-cyan-950/80 px-3 py-1.5 rounded-md border border-cyan-400/30 font-bold">แก้ตามลำดับ 11 จุดนี้ รันผ่าน 100%</span>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-6">
+        <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2">
+          <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง:</div>
+          <p>กรรมการจะให้โฟลเดอร์เทมเพลตต้นฉบับชื่อ <code class="text-amber-300 font-bold">PES</code> (ประกอบด้วย <code class="text-white">backend</code>, <code class="text-white">frontend</code>, <code class="text-white">schema.sql</code>, <code class="text-white">docker-compose.yml</code>, <code class="text-white">.gitlab-ci.yml</code>) ซึ่งไฟล์ต้นฉบับของกรรมการมีการวางยา/บั๊กไว้หลายจุด และยังชี้ IP ไปที่ <code class="text-rose-300">localhost:7000</code> หรือ <code class="text-rose-300">172.16.3.105</code></p>
+          <p><strong>วิธีเตรียมตัวก่อนเริ่มแก้:</strong> คัดลอกโฟลเดอร์ <code class="text-amber-300">PES</code> ออกมาเป็นโฟลเดอร์ใหม่ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> แล้ว<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> จากนั้นเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code แล้วไล่ทำตามลำดับด้านล่างนี้ครับ</p>
+        </div>
+
+        <!-- PES Pre-check on VM1 & VM2 -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: ตั้งค่าเพิ่มเติมบน VM2 (192.168.10.32) เพื่อรับโปรเจกต์ PES (พอร์ต 3000, 7000, 8081)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">เนื่องจากโปรเจกต์ <code class="text-white">PES</code> มีทั้ง Frontend (พอร์ต <code class="text-emerald-300">3000</code>), Backend API (พอร์ต <code class="text-emerald-300">7000</code>), และ phpMyAdmin (พอร์ต <code class="text-emerald-300">8081</code>) ให้รันคำสั่งเปิดพอร์ต UFW บน <strong>VM2</strong> เพิ่มดังนี้:</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">[VM2] เปิดพอร์ต UFW สำหรับ PES (3000, 7000, 8081)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw allow 3000/tcp
+sudo ufw allow 7000/tcp
+sudo ufw allow 8081/tcp
+sudo ufw reload</code></pre>
+          </div>
+          <div class="text-xs text-slate-400">
+            * และในหน้าเว็บ <strong>Nginx Proxy Manager (`http://192.168.10.32:81`)</strong> ให้ตั้งค่า Proxy Host ของ <code class="text-amber-300">app.mydomain.lab</code> ชี้ไปที่ <code class="text-emerald-300">192.168.10.32</code> พอร์ต <code class="text-emerald-300 font-bold">3000</code> (หรือถ้าต้องการโดเมน API ด้วย ให้เพิ่ม <code class="text-amber-300">api.mydomain.lab</code> ชี้ไปพอร์ต <code class="text-emerald-300 font-bold">7000</code>)
+          </div>
+        </div>
+
+        <!-- Point 1 & 2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 1: แก้ไฟล์ <code class="text-white">schema.sql</code> (เพิ่มคอลัมน์ note)</h3>
+            <p class="text-xs text-slate-300">กด <code class="text-amber-300">Ctrl+F</code> หา <code class="text-amber-300">storage_path VARCHAR(1024)</code> ในตาราง <code class="text-white">attachments</code> (บรรทัด ~149) แล้วแทรกบรรทัด <code class="text-emerald-300 font-bold">note TEXT NULL,</code> ต่อท้าย:</p>
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">schema.sql (ตาราง attachments)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>  file_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  size_bytes INT UNSIGNED NOT NULL,
+  storage_path VARCHAR(1024) NOT NULL,
+  note TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,</code></pre>
+            </div>
+          </div>
+
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> (เปิด CORS)</h3>
+            <p class="text-xs text-slate-300">แก้บรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code>:</p>
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">backend/.env (วางทับทั้งไฟล์)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
+CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab
+
+DB_HOST=db
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=rootpassword
+DB_NAME=skills_db
+
+JWT_SECRET=testing123
+JWT_EXPIRES=2h</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Point 3, 4, 5 -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 3–5: สร้าง <code class="text-white">frontend/.dockerignore</code>, <code class="text-white">frontend/.env</code> และแก้ <code class="text-white">nuxt.config.ts</code> + <code class="text-white">axios.client.js</code></h3>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 3.1: สร้างไฟล์ frontend/.dockerignore</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>node_modules
+.nuxt
+.output
+dist</code></pre>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 3.2: สร้างไฟล์ frontend/.env</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>NUXT_PUBLIC_API_BASE=http://192.168.10.32:7000</code></pre>
+            </div>
+          </div>
+
+          <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
+            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://192.168.10.32:7000'</code></li>
+            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://192.168.10.32:7000'</code></li>
+          </ul>
+        </div>
+
+        <!-- Point 6, 7, 8, 9 -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (4 ไฟล์)</h3>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 6: ท้ายไฟล์ frontend/composables/useMenu.js</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
+  const r = isRef(roleInput) ? roleInput : ref(roleInput)
+  const config = useRuntimeConfig()
+
+  const menu = computed(() => {
+    const key = normalizeRole(r.value)
+    const base = String(config.public.apiBase || 'http://192.168.10.32:7000').replace(/\/$/, '')
+    const sections = MAP[key] || MAP.user
+    return sections.map((sec) => ({
+      ...sec,
+      items: sec.items.map((it) =>
+        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it
+      ),
+    }))
+  })
+
+  return { menu }
+}</code></pre>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 9.1: ส่วน &lt;script setup&gt; ใน frontend/layouts/default.vue</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+import { ref, computed } from 'vue'
+import { useMenu } from '~/composables/useMenu'
+import { useAuthStore } from '~/stores/auth'
+
+const auth = useAuthStore()
+const role = computed(() =&gt; auth.user?.role || 'user')
+const { menu } = useMenu(role)
+const drawer = ref(true)
+&lt;/script&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: แทนที่ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (แก้บั๊ก localStorage 500 Error)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+definePageMeta({ ssr: false })
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+
+const router = useRouter();
+const config = useRuntimeConfig();
+const errorMsg = ref("");
+const showPassword = ref(false);
+
+const vals = ref({
+  name_th: "",
+  email: "",
+  password: "",
+  role: "evaluatee",
+});
+
+const roles = ["evaluatee", "evaluator", "admin"];
+const handleSubmit = async () =&gt; {
+  const token = localStorage.getItem("auth_token");
+  try {
+    await axios.post(
+      `${config.public.apiBase || "http://192.168.10.32:7000"}/api/users`,
+      {
+        name_th: vals.value.name_th,
+        email: vals.value.email,
+        password: vals.value.password,
+        role: vals.value.role,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      }
+    );
+    router.push("/");
+  } catch (e) {
+    errorMsg.value = e?.response?.data?.message || e.message || "Create failed";
+  }
+};
+&lt;/script&gt;</code></pre>
+          </div>
+
+          <ul class="text-xs sm:text-sm text-slate-300 space-y-1">
+            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300">http://localhost:7000/docs</code> เป็น <code class="text-emerald-300 font-bold">http://192.168.10.32:7000/docs</code></li>
+            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> แก้ไอคอนตาจาก <code class="text-rose-300">:append-inner-icon="show ? ..."</code> เป็น <code class="text-emerald-300 font-bold">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</code></li>
+          </ul>
+        </div>
+
+        <!-- Point 10: docker-compose.yml -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (สำหรับรัน 4 บริการบน VM2)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">docker-compose.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (ใช้ Image ที่ Build จาก Registry บน VM1 <code class="text-emerald-300">192.168.10.31:5000</code>):</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">pes-app/docker-compose.yml</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก docker-compose.yml</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>services:
+  db:
+    image: mysql:8.0
+    container_name: pes-db
+    command: &gt;
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: skills_db
+      TZ: Asia/Bangkok
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [pes_net]
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pes-pma
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports: ["8081:80"]
+    depends_on: [db]
+    networks: [pes_net]
+    restart: always
+
+  api:
+    image: 192.168.10.31:5000/pes-backend:latest
+    container_name: pes-api
+    env_file:
+      - ./backend/.env
+    ports: ["7000:7000"]
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks: [pes_net]
+    restart: always
+
+  frontend:
+    image: 192.168.10.31:5000/pes-frontend:latest
+    container_name: pes-frontend
+    environment:
+      NUXT_PUBLIC_API_BASE: http://192.168.10.32:7000
+      NITRO_PORT: 3000
+      HOST: 0.0.0.0
+    ports: ["3000:3000"]
+    depends_on: [api]
+    networks: [pes_net]
+    restart: always
+
+volumes:
+  db_data:
+
+networks:
+  pes_net:
+    driver: bridge</code></pre>
+          </div>
+        </div>
+
+        <!-- Point 11: .gitlab-ci.yml -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 11: แก้ไฟล์ <code class="text-white">.gitlab-ci.yml</code> ที่รากโปรเจกต์ (ครบ 4 Stages: build, test, push, deploy)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">.gitlab-ci.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (รัน Unit Test + Integration Test ผ่าน Vitest ในคอนเทนเนอร์ และส่งไป Deploy บน VM2 อัตโนมัติทันทีที่ Push):</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">pes-app/.gitlab-ci.yml</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก .gitlab-ci.yml</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  REGISTRY_URL: "192.168.10.31:5000"
+  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
+  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
+  PROD_SERVER: "user1@192.168.10.32"
+  SSH_PORT: "2222"
+  DEPLOY_DIR: "/home/user1/pes-prod"
+
+# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
+build_job:
+  stage: build
+  script:
+    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
+    - docker build -t $BACKEND_IMAGE ./backend
+    - docker build -t $FRONTEND_IMAGE ./frontend
+
+# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
+test_job:
+  stage: test
+  script:
+    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
+    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+
+# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
+push_job:
+  stage: push
+  script:
+    - echo "=== [3/4] Pushing Images to Private Registry ==="
+    - docker push $BACKEND_IMAGE
+    - docker push $FRONTEND_IMAGE
+
+# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
+deploy_job:
+  stage: deploy
+  script:
+    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
+        cd $DEPLOY_DIR &amp;&amp;
+        sudo docker compose pull api frontend &amp;&amp;
+        sudo docker compose up -d --remove-orphans
+      "
+    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 8: RAW PLAINTEXT VIEW                                         -->
     <!-- ===================================================================== -->
     <section id="sec-raw" class="section-block hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -1983,13 +2368,13 @@ git push -u origin main</pre>
   <!-- Script for Copy & Tabs -->
   <script>
     const defaultIpConfig = {
-      gateway: '172.16.48.1',
-      proxmox: '172.16.48.30',
-      vm1: '172.16.48.31',
-      vm2: '172.16.48.32',
-      pc1: '172.16.48.35',
-      pc2: '172.16.48.36',
-      pc3: '172.16.48.37'
+      gateway: '192.168.10.1',
+      proxmox: '192.168.10.30',
+      vm1: '192.168.10.31',
+      vm2: '192.168.10.32',
+      pc1: '192.168.20.36',
+      pc2: '192.168.20.37',
+      pc3: '192.168.20.38'
     };
 
     function readIpConfig() {
@@ -2002,6 +2387,30 @@ git push -u origin main</pre>
         pc2: document.getElementById('ip-pc2')?.value.trim() || defaultIpConfig.pc2,
         pc3: document.getElementById('ip-pc3')?.value.trim() || defaultIpConfig.pc3
       };
+    }
+
+    function replaceIpsInString(str, config) {
+      let s = str;
+      s = s.replaceAll('172.16.48.0/22', '192.168.10.0/24');
+      s = s.replaceAll('255.255.252.0', '255.255.255.0');
+      s = s.replaceAll('172.16.48.30/22', `${config.proxmox}/24`);
+      s = s.replaceAll('172.16.48.31/22', `${config.vm1}/24`);
+      s = s.replaceAll('172.16.48.32/22', `${config.vm2}/24`);
+      s = s.replaceAll('172.16.48.1', config.gateway);
+      s = s.replaceAll('192.168.10.1', config.gateway);
+      s = s.replaceAll('172.16.48.30', config.proxmox);
+      s = s.replaceAll('192.168.10.30', config.proxmox);
+      s = s.replaceAll('172.16.48.31', config.vm1);
+      s = s.replaceAll('192.168.10.31', config.vm1);
+      s = s.replaceAll('172.16.48.32', config.vm2);
+      s = s.replaceAll('192.168.10.32', config.vm2);
+      s = s.replaceAll('172.16.48.35', config.pc1);
+      s = s.replaceAll('192.168.20.36', config.pc1);
+      s = s.replaceAll('172.16.48.36', config.pc2);
+      s = s.replaceAll('192.168.20.37', config.pc2);
+      s = s.replaceAll('172.16.48.37', config.pc3);
+      s = s.replaceAll('192.168.20.38', config.pc3);
+      return s;
     }
 
     function updateIpDisplay() {
@@ -2027,20 +2436,27 @@ git push -u origin main</pre>
         liveIpSummary.innerText = `Gateway ${config.gateway} • Proxmox ${config.proxmox} • VM1 ${config.vm1} • VM2 ${config.vm2} • PC ${config.pc1} / ${config.pc2} / ${config.pc3}`;
       }
 
+      document.querySelectorAll('main pre code, main code, main td, main span, main li, main p, main h2, main h3').forEach(el => {
+        if (el.children.length === 0 && (el.innerText.includes('172.16.48.') || el.innerText.includes('192.168.') || el.dataset.baseText)) {
+          if (!el.dataset.baseText) {
+            el.dataset.baseText = el.innerText;
+          }
+          el.innerText = replaceIpsInString(el.dataset.baseText, config);
+        }
+      });
+
+      document.querySelectorAll('main pre code').forEach(el => {
+        if (!el.dataset.baseCode) {
+          el.dataset.baseCode = el.innerText;
+        }
+        el.innerText = replaceIpsInString(el.dataset.baseCode, config);
+      });
+
       if (rawTextEl) {
         if (!rawTextEl.dataset.baseText) {
           rawTextEl.dataset.baseText = rawTextEl.innerText;
         }
-
-        let generated = rawTextEl.dataset.baseText;
-        generated = generated.replaceAll('172.16.48.1', config.gateway);
-        generated = generated.replaceAll('172.16.48.30', config.proxmox);
-        generated = generated.replaceAll('172.16.48.31', config.vm1);
-        generated = generated.replaceAll('172.16.48.32', config.vm2);
-        generated = generated.replaceAll('172.16.48.35', config.pc1);
-        generated = generated.replaceAll('172.16.48.36', config.pc2);
-        generated = generated.replaceAll('172.16.48.37', config.pc3);
-        rawTextEl.innerText = generated;
+        rawTextEl.innerText = replaceIpsInString(rawTextEl.dataset.baseText, config);
       }
     }
 
@@ -2133,6 +2549,7 @@ git push -u origin main</pre>
         webui: document.getElementById('sec-webui'),
         runner: document.getElementById('sec-runner'),
         dev: document.getElementById('sec-dev'),
+        pes: document.getElementById('sec-pes'),
         raw: document.getElementById('sec-raw')
       };
 
@@ -2149,7 +2566,7 @@ git push -u origin main</pre>
       }
 
       // Show/Hide sections
-      Object.values(sections).forEach(sec => sec.classList.add('hidden'));
+      Object.values(sections).forEach(sec => sec && sec.classList.add('hidden'));
 
       if (tab === 'all') {
         sections.overview.classList.remove('hidden');
@@ -2159,6 +2576,7 @@ git push -u origin main</pre>
         sections.webui.classList.remove('hidden');
         sections.runner.classList.remove('hidden');
         sections.dev.classList.remove('hidden');
+        if (sections.pes) sections.pes.classList.remove('hidden');
       } else if (tab === 'raw') {
         sections.raw.classList.remove('hidden');
       } else if (tab === 'overview') {
