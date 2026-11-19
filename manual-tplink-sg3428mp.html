@@ -505,7 +505,7 @@
       <tr>
         <td><strong>พูล DHCP VLAN 20</strong></td>
         <td><code>192.168.20.100 – 199</code></td>
-        <td>ตั้ง Network <code>192.168.20.0/24</code> แล้ว Exclude <code>.1–.99</code> และ <code>.200–.254</code>, DNS <code>1.1.1.1</code></td>
+        <td>ตั้ง Network <code>192.168.20.0/24</code> แล้ว Exclude <code>.1–.99</code> และ <code>.200–.254</code>, DNS <code>192.168.10.31</code></td>
       </tr>
       <tr>
         <td><strong>ฉุกเฉิน VLAN 1 ของ TP-Link</strong></td>
@@ -1027,8 +1027,8 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
       </tr>
       <tr>
         <td><strong>DNS Server</strong></td>
-        <td><code>1.1.1.1</code></td>
-        <td><code>1.1.1.1</code></td>
+        <td><code>192.168.10.31</code></td>
+        <td><code>192.168.10.31</code></td>
       </tr>
       <tr>
         <td><strong>Lease Time</strong></td>
@@ -1042,6 +1042,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
       </tr>
     </tbody>
   </table>
+  <p><strong>DNS Server ต้องเป็น <code>192.168.10.31</code> (Technitium บน VM1)</strong> ไม่ใช่ <code>1.1.1.1</code> ไม่งั้นเครื่องที่รับ DHCP จะเปิด <code>*.mydomain.lab</code> ไม่ได้ ส่วนการออกเน็ต Technitium จะส่งต่อให้ Forwarders <code>8.8.8.8, 1.1.1.1</code> เอง</p>
 
   <h3>5.6 เปิด DHCP Snooping บน VLAN 10 และ VLAN 20</h3>
   <ol>
@@ -1077,7 +1078,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   <h3>6.2 ทดสอบ DHCP และเกตเวย์วง dev (พอร์ต 9–16)</h3>
   <ol>
     <li>ย้ายสาย LAN ของโน้ตบุ๊คมาเสียบที่ <strong>พอร์ต 9</strong> ของสวิตช์ TP-Link แล้วตั้งการ์ดแลนโน้ตบุ๊คเป็นรับ <strong>DHCP (Obtain an IP address automatically)</strong></li>
-    <li>เปิด Command Prompt พิมพ์ <code>ipconfig /all</code> ต้องได้รับไอพีในช่วง <strong><code>192.168.20.100 – 199</code></strong> มาสก์ <code>255.255.255.0</code> เกตเวย์ <code>192.168.20.1</code> และ DNS <code>1.1.1.1</code></li>
+    <li>เปิด Command Prompt พิมพ์ <code>ipconfig /all</code> ต้องได้รับไอพีในช่วง <strong><code>192.168.20.100 – 199</code></strong> มาสก์ <code>255.255.255.0</code> เกตเวย์ <code>192.168.20.1</code> และ DNS <code>192.168.10.31</code> (Technitium บน VM1)</li>
     <li>สั่งทดสอบ Ping จากโน้ตบุ๊คตามลำดับ:
       <ul>
         <li><code>ping 192.168.20.1</code> &rarr; <strong>ต้องติด</strong> (เกตเวย์วงตัวเอง)</li>

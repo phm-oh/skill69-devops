@@ -356,9 +356,11 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"
 | **Network Address** | `192.168.10.0` | `192.168.20.0` |
 | **Subnet Mask** | `255.255.255.0` | `255.255.255.0` |
 | **Default Gateway** | `192.168.10.1` | `192.168.20.1` |
-| **DNS Server** | `1.1.1.1` | `1.1.1.1` |
+| **DNS Server** | `192.168.10.31` | `192.168.10.31` |
 | **Lease Time** | ปล่อยค่าเริ่มต้น (เช่น `1440` นาที) | ปล่อยค่าเริ่มต้น (เช่น `1440` นาที) |
 | *(ช่องอื่นๆ เว้นว่างได้)* | กดปุ่ม **Create** | กดปุ่ม **Create** |
+
+> **DNS Server ต้องเป็น `192.168.10.31` (Technitium บน VM1)** ไม่ใช่ `1.1.1.1` ไม่งั้นเครื่องที่รับ DHCP จะเปิด `*.mydomain.lab` ไม่ได้ ส่วนการออกเน็ต Technitium จะส่งต่อให้ Forwarders `8.8.8.8, 1.1.1.1` เอง
 
 3. คลิกปุ่ม **Save** (มุมขวาบนสุดของหน้าเว็บ)
 
@@ -408,7 +410,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"
    - **IPv4 Address:** ต้องอยู่ในช่วง `192.168.20.100` ถึง `192.168.20.199`
    - **Subnet Mask:** `255.255.255.0`
    - **Default Gateway:** `192.168.20.1`
-   - **DNS Servers:** `1.1.1.1`
+   - **DNS Servers:** `192.168.10.31` *(ถ้า VM1 ยังไม่เปิด ping ด้วยไอพีได้ แต่เปิดเว็บด้วยชื่อยังไม่ได้)*
 4. ทดสอบสั่ง Ping จากโน้ตบุ๊คใน Command Prompt ตามลำดับนี้:
    - `ping 192.168.20.1` $\rightarrow$ **ต้องติด** (เกตเวย์วงตัวเองบนสวิตช์)
    - `ping 192.168.10.1` $\rightarrow$ **ต้องติด** (ทดสอบ Inter-VLAN ข้ามไปเกตเวย์วงเซิร์ฟเวอร์)

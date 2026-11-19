@@ -224,7 +224,8 @@
           <div class="text-xs text-slate-300 mt-2 space-y-0.5">
             <div>• NPM Proxy: <code class="text-emerald-300">80, 443</code></div>
             <div>• NPM Admin: <code class="text-emerald-300">:81</code></div>
-            <div>• Task Web App: <code class="text-emerald-300">:8080</code></div>
+            <div>• PES: Frontend <code class="text-emerald-300">:3000</code> • API <code class="text-emerald-300">:7000</code> • phpMyAdmin <code class="text-emerald-300">:8081</code></div>
+            <div>• Task App (งานซ้อม): <code class="text-emerald-300">:8080</code></div>
           </div>
         </div>
 
@@ -255,7 +256,7 @@
           </div>
           <div class="bg-slate-900 p-3 rounded-lg border border-purple-500/30">
             <span class="text-purple-400 font-bold">4. DNS & NPM</span>
-            <p class="text-slate-400 mt-1">ชี้โดเมน .lab มาที่ .32 แล้วให้ NPM ส่งต่อไป GitLab, DNS และ App</p>
+            <p class="text-slate-400 mt-1">ชี้ทุกโดเมน .lab มาที่ .32 แล้วให้ NPM ส่งต่อไป GitLab, DNS, Registry และ PES (app/api)</p>
           </div>
           <div class="bg-slate-900 p-3 rounded-lg border border-orange-500/30">
             <span class="text-orange-400 font-bold">5. GitLab Runner</span>
@@ -475,7 +476,9 @@ user2 ALL=(ALL) NOPASSWD:ALL</code></pre>
             </div>
             <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo chmod 0440 /etc/sudoers.d/users
 sudo nano /etc/ssh/sshd_config
-sudo systemctl restart ssh</code></pre>
+# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
+if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo ss -tlnp | grep 2222</code></pre>
           </div>
 
           <div class="code-box">
@@ -497,6 +500,7 @@ sudo ufw allow 5000/tcp
 sudo ufw allow 8080/tcp
 sudo ufw enable</code></pre>
           </div>
+          <p class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">⚠️ พอร์ตที่ Docker เปิดด้วย <code>ports:</code> (เช่น 53, 5000, 8080) ไม่ผ่านกฎ UFW เพราะ Docker เขียน iptables เอง กฎ <code>ufw allow from ... port 53</code> จึงกันใครไม่ได้จริง ถ้าต้องจำกัดว่าใครใช้ DNS ได้ ให้ทำ ACL ที่สวิตช์ TP-Link</p>
         </div>
 
         <!-- VM1 Step 2.3: Docker & Insecure Registry -->
@@ -768,12 +772,14 @@ user2 ALL=(ALL) NOPASSWD:ALL</code></pre>
             </div>
             <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo chmod 0440 /etc/sudoers.d/users
 sudo nano /etc/ssh/sshd_config
-sudo systemctl restart ssh</code></pre>
+# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
+if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo ss -tlnp | grep 2222</code></pre>
           </div>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-emerald-300">[VM2] 4. ตั้งค่า UFW Firewall บน VM2 (เปิด 2222, 80, 81, 443, 8080 ไม่ให้เว็บค้าง!)</span>
+              <span class="text-xs font-mono text-emerald-300">[VM2] 4. ตั้งค่า UFW Firewall บน VM2 (เปิด 2222, 80, 81, 443, 3000, 7000, 8080, 8081)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
@@ -930,7 +936,13 @@ sudo nano docker-compose.yml</code></pre>
                   <td class="p-3 text-amber-300 font-bold">app</td>
                   <td class="p-3 text-slate-300">A</td>
                   <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
-                  <td class="p-3 font-sans text-slate-400">หน้าเว็บระบบติดตามงาน (Task Tracker) ที่ Deploy สำเร็จ (.32:8080)</td>
+                  <td class="p-3 font-sans text-slate-400">หน้าเว็บ PES (Frontend) วิ่งเข้า NPM แล้วส่งต่อไป .32:3000</td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-amber-300 font-bold">api</td>
+                  <td class="p-3 text-slate-300">A</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
+                  <td class="p-3 font-sans text-slate-400">Backend API ของ PES วิ่งเข้า NPM แล้วส่งต่อไป .32:7000</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">registry</td>
@@ -954,7 +966,7 @@ sudo nano docker-compose.yml</code></pre>
             <span class="text-xs font-mono bg-emerald-950 text-emerald-300 px-3 py-1 rounded border border-emerald-500/30">URL: http://192.168.10.32:81 (Login แรก: admin@example.com / changeme)</span>
           </div>
 
-          <p class="text-sm text-slate-300">ไปที่เมนู <strong>Hosts</strong> $\rightarrow$ <strong>Proxy Hosts</strong> $\rightarrow$ กดปุ่ม <strong>Add Proxy Host</strong> แล้วสร้างครบทั้ง 5 รายการตามตารางนี้:</p>
+          <p class="text-sm text-slate-300">ไปที่เมนู <strong>Hosts</strong> $\rightarrow$ <strong>Proxy Hosts</strong> $\rightarrow$ กดปุ่ม <strong>Add Proxy Host</strong> แล้วสร้างครบทั้ง 6 รายการตามตารางนี้:</p>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs sm:text-sm bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
@@ -989,7 +1001,13 @@ sudo nano docker-compose.yml</code></pre>
                   <td class="p-3 text-amber-300 font-bold">app.mydomain.lab</td>
                   <td class="p-3 text-slate-300">http</td>
                   <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
-                  <td class="p-3 text-emerald-400 font-bold">8080 <span class="font-sans text-xs text-slate-400">(เว็บ Task Tracker ที่ CI/CD Deploy มาลง)</span></td>
+                  <td class="p-3 text-emerald-400 font-bold">3000 <span class="font-sans text-xs text-slate-400">(PES Frontend — เปิดสวิตช์ Websockets Support ด้วย)</span></td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-amber-300 font-bold">api.mydomain.lab</td>
+                  <td class="p-3 text-slate-300">http</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">7000 <span class="font-sans text-xs text-slate-400">(PES Backend API)</span></td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">registry.mydomain.lab</td>
@@ -1000,6 +1018,7 @@ sudo nano docker-compose.yml</code></pre>
               </tbody>
             </table>
           </div>
+          <p class="text-xs text-slate-400">* <code>app</code> กับ <code>api</code> จะขึ้น 502 จนกว่า Pipeline ของ PES (ส่วนที่ 7) จะ Deploy เสร็จ ส่วนเว็บซ้อม Task Tracker (ส่วนที่ 6) ไม่มีโดเมน ให้เปิดตรงที่ <code class="text-emerald-300">http://192.168.10.32:8080</code></p>
         </div>
 
         <!-- Step 4.3: PC Client & Troubleshooting -->
@@ -1034,7 +1053,7 @@ ping gitlab.mydomain.lab</code></pre>
             <h4 class="font-bold text-rose-300 text-sm mb-2">🛠️ จุดเช็กด่วน! หากเข้าเว็บ gitlab.mydomain.lab ไม่ได้ (จากปัญหาที่เจอบ่อย)</h4>
             <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
               <li>1. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วขึ้น <code class="text-rose-300">Server: one.one.one.one (1.1.1.1)</code>:</strong> แปลว่าในการ์ดแลน PC ยังไม่ได้ลบ DNS <code class="text-rose-300">1.1.1.1</code> ออก ให้ไปลบออกให้เหลือแค่ <code class="text-emerald-300">192.168.10.31</code> ตัวเดียว</li>
-              <li>2. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วได้ IP <code class="text-rose-300">172.168.16.x</code>:</strong> แปลว่าพิมพ์ IP ในหน้า Technitium DNS ผิดวง ต้องแก้เป็น <code class="text-emerald-300">192.168.10.32</code> แล้วรัน <code class="text-amber-300">ipconfig /flushdns</code> บน PC</li>
+              <li>2. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วได้ IP อื่นที่ไม่ใช่ <code class="text-rose-300">192.168.10.32</code>:</strong> แปลว่าพิมพ์ IP ในหน้า Technitium DNS ผิด ต้องแก้เป็น <code class="text-emerald-300">192.168.10.32</code> แล้วรัน <code class="text-amber-300">ipconfig /flushdns</code> บน PC</li>
               <li>3. <strong>ได้ IP <code class="text-emerald-300">192.168.10.32</code> ถูกต้องแล้ว แต่เปิดเว็บขึ้น <code class="text-rose-300">ERR_CONNECTION_TIMED_OUT</code>:</strong> เช็กว่าบน VM2 รัน <code class="text-emerald-300">sudo ufw allow 80/tcp</code> หรือยัง และลองเปิดผ่านโหมดไม่ระบุตัวตน (Incognito) เพื่อเลี่ยงแคชเบราว์เซอร์</li>
             </ul>
           </div>
@@ -1184,10 +1203,8 @@ ssh-copy-id -p 2222 user1@192.168.10.32</code></pre>
           </div>
           <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
             ⚠️ ถ้า <strong>SSH Login ครั้งแรกไม่ผ่าน</strong> หรือเคย login กับ VM2 แล้ว key เปลี่ยน/ล้าสมัย ให้ล้าง cache host key ก่อน:
-            <code class="text-white font-bold">ssh-keygen -R "[192.168.10.31]:2222"</code>
-            หรือถ้าต้องการล้าง host key ของ VM2 แบบตรงไปตรงมา ให้ใช้:
-            <code class="text-white font-bold">ssh-keygen -R "192.168.10.32"</code>
-            แล้วลอง login ใหม่อีกครั้ง
+            <code class="text-white font-bold">ssh-keygen -R "[192.168.10.32]:2222"</code>
+            (รันในตัวผู้ใช้ <code>gitlab-runner</code> เพราะ SSH พอร์ต 2222 จะเก็บ key ไว้ในชื่อ <code>[IP]:2222</code>) แล้วลอง login ใหม่อีกครั้ง
           </div>
           <p class="text-xs text-slate-400">* ตอนรัน <code class="text-amber-300">ssh-copy-id</code> ระบบจะถาม <code class="text-white">Are you sure you want to continue connecting (yes/no)?</code> ให้พิมพ์ <code class="text-emerald-300 font-bold">yes</code> แล้วกรอกรหัสผ่านของ <code class="text-emerald-300">user1</code> บนเครื่อง VM2</p>
 
@@ -1223,7 +1240,7 @@ exit</code></pre>
 
       <div class="p-5 sm:p-6 space-y-6">
         <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-300">
-          📁 <strong>วิธีเตรียมโฟลเดอร์บนเครื่อง PC ลูกข่าย:</strong> สร้างโฟลเดอร์ชื่อ <code class="text-pink-300 font-bold">task-app</code> บน Desktop แล้วเปิดด้วยโปรแกรม VS Code จากนั้นสร้างไฟล์ทั้ง 5 ไฟล์ตามลำดับด้านล่างนี้ (กดปุ่ม <strong>"📋 กดเพื่อคัดลอก"</strong> ในแต่ละไฟล์ไปวางได้เลย):
+          🧪 <strong>ส่วนนี้เป็นงานซ้อม</strong> ให้ลอง Pipeline ให้ผ่านก่อนทำ PES จริง เว็บนี้รันบน VM2 พอร์ต <code class="text-pink-300">8080</code> เปิดที่ <code class="text-pink-300">http://192.168.10.32:8080</code> (โดเมน <code>app.mydomain.lab</code> สงวนไว้ให้ PES)<br>📁 <strong>วิธีเตรียมโฟลเดอร์บนเครื่อง PC ลูกข่าย:</strong> สร้างโฟลเดอร์ชื่อ <code class="text-pink-300 font-bold">task-app</code> บน Desktop แล้วเปิดด้วยโปรแกรม VS Code จากนั้นสร้างไฟล์ทั้ง 5 ไฟล์ตามลำดับด้านล่างนี้ (กดปุ่ม <strong>"📋 กดเพื่อคัดลอก"</strong> ในแต่ละไฟล์ไปวางได้เลย):
         </div>
 
         <!-- File 1: index.html -->
@@ -1497,7 +1514,7 @@ deploy_job:
         sudo docker rm -f task-app || true &&
         sudo docker run -d --name task-app --restart always -p 8080:80 $IMAGE_NAME
       "
-    - echo "Deployment Completed! Web is live at http://app.mydomain.lab"</code></pre>
+    - echo "Deployment Completed! Task App (practice) is live at http://192.168.10.32:8080"</code></pre>
           </div>
         </div>
 
@@ -1529,7 +1546,7 @@ git push -u origin main</code></pre>
               <li>เมื่อระบบถาม Username / Password ตอน Push: ให้ใส่ Username = <code class="text-amber-300 font-bold">root</code> และ Password = รหัสผ่าน root ของ GitLab</li>
               <li>เปิดหน้าเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab/root/task-app</code>) $\rightarrow$ ไปที่เมนูซ้ายมือ <strong>Build</strong> $\rightarrow$ <strong>Pipelines</strong></li>
               <li>จะเห็นสถานะ Pipeline รันผ่านเป็น <strong>สีเขียว (Passed)</strong> ครบทั้ง 4 Stages: <code class="text-emerald-300">build</code> $\rightarrow$ <code class="text-emerald-300">test</code> $\rightarrow$ <code class="text-emerald-300">push</code> $\rightarrow$ <code class="text-emerald-300">deploy</code></li>
-              <li>เปิดแท็บใหม่บนเบราว์เซอร์เข้า <strong class="text-emerald-400 underline">http://app.mydomain.lab</strong> (หรือ <code class="text-emerald-300">http://192.168.10.32:8080</code>) จะพบหน้าเว็บ <strong>ระบบติดตามงานและสถานะ (Task Tracker)</strong> พร้อมใช้งานทันที!</li>
+              <li>เปิดแท็บใหม่บนเบราว์เซอร์เข้า <strong class="text-emerald-400 underline">http://192.168.10.32:8080</strong> จะพบหน้าเว็บ <strong>ระบบติดตามงานและสถานะ (Task Tracker)</strong> พร้อมใช้งานทันที!</li>
             </ol>
           </div>
         </div>
@@ -1572,7 +1589,8 @@ sudo ufw allow 8081/tcp
 sudo ufw reload</code></pre>
           </div>
           <div class="text-xs text-slate-400">
-            * และในหน้าเว็บ <strong>Nginx Proxy Manager (`http://192.168.10.32:81`)</strong> ให้ตั้งค่า Proxy Host ของ <code class="text-amber-300">app.mydomain.lab</code> ชี้ไปที่ <code class="text-emerald-300">192.168.10.32</code> พอร์ต <code class="text-emerald-300 font-bold">3000</code> (หรือถ้าต้องการโดเมน API ด้วย ให้เพิ่ม <code class="text-amber-300">api.mydomain.lab</code> ชี้ไปพอร์ต <code class="text-emerald-300 font-bold">7000</code>)
+            * เช็กว่าทำ STEP 4.1–4.2 ครบ: DNS มี <code class="text-amber-300">app</code> และ <code class="text-amber-300">api</code> และ NPM มี <code class="text-amber-300">app.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:3000</code> กับ <code class="text-amber-300">api.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:7000</code><br>
+            * เส้นทางจริง: PC เปิด <code>http://app.mydomain.lab</code> → NPM → Nuxt <code>:3000</code> → หน้าเว็บในเบราว์เซอร์เรียก <code>http://api.mydomain.lab</code> → NPM → API <code>:7000</code> → MySQL (<code>db</code> ใน compose)
           </div>
         </div>
 
@@ -1599,7 +1617,7 @@ sudo ufw reload</code></pre>
 
           <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
             <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> (เปิด CORS)</h3>
-            <p class="text-xs text-slate-300">แก้บรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code>:</p>
+            <p class="text-xs text-slate-300">แก้บรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง เพราะโค้ด API ไม่ตัดช่องว่างให้):</p>
             <div class="code-box">
               <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
                 <span class="text-xs font-mono text-cyan-300">backend/.env (วางทับทั้งไฟล์)</span>
@@ -1608,7 +1626,7 @@ sudo ufw reload</code></pre>
                 </button>
               </div>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
-CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab
+CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
 
 DB_HOST=db
 DB_PORT=3306
@@ -1646,13 +1664,13 @@ dist</code></pre>
                   <span>📋 กดเพื่อคัดลอก</span>
                 </button>
               </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>NUXT_PUBLIC_API_BASE=http://192.168.10.32:7000</code></pre>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>NUXT_PUBLIC_API_BASE=http://api.mydomain.lab</code></pre>
             </div>
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://192.168.10.32:7000'</code></li>
-            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://192.168.10.32:7000'</code></li>
+            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://api.mydomain.lab'</code></li>
+            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://api.mydomain.lab'</code></li>
           </ul>
         </div>
 
@@ -1674,7 +1692,7 @@ dist</code></pre>
 
   const menu = computed(() => {
     const key = normalizeRole(r.value)
-    const base = String(config.public.apiBase || 'http://192.168.10.32:7000').replace(/\/$/, '')
+    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')
     const sections = MAP[key] || MAP.user
     return sections.map((sec) => ({
       ...sec,
@@ -1738,7 +1756,7 @@ const handleSubmit = async () =&gt; {
   const token = localStorage.getItem("auth_token");
   try {
     await axios.post(
-      `${config.public.apiBase || "http://192.168.10.32:7000"}/api/users`,
+      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,
       {
         name_th: vals.value.name_th,
         email: vals.value.email,
@@ -1761,7 +1779,7 @@ const handleSubmit = async () =&gt; {
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1">
-            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300">http://localhost:7000/docs</code> เป็น <code class="text-emerald-300 font-bold">http://192.168.10.32:7000/docs</code></li>
+            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300">http://localhost:7000/docs</code> เป็น <code class="text-emerald-300 font-bold">http://api.mydomain.lab/docs</code></li>
             <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> แก้ไอคอนตาจาก <code class="text-rose-300">:append-inner-icon="show ? ..."</code> เป็น <code class="text-emerald-300 font-bold">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</code></li>
           </ul>
         </div>
@@ -1829,7 +1847,7 @@ const handleSubmit = async () =&gt; {
     image: 192.168.10.31:5000/pes-frontend:latest
     container_name: pes-frontend
     environment:
-      NUXT_PUBLIC_API_BASE: http://192.168.10.32:7000
+      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
@@ -1910,6 +1928,38 @@ deploy_job:
     - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"</code></pre>
           </div>
         </div>
+
+        <!-- Step 7.12: GitLab project + runner + push + checks -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 class="font-bold text-cyan-300 text-base">STEP 7.12: สร้างโปรเจกต์ <code class="text-white">pes-app</code> ใน GitLab, ผูก Runner, Push และตรวจผล</h3>
+          <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-300 space-y-1.5">
+            <li>ที่ <code class="text-amber-300">http://gitlab.mydomain.lab</code> สร้าง Blank project ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (Public และติ๊กออก <em>Initialize repository with a README</em>)</li>
+            <li>Runner จาก STEP 5.2–5.3 ผูกกับโปรเจกต์ <code>task-app</code> เท่านั้น ให้ทำ STEP 5.2–5.3 ซ้ำในโปรเจกต์ <code>pes-app</code> (เอา token <code>glrt-...</code> ตัวใหม่ไป register บน VM1 อีกตัว ตั้ง description เป็น <code>vm1-shell-runner-pes</code>) ส่วน SSH Key จาก STEP 5.4 ใช้ของเดิมได้</li>
+            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่าง</li>
+          </ol>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">[PC Terminal] Push โปรเจกต์ pes-app</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>rm -rf .git
+git init
+git switch -c main
+git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git add .
+git commit -m "Deploy PES with 4-stage CI/CD"
+git push -u origin main</code></pre>
+          </div>
+          <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-1">
+            <div class="font-bold text-cyan-300">✅ ตรวจผลหลัง Pipeline เขียวครบ 4 Stages (ไล่จากหลังบ้านไปหน้าบ้าน):</div>
+            <div>1. <code class="text-emerald-300">http://api.mydomain.lab/health</code> ต้องได้ <code>{"service":"okoak",...}</code> (ถ้าไม่ได้ ลอง <code>http://192.168.10.32:7000/health</code> เพื่อแยกว่าเสียที่ NPM หรือที่ API)</div>
+            <div>2. <code class="text-emerald-300">http://192.168.10.32:8081</code> (phpMyAdmin) ต้องเห็นฐานข้อมูล <code>skills_db</code> และตาราง <code>attachments</code> มีคอลัมน์ <code>note</code></div>
+            <div>3. <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code>password</code> (ตาม hash ใน <code>schema.sql</code> ของ PES ถ้ากรรมการเปลี่ยน ให้ดูคอมเมนต์ในไฟล์)</div>
+            <div class="text-amber-300">⚠️ MySQL รัน <code>schema.sql</code> เฉพาะตอน volume ยังว่าง ถ้าแก้ schema หลัง Deploy ไปแล้ว ให้รันบน VM2: <code>cd ~/pes-prod &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job deploy</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1935,7 +1985,7 @@ deploy_job:
 #     - Gateway VLAN 10: 192.168.10.1  (SVI VLAN 10 บนสวิตช์ TP-Link)
 #     - Proxmox Host:    192.168.10.30  (https://192.168.10.30:8006)
 #     - VM 1 (GitLab):   192.168.10.31  (DNS :53/:5380, GitLab :8080, Registry :5000)
-#     - VM 2 (Prod/NPM): 192.168.10.32  (NPM Proxy :80/:443, NPM Admin :81, Web :8080)
+#     - VM 2 (Prod/NPM): 192.168.10.32  (NPM :80/:443, Admin :81, PES Frontend :3000 / API :7000 / phpMyAdmin :8081, Task ซ้อม :8080)
 #     - PC1, PC2, PC3:   192.168.20.36, 192.168.20.37, 192.168.20.38 (VLAN 20, Gateway: 192.168.20.1, DNS: 192.168.10.31)
 #
 ################################################################################
@@ -2031,7 +2081,9 @@ sudo chmod 0440 /etc/sudoers.d/users
 2. เปลี่ยนพอร์ต SSH เป็น 2222:
 sudo nano /etc/ssh/sshd_config
 (ลบ # หน้า Port 22 แล้วแก้เป็น Port 2222)
-sudo systemctl restart ssh
+# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
+if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
 3. ตั้งค่า UFW Firewall บน VM1:
 sudo ufw default deny incoming
@@ -2173,16 +2225,21 @@ sudo chmod 0440 /etc/sudoers.d/users
 2. เปลี่ยนพอร์ต SSH เป็น 2222:
 sudo nano /etc/ssh/sshd_config
 (ลบ # หน้า Port 22 แล้วแก้เป็น Port 2222)
-sudo systemctl restart ssh
+# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
+if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
-3. ตั้งค่า UFW Firewall บน VM2 (เปิด 80, 81, 443, 8080):
+3. ตั้งค่า UFW Firewall บน VM2 (เปิด 2222, 80, 81, 443, 3000, 7000, 8080, 8081):
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 2222/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 81/tcp
 sudo ufw allow 443/tcp
+sudo ufw allow 3000/tcp
+sudo ufw allow 7000/tcp
 sudo ufw allow 8080/tcp
+sudo ufw allow 8081/tcp
 sudo ufw enable
 
 [STEP 3.3] ติดตั้ง Docker และรัน Nginx Proxy Manager (NPM) บน VM2
@@ -2231,7 +2288,8 @@ sudo docker compose up -d
        * Name: gitlab    | Type: A | IP Address: 192.168.10.32
        * Name: dns       | Type: A | IP Address: 192.168.10.32
        * Name: npm       | Type: A | IP Address: 192.168.10.32
-       * Name: app       | Type: A | IP Address: 192.168.10.32
+       * Name: app       | Type: A | IP Address: 192.168.10.32   (PES Frontend)
+       * Name: api       | Type: A | IP Address: 192.168.10.32   (PES Backend API)
        * Name: registry  | Type: A | IP Address: 192.168.10.32
    - ไปที่เมนู Settings -> Proxy & Forwarders -> ช่อง Forwarders ใส่ 8.8.8.8 และ 1.1.1.1 -> Save
 
@@ -2240,8 +2298,10 @@ sudo docker compose up -d
        * ตัวที่ 1: Domain: gitlab.mydomain.lab | Scheme: http | Forward IP: 192.168.10.31 | Port: 8080
        * ตัวที่ 2: Domain: dns.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.31 | Port: 5380
        * ตัวที่ 3: Domain: npm.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 81
-       * ตัวที่ 4: Domain: app.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 8080
+       * ตัวที่ 4: Domain: app.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 3000 (PES Frontend, เปิด Websockets Support)
        * ตัวที่ 5: Domain: registry.mydomain.lab | Scheme: http | Forward IP: 192.168.10.31 | Port: 5000
+       * ตัวที่ 6: Domain: api.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 7000 (PES Backend API)
+     - app/api ขึ้น 502 จนกว่า PES จะ Deploy เสร็จ | เว็บซ้อม task-app เปิดตรงที่ http://192.168.10.32:8080
 
 3. ตั้งค่าเครื่อง PC ลูกข่าย VLAN 20 (PC1 = 192.168.20.36, PC2 = .37, PC3 = .38 หรือรับ DHCP .100+):
    - Subnet Mask: 255.255.255.0
@@ -2303,6 +2363,7 @@ exit
 ================================================================================
   ส่วนที่ 6: โค้ดฝั่งเครื่อง PC นักพัฒนา (5 ไฟล์ในโฟลเดอร์ task-app) + GIT PUSH
 ================================================================================
+(งานซ้อม: เว็บรันบน VM2 พอร์ต 8080 เปิดที่ http://192.168.10.32:8080 | โดเมน app.mydomain.lab สงวนไว้ให้ PES)
 
 --- ไฟล์ที่ 1: Dockerfile ---
 FROM nginx:alpine
@@ -2361,7 +2422,184 @@ git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/task-app.git
 git add .
 git commit -m "Initial commit: Task Tracker App with Full CI/CD Pipeline"
-git push -u origin main</pre>
+git push -u origin main
+
+================================================================================
+  ส่วนที่ 7: โปรเจกต์จริง PES (Frontend :3000 | API :7000 | phpMyAdmin :8081 บน VM2)
+================================================================================
+เส้นทาง: PC -&gt; http://app.mydomain.lab -&gt; NPM (.32:80) -&gt; Nuxt (.32:3000)
+         เบราว์เซอร์เรียก API -&gt; http://api.mydomain.lab -&gt; NPM -&gt; API (.32:7000) -&gt; MySQL (db ใน compose)
+CI/CD:   git push -&gt; GitLab (.31) -&gt; Runner shell บน VM1: build -&gt; test -&gt; push 192.168.10.31:5000
+         -&gt; ssh user1@192.168.10.32 -p 2222 -&gt; docker compose pull + up -d (ใน ~/pes-prod)
+
+1. เตรียม: คัดลอก PES เป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
+   (UFW ของ VM2 เปิด 3000, 7000, 8081 แล้วใน STEP 3.2 | DNS/NPM มี app และ api แล้วใน ส่วนที่ 4)
+
+2. schema.sql: ในตาราง attachments ใต้บรรทัด storage_path VARCHAR(1024) NOT NULL, ให้เพิ่ม
+  note TEXT NULL,
+
+3. backend/.env (วางทับทั้งไฟล์ | CORS_ORIGIN คั่นด้วย , ห้ามมีช่องว่าง):
+PORT=7000
+CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
+
+DB_HOST=db
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=rootpassword
+DB_NAME=skills_db
+
+JWT_SECRET=testing123
+JWT_EXPIRES=2h
+
+4. frontend/.dockerignore:
+node_modules
+.nuxt
+.output
+dist
+   frontend/.env:
+NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
+
+5. แก้ http://localhost:7000 เป็น http://api.mydomain.lab ใน frontend/nuxt.config.ts (apiBase),
+   frontend/plugins/axios.client.js, frontend/composables/useMenu.js, frontend/pages/index.vue,
+   frontend/pages/users/new.vue และแก้บั๊ก layouts/default.vue, pages/login.vue (โค้ดเต็มดูในแท็บ PES จุดที่ 6-9)
+
+6. docker-compose.yml (วางทับทั้งไฟล์):
+services:
+  db:
+    image: mysql:8.0
+    container_name: pes-db
+    command: &gt;
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: skills_db
+      TZ: Asia/Bangkok
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [pes_net]
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pes-pma
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports: ["8081:80"]
+    depends_on: [db]
+    networks: [pes_net]
+    restart: always
+
+  api:
+    image: 192.168.10.31:5000/pes-backend:latest
+    container_name: pes-api
+    env_file:
+      - ./backend/.env
+    ports: ["7000:7000"]
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks: [pes_net]
+    restart: always
+
+  frontend:
+    image: 192.168.10.31:5000/pes-frontend:latest
+    container_name: pes-frontend
+    environment:
+      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+      NITRO_PORT: 3000
+      HOST: 0.0.0.0
+    ports: ["3000:3000"]
+    depends_on: [api]
+    networks: [pes_net]
+    restart: always
+
+volumes:
+  db_data:
+
+networks:
+  pes_net:
+    driver: bridge
+
+7. .gitlab-ci.yml (วางทับทั้งไฟล์):
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  REGISTRY_URL: "192.168.10.31:5000"
+  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
+  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
+  PROD_SERVER: "user1@192.168.10.32"
+  SSH_PORT: "2222"
+  DEPLOY_DIR: "/home/user1/pes-prod"
+
+# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
+build_job:
+  stage: build
+  script:
+    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
+    - docker build -t $BACKEND_IMAGE ./backend
+    - docker build -t $FRONTEND_IMAGE ./frontend
+
+# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
+test_job:
+  stage: test
+  script:
+    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
+    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+
+# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
+push_job:
+  stage: push
+  script:
+    - echo "=== [3/4] Pushing Images to Private Registry ==="
+    - docker push $BACKEND_IMAGE
+    - docker push $FRONTEND_IMAGE
+
+# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
+deploy_job:
+  stage: deploy
+  script:
+    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
+        cd $DEPLOY_DIR &amp;&amp;
+        sudo docker compose pull api frontend &amp;&amp;
+        sudo docker compose up -d --remove-orphans
+      "
+    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"
+
+8. GitLab: สร้าง Blank project ชื่อ pes-app (Public, ไม่ติ๊ก README)
+   -&gt; ทำ ส่วนที่ 5 ข้อ 3 ซ้ำในโปรเจกต์ pes-app แล้วรันเฉพาะคำสั่ง sudo gitlab-runner register ของข้อ 4 (token glrt- ตัวใหม่, description vm1-shell-runner-pes)
+   -&gt; SSH Key ของ gitlab-runner ใช้ของเดิมได้
+rm -rf .git
+git init
+git switch -c main
+git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git add .
+git commit -m "Deploy PES with 4-stage CI/CD"
+git push -u origin main
+
+9. ตรวจผลหลัง Pipeline เขียว:
+   - http://api.mydomain.lab/health  -&gt; {"service":"okoak",...}  (ถ้าไม่ได้ ลอง http://192.168.10.32:7000/health)
+   - http://192.168.10.32:8081       -&gt; phpMyAdmin เห็น skills_db และ attachments มีคอลัมน์ note
+   - http://app.mydomain.lab/login   -&gt; admin@ccollege.ac.th / password (ตาม hash ใน schema.sql ของ PES)
+   - ถ้าแก้ schema.sql หลัง Deploy ไปแล้ว: บน VM2 รัน cd ~/pes-prod &amp;&amp; sudo docker compose down -v แล้ว Retry job deploy</pre>
     </section>
 
   </main>

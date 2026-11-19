@@ -80,7 +80,11 @@
    - `gitlab.mydomain.lab` $\rightarrow$ `http://192.168.10.31:8080`
    - `dns.mydomain.lab` $\rightarrow$ `http://192.168.10.31:5380`
    - `npm.mydomain.lab` $\rightarrow$ `http://192.168.10.32:81`
-   - `app.mydomain.lab` $\rightarrow$ `http://192.168.10.32:3000` *(ชี้ไปหน้าเว็บ PES Frontend พอร์ต 3000)*
+   - `app.mydomain.lab` $\rightarrow$ `http://192.168.10.32:3000` *(PES Frontend — เปิดสวิตช์ Websockets Support ด้วย)*
+   - `api.mydomain.lab` $\rightarrow$ `http://192.168.10.32:7000` *(PES Backend API — หน้าเว็บเรียก API ผ่านชื่อนี้)*
+   - `registry.mydomain.lab` $\rightarrow$ `http://192.168.10.31:5000`
+
+   *(ใน Technitium DNS ต้องมี A Record `gitlab`, `dns`, `npm`, `app`, `api`, `registry` ชี้ไป `192.168.10.32` ทุกตัว)*
 
 ---
 
@@ -111,12 +115,12 @@
 
 ### 🛠️ จุดที่ 2: แก้ไฟล์ `backend/.env` (เปิด CORS ให้เรียกข้ามเครื่องได้)
 * **สาเหตุที่ต้องแก้:** ของเดิมอนุญาตแค่ `localhost:3000` พอเปิดเว็บผ่าน IP `192.168.10.32:3000` หรือ `app.mydomain.lab` จะติดบล็อก CORS
-* **วิธีแก้:** เปิดไฟล์ `backend/.env` แล้วแก้บรรทัด `CORS_ORIGIN` เป็น:
+* **วิธีแก้:** เปิดไฟล์ `backend/.env` แล้วแก้บรรทัด `CORS_ORIGIN` เป็น (คั่นด้วย `,` ห้ามมีช่องว่าง เพราะโค้ด API ไม่ตัดช่องว่างให้):
 
 ```env
 # Backend env
 PORT=7000
-CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab
+CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
 
 # Database
 DB_HOST=db
@@ -142,18 +146,18 @@ JWT_EXPIRES=2h
    ```
 2. คลิกขวาที่โฟลเดอร์ `frontend` $\rightarrow$ เลือก **New File** ตั้งชื่อว่า **`.env`** แล้ววางบรรทัดนี้ (ชี้ไปที่ API บน VM2):
    ```env
-   NUXT_PUBLIC_API_BASE=http://192.168.10.32:7000
+   NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
    ```
 
 ---
 
-### 🛠️ จุดที่ 4: แก้ไฟล์ `frontend/nuxt.config.ts` (เปลี่ยน `apiBase` ไปที่ `192.168.10.32:7000`)
-* เปิดไฟล์ `frontend/nuxt.config.ts` เลื่อนลงมาที่บรรทัดที่ 52 (ในก้อน `runtimeConfig -> public`) แก้จาก `http://localhost:7000` เป็น **`http://192.168.10.32:7000`**:
+### 🛠️ จุดที่ 4: แก้ไฟล์ `frontend/nuxt.config.ts` (เปลี่ยน `apiBase` ไปที่ `http://api.mydomain.lab`)
+* เปิดไฟล์ `frontend/nuxt.config.ts` เลื่อนลงมาที่บรรทัดที่ 52 (ในก้อน `runtimeConfig -> public`) แก้จาก `http://localhost:7000` เป็น **`http://api.mydomain.lab`**:
 
 ```typescript
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://192.168.10.32:7000'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://api.mydomain.lab'
     }
   },
 ```
@@ -161,11 +165,11 @@ JWT_EXPIRES=2h
 ---
 
 ### 🛠️ จุดที่ 5: แก้ไฟล์ `frontend/plugins/axios.client.js`
-* เปิดไฟล์ `frontend/plugins/axios.client.js` ดูบรรทัดที่ 10 แก้จาก `http://localhost:7000` เป็น **`http://192.168.10.32:7000`**:
+* เปิดไฟล์ `frontend/plugins/axios.client.js` ดูบรรทัดที่ 10 แก้จาก `http://localhost:7000` เป็น **`http://api.mydomain.lab`**:
 
 ```javascript
   const api = axios.create({
-    baseURL: config.public.apiBase || 'http://192.168.10.32:7000',
+    baseURL: config.public.apiBase || 'http://api.mydomain.lab',
     timeout: 15000,
 ```
 
@@ -173,7 +177,7 @@ JWT_EXPIRES=2h
 
 ### 🛠️ จุดที่ 6: แก้ไฟล์ `frontend/composables/useMenu.js` (แก้ลิงก์ API Docs)
 * เปิดไฟล์ `frontend/composables/useMenu.js`:
-  1. กด `Ctrl+H` ค้นหา `http://localhost:7000/docs` แล้วแทนที่ (Replace All 2 จุด) ด้วย **`http://192.168.10.32:7000/docs`**
+  1. กด `Ctrl+H` ค้นหา `http://localhost:7000/docs` แล้วแทนที่ (Replace All 2 จุด) ด้วย **`http://api.mydomain.lab/docs`**
   2. เลื่อนลงไปท้ายสุดของไฟล์ แทนที่ฟังก์ชัน `export function useMenu` ด้วยโค้ดนี้:
 
 ```javascript
@@ -183,7 +187,7 @@ export function useMenu(roleInput = 'user') {
 
   const menu = computed(() => {
     const key = normalizeRole(r.value)
-    const base = String(config.public.apiBase || 'http://192.168.10.32:7000').replace(/\/$/, '')
+    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')
     const sections = MAP[key] || MAP.user
     return sections.map((sec) => ({
       ...sec,
@@ -206,7 +210,7 @@ export function useMenu(roleInput = 'user') {
      ```javascript
      const config = useRuntimeConfig()
      const docsUrl = computed(() => {
-       const base = String(config.public.apiBase || 'http://192.168.10.32:7000').replace(/\/$/, '')
+       const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')
        return `${base}/docs`
      })
      ```
@@ -245,7 +249,7 @@ const handleSubmit = async () => {
   const token = localStorage.getItem("auth_token");
   try {
     await axios.post(
-      `${config.public.apiBase || "http://192.168.10.32:7000"}/api/users`,
+      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,
       {
         name_th: vals.value.name_th,
         email: vals.value.email,
@@ -346,7 +350,7 @@ services:
     image: 192.168.10.31:5000/pes-frontend:latest
     container_name: pes-frontend
     environment:
-      NUXT_PUBLIC_API_BASE: http://192.168.10.32:7000
+      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
@@ -433,7 +437,7 @@ deploy_job:
 ## ส่วนที่ 3: สั่ง Git Push ขึ้น GitLab เพื่อรัน Pipeline อัตโนมัติ
 
 1. เข้าหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`) สร้าง Blank Project ชื่อ **`pes-app`** (เลือก **Public** และติ๊กออก *Initialize repository with a README*)
-2. ผูก Project Runner (ติ๊ก `[✓] Run untagged jobs`) ตามขั้นตอนปกติ
+2. Runner ที่ลงทะเบียนไว้กับโปรเจกต์ `task-app` ใช้กับ `pes-app` ไม่ได้เอง ให้ไปที่ **Settings → CI/CD → Runners → New project runner** ในโปรเจกต์ `pes-app` (ติ๊ก `[✓] Run untagged jobs`) แล้วเอา token `glrt-...` ตัวใหม่ไปรัน `sudo gitlab-runner register` บน VM1 อีกครั้ง (executor `shell`, description `vm1-shell-runner-pes`) ส่วน SSH Key ของ `gitlab-runner` ใช้ของเดิมได้
 3. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` บนเครื่อง PC นักเรียน แล้วรันคำสั่งชุดนี้:
 
 ```bash
@@ -456,11 +460,13 @@ git push -u origin main
 
 เมื่อทั้ง 4 Stages (`build` $\rightarrow$ `test` $\rightarrow$ `push` $\rightarrow$ `deploy`) ขึ้นเครื่องหมายถูกสีเขียวทั้งหมดแล้ว ให้เปิดเบราว์เซอร์ทดสอบ:
 
-1. **เช็ค API Health:** เปิด `http://192.168.10.32:7000/health` $\rightarrow$ ต้องเห็น `{"service":"okoak","time":"..."}`
-2. **เช็ค Swagger API Docs:** เปิด `http://192.168.10.32:7000/docs` $\rightarrow$ ต้องเห็นหน้าเอกสาร Teaching API
+1. **เช็ค API Health:** เปิด `http://api.mydomain.lab/health` $\rightarrow$ ต้องเห็น `{"service":"okoak","time":"..."}` (ถ้าไม่ได้ ลอง `http://192.168.10.32:7000/health` เพื่อแยกว่าเสียที่ NPM หรือที่ API)
+2. **เช็ค Swagger API Docs:** เปิด `http://api.mydomain.lab/docs` $\rightarrow$ ต้องเห็นหน้าเอกสาร Teaching API
 3. **เช็ค phpMyAdmin:** เปิด `http://192.168.10.32:8081` (ผู้ใช้ `root` / รหัส `rootpassword`) $\rightarrow$ เข้าฐานข้อมูล `skills_db` $\rightarrow$ ตาราง `attachments` ต้องมีคอลัมน์ `note`
 4. **เข้าหน้าเว็บระบบประเมินบุคลากร (PES Frontend):**
    - เปิด **`http://app.mydomain.lab/login`** (หรือ `http://192.168.10.32:3000/login`)
-   - ล็อกอินด้วยอีเมล: **`admin@ccollege.ac.th`** | รหัสผ่าน: **`12345678`**
+   - ล็อกอินด้วยอีเมล: **`admin@ccollege.ac.th`** | รหัสผ่าน: **`password`** *(ตาม hash ใน `schema.sql` ของ repo PES ถ้ากรรมการเปลี่ยน ให้ดูคอมเมนต์ในไฟล์)*
    - ต้องเข้าสู่หน้าตารางรายชื่อผู้ใช้ (Users) เมนูซ้ายมีคำว่า `Users`, `Periods`, `API Docs`
    - กดปุ่ม **Create User** สามารถกรอกเพิ่มผู้ใช้ใหม่ได้จริง และหน้า **Upload** สามารถอัปโหลดไฟล์แนบพร้อมบันทึก `note` ได้สมบูรณ์!
+
+> **⚠️ ถ้าแก้ `schema.sql` หลัง Deploy ไปแล้ว:** MySQL รัน `schema.sql` เฉพาะตอน volume ยังว่าง ให้รันบน VM2 `cd ~/pes-prod && sudo docker compose down -v` แล้วกด Retry job `deploy_job`
