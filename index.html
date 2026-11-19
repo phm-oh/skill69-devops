@@ -204,13 +204,13 @@
 
         <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-4">
           <div class="text-xs font-semibold text-amber-300 uppercase">Proxmox Host (Node: oh)</div>
-          <div id="proxmox-value" class="text-lg font-bold font-mono text-amber-200 mt-1">172.16.48.30</div>
-          <div class="text-xs text-slate-300 mt-2">Web UI: <code id="proxmox-webui" class="text-amber-300">https://172.16.48.30:8006</code></div>
+          <div id="proxmox-value" class="text-lg font-bold font-mono text-amber-200 mt-1">192.168.10.30</div>
+          <div class="text-xs text-slate-300 mt-2">Web UI: <code id="proxmox-webui" class="text-amber-300">https://192.168.10.30:8006</code></div>
         </div>
 
         <div class="bg-blue-950/30 border border-blue-500/40 rounded-xl p-4">
           <div class="text-xs font-semibold text-blue-300 uppercase">🟦 VM1 (gitlab-vm : 101)</div>
-          <div id="vm1-value" class="text-lg font-bold font-mono text-blue-200 mt-1">172.16.48.31</div>
+          <div id="vm1-value" class="text-lg font-bold font-mono text-blue-200 mt-1">192.168.10.31</div>
           <div class="text-xs text-slate-300 mt-2 space-y-0.5">
             <div>• DNS: <code class="text-blue-300">53</code>, Web <code class="text-blue-300">:5380</code></div>
             <div>• GitLab CE: <code class="text-blue-300">:8080</code></div>
@@ -220,7 +220,7 @@
 
         <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-xl p-4">
           <div class="text-xs font-semibold text-emerald-300 uppercase">🟩 VM2 (prod-vm : 102)</div>
-          <div id="vm2-value" class="text-lg font-bold font-mono text-emerald-200 mt-1">172.16.48.32</div>
+          <div id="vm2-value" class="text-lg font-bold font-mono text-emerald-200 mt-1">192.168.10.32</div>
           <div class="text-xs text-slate-300 mt-2 space-y-0.5">
             <div>• NPM Proxy: <code class="text-emerald-300">80, 443</code></div>
             <div>• NPM Admin: <code class="text-emerald-300">:81</code></div>
@@ -230,9 +230,9 @@
 
         <div class="bg-purple-950/25 border border-purple-500/30 rounded-xl p-4">
           <div class="text-xs font-semibold text-purple-300 uppercase">💻 PC ลูกข่าย (PC1 - PC3)</div>
-          <div id="pc-range-value" class="text-lg font-bold font-mono text-purple-200 mt-1">.35 / .36 / .37</div>
+          <div id="pc-range-value" class="text-lg font-bold font-mono text-purple-200 mt-1">192.168.20.36 / 192.168.20.37 / 192.168.20.38</div>
           <div class="text-xs text-slate-300 mt-2">
-            ชี้ Preferred DNS มาที่ <code id="dns-target" class="text-purple-300 font-bold">172.16.48.31</code> ตัวเดียวเท่านั้น
+            ชี้ Preferred DNS มาที่ <code id="dns-target" class="text-purple-300 font-bold">192.168.10.31</code> ตัวเดียวเท่านั้น
           </div>
         </div>
       </div>
@@ -270,15 +270,15 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- SECTION 1: PROXMOX HOST (172.16.48.30)                                -->
+    <!-- SECTION 1: PROXMOX HOST (192.168.10.30)                                -->
     <!-- ===================================================================== -->
     <section id="sec-proxmox" class="section-block bg-slate-900 border-2 border-amber-500/30 rounded-2xl overflow-hidden shadow-xl">
       <div class="bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent px-6 py-4 border-b border-amber-500/30 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-3">
           <span class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-extrabold text-sm">ส่วนที่ 1</span>
-          <h2 class="text-lg sm:text-xl font-bold text-amber-200">การตั้งค่าเครื่องแม่ Proxmox Host (IP: 172.16.48.30)</h2>
+          <h2 class="text-lg sm:text-xl font-bold text-amber-200">การตั้งค่าเครื่องแม่ Proxmox Host (IP: 192.168.10.30)</h2>
         </div>
-        <span class="text-xs font-mono text-amber-300 bg-amber-950/60 px-3 py-1 rounded-md border border-amber-500/30">Web UI: https://172.16.48.30:8006</span>
+        <span class="text-xs font-mono text-amber-300 bg-amber-950/60 px-3 py-1 rounded-md border border-amber-500/30">Web UI: https://192.168.10.30:8006</span>
       </div>
 
       <div class="p-5 sm:p-6 space-y-6">
@@ -287,7 +287,7 @@
           <h3 class="font-bold text-amber-300 text-base mb-2">STEP 1.1: นำไฟล์ Ubuntu ISO จาก USB Drive เข้า Proxmox (ทำที่หน้าจอ Shell ของ Proxmox)</h3>
           <ol class="list-decimal list-inside text-sm text-slate-300 space-y-1.5 mb-4">
             <li>เสียบ USB Drive ที่มีไฟล์ <code class="text-amber-300">ubuntu.iso</code> เข้าที่เครื่อง Server</li>
-            <li>เปิดหน้าเว็บ <code class="text-amber-300">https://172.16.48.30:8006</code> $\rightarrow$ คลิกชื่อ Node (เช่น <code class="text-white font-semibold">oh</code>) $\rightarrow$ คลิกเมนู <strong>Shell</strong></li>
+            <li>เปิดหน้าเว็บ <code class="text-amber-300">https://192.168.10.30:8006</code> $\rightarrow$ คลิกชื่อ Node (เช่น <code class="text-white font-semibold">oh</code>) $\rightarrow$ คลิกเมนู <strong>Shell</strong></li>
             <li>รันคำสั่งเช็กชื่อ USB Drive (ดูว่า USB เป็น <code class="text-emerald-300">sdb1</code> หรือ <code class="text-emerald-300">sdc1</code>):</li>
           </ol>
 
@@ -314,8 +314,8 @@ umount /mnt/usb</code></pre>
               <li>1. เลือก Node <code class="text-white">oh</code> $\rightarrow$ <strong>System</strong> $\rightarrow$ <strong>Network</strong> $\rightarrow$ ดับเบิลคลิก <strong>vmbr0</strong>:
                 <ul class="list-disc list-inside pl-4 mt-1 text-slate-400 space-y-1">
                   <li>Bridge ports: <code class="text-amber-300 font-semibold">enp0s31f6</code></li>
-                  <li>IPv4/CIDR: <code class="text-amber-300 font-semibold">172.16.48.30/22</code></li>
-                  <li>Gateway: <code class="text-amber-300 font-semibold">172.16.48.1</code></li>
+                  <li>IPv4/CIDR: <code class="text-amber-300 font-semibold">192.168.10.30/24</code></li>
+                  <li>Gateway: <code class="text-amber-300 font-semibold">192.168.10.1</code></li>
                   <li>กด <strong>OK</strong> $\rightarrow$ กดปุ่ม <strong>Apply Configuration</strong> ด้านบน</li>
                 </ul>
               </li>
@@ -373,7 +373,7 @@ sysctl -p</code></pre>
     </section>
 
     <!-- ===================================================================== -->
-    <!-- SECTION 2: VM1 ONLY (172.16.48.31 - GitLab / DNS / Registry)          -->
+    <!-- SECTION 2: VM1 ONLY (192.168.10.31 - GitLab / DNS / Registry)          -->
     <!-- ===================================================================== -->
     <section id="sec-vm1" class="section-block bg-slate-900 border-2 border-blue-500/40 rounded-2xl overflow-hidden shadow-xl">
       <div class="bg-gradient-to-r from-blue-600/30 via-blue-600/10 to-transparent px-6 py-4 border-b border-blue-500/40 flex flex-wrap items-center justify-between gap-2">
@@ -381,15 +381,15 @@ sysctl -p</code></pre>
           <span class="px-3 py-1 rounded-lg bg-blue-500 text-white font-extrabold text-sm">ส่วนที่ 2 : เฉพาะเครื่อง VM1</span>
           <h2 class="text-lg sm:text-xl font-bold text-blue-200">การตั้งค่า VM1 — GitLab + Technitium DNS + Registry</h2>
         </div>
-        <span class="text-xs font-mono text-blue-200 bg-blue-950/80 px-3 py-1.5 rounded-md border border-blue-400/30 font-bold">IP ของ VM1: 172.16.48.31/22</span>
+        <span class="text-xs font-mono text-blue-200 bg-blue-950/80 px-3 py-1.5 rounded-md border border-blue-400/30 font-bold">IP ของ VM1: 192.168.10.31/24</span>
       </div>
 
       <div class="p-5 sm:p-6 space-y-6">
         <!-- VM1 Step 2.1 & 2.2 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-blue-300 text-base">STEP 2.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM1 (172.16.48.31)</h3>
+          <h3 class="font-bold text-blue-300 text-base">STEP 2.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM1 (192.168.10.31)</h3>
           <div class="text-sm text-slate-300 bg-blue-950/20 border border-blue-500/20 rounded-lg p-3.5">
-            <strong>ตอนติดตั้งหน้า Console ของ VM1:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-blue-300">172.16.48.0/22</code> | Address: <code class="text-blue-300 font-bold">172.16.48.31</code> | Gateway: <code class="text-blue-300">172.16.48.1</code> | Name servers: <code class="text-blue-300">8.8.8.8</code> และหน้า Profile <strong>อย่าลืมติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
+            <strong>ตอนติดตั้งหน้า Console ของ VM1:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-blue-300">192.168.10.0/24</code> | Address: <code class="text-blue-300 font-bold">192.168.10.31</code> | Gateway: <code class="text-blue-300">192.168.10.1</code> | Name servers: <code class="text-blue-300">8.8.8.8</code> และหน้า Profile <strong>อย่าลืมติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
           </div>
 
           <p class="text-sm text-slate-300">เมื่อติดตั้งเสร็จและล็อกอินเข้า <strong>VM1</strong> แล้ว ให้เปิดแก้ไขไฟล์ Netplan (เช็กชื่อไฟล์ใน <code class="text-blue-300">/etc/netplan/</code> ก่อน):</p>
@@ -415,13 +415,13 @@ sysctl -p</code></pre>
   ethernets:
     ens18:
       addresses:
-        - 172.16.48.31/22
+        - 192.168.10.31/24
       nameservers:
         search: [mydomain.lab]
         addresses: [8.8.8.8, 1.1.1.1]
       routes:
         - to: default
-          via: 172.16.48.1</code></pre>
+          via: 192.168.10.1</code></pre>
           </div>
 
           <div class="code-box">
@@ -526,8 +526,7 @@ sudo nano /etc/docker/daemon.json</code></pre>
               </div>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>{
   "insecure-registries": [
-    "172.16.48.10:5000",
-    "172.16.48.31:5000"
+    "192.168.10.31:5000"
   ]
 }</code></pre>
             </div>
@@ -668,7 +667,7 @@ sudo nano docker-compose.yml</code></pre>
     </section>
 
     <!-- ===================================================================== -->
-    <!-- SECTION 3: VM2 ONLY (172.16.48.32 - Production & NPM)                 -->
+    <!-- SECTION 3: VM2 ONLY (192.168.10.32 - Production & NPM)                 -->
     <!-- ===================================================================== -->
     <section id="sec-vm2" class="section-block bg-slate-900 border-2 border-emerald-500/40 rounded-2xl overflow-hidden shadow-xl">
       <div class="bg-gradient-to-r from-emerald-600/30 via-emerald-600/10 to-transparent px-6 py-4 border-b border-emerald-500/40 flex flex-wrap items-center justify-between gap-2">
@@ -676,15 +675,15 @@ sudo nano docker-compose.yml</code></pre>
           <span class="px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-extrabold text-sm">ส่วนที่ 3 : เฉพาะเครื่อง VM2</span>
           <h2 class="text-lg sm:text-xl font-bold text-emerald-200">การตั้งค่า VM2 — Production Server & Nginx Proxy Manager</h2>
         </div>
-        <span class="text-xs font-mono text-emerald-200 bg-emerald-950/80 px-3 py-1.5 rounded-md border border-emerald-400/30 font-bold">IP ของ VM2: 172.16.48.32/22</span>
+        <span class="text-xs font-mono text-emerald-200 bg-emerald-950/80 px-3 py-1.5 rounded-md border border-emerald-400/30 font-bold">IP ของ VM2: 192.168.10.32/24</span>
       </div>
 
       <div class="p-5 sm:p-6 space-y-6">
         <!-- VM2 Step 3.1 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-emerald-300 text-base">STEP 3.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM2 (172.16.48.32)</h3>
+          <h3 class="font-bold text-emerald-300 text-base">STEP 3.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM2 (192.168.10.32)</h3>
           <div class="text-sm text-slate-300 bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3.5">
-            <strong>ตอนติดตั้งหน้า Console ของ VM2:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-emerald-300">172.16.48.0/22</code> | Address: <code class="text-emerald-300 font-bold">172.16.48.32</code> | Gateway: <code class="text-emerald-300">172.16.48.1</code> | Name servers: <code class="text-emerald-300">8.8.8.8</code> และหน้า Profile <strong>ติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
+            <strong>ตอนติดตั้งหน้า Console ของ VM2:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-emerald-300">192.168.10.0/24</code> | Address: <code class="text-emerald-300 font-bold">192.168.10.32</code> | Gateway: <code class="text-emerald-300">192.168.10.1</code> | Name servers: <code class="text-emerald-300">8.8.8.8</code> และหน้า Profile <strong>ติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
           </div>
 
           <div class="code-box">
@@ -699,7 +698,7 @@ sudo nano docker-compose.yml</code></pre>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-emerald-300">[VM2] 2. รายละเอียดในไฟล์ 00-installer-config.yaml (ใช้ IP 172.16.48.32/22)</span>
+              <span class="text-xs font-mono text-emerald-300">[VM2] 2. รายละเอียดในไฟล์ 00-installer-config.yaml (ใช้ IP 192.168.10.32/24)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
@@ -709,13 +708,13 @@ sudo nano docker-compose.yml</code></pre>
   ethernets:
     ens18:
       addresses:
-        - 172.16.48.32/22
+        - 192.168.10.32/24
       nameservers:
         search: [mydomain.lab]
         addresses: [8.8.8.8, 1.1.1.1]
       routes:
         - to: default
-          via: 172.16.48.1</code></pre>
+          via: 192.168.10.1</code></pre>
           </div>
 
           <div class="code-box">
@@ -821,8 +820,7 @@ sudo nano /etc/docker/daemon.json</code></pre>
               </div>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>{
   "insecure-registries": [
-    "172.16.48.10:5000",
-    "172.16.48.31:5000"
+    "192.168.10.31:5000"
   ]
 }</code></pre>
             </div>
@@ -891,12 +889,12 @@ sudo nano docker-compose.yml</code></pre>
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <h3 class="font-bold text-purple-300 text-base">STEP 4.1: ตั้งค่า Zone และ A Record ใน Technitium DNS</h3>
-            <span class="text-xs font-mono bg-blue-950 text-blue-300 px-3 py-1 rounded border border-blue-500/30">URL: http://172.16.48.31:5380 (User: admin | Pass: admin1234)</span>
+            <span class="text-xs font-mono bg-blue-950 text-blue-300 px-3 py-1 rounded border border-blue-500/30">URL: http://192.168.10.31:5380 (User: admin | Pass: admin1234)</span>
           </div>
 
           <ol class="list-decimal list-inside text-sm text-slate-300 space-y-1.5">
             <li>ไปที่เมนู <strong>Zones</strong> ด้านบน $\rightarrow$ กดปุ่ม <strong>Add Zone</strong> $\rightarrow$ ช่อง Zone พิมพ์ <code class="text-amber-300 font-bold">mydomain.lab</code> $\rightarrow$ กด <strong>Add</strong></li>
-            <li>กดปุ่ม <strong>Add Record</strong> เพื่อสร้าง <strong>A Record</strong> ชี้ทุกชื่อโดเมนเว็บไปที่ <strong class="text-emerald-400 underline">172.16.48.32 (เครื่อง VM2 - NPM)</strong> และชี้ registry ไปที่ <strong class="text-blue-400 underline">172.16.48.31</strong> ตามตารางนี้เป๊ะๆ:</li>
+            <li>กดปุ่ม <strong>Add Record</strong> เพื่อสร้าง <strong>A Record</strong> ชี้ทุกชื่อโดเมนเว็บไปที่ <strong class="text-emerald-400 underline">192.168.10.32 (เครื่อง VM2 - NPM)</strong> และชี้ registry ไปที่ <strong class="text-blue-400 underline">192.168.10.31</strong> ตามตารางนี้เป๊ะๆ:</li>
           </ol>
 
           <div class="overflow-x-auto">
@@ -913,31 +911,31 @@ sudo nano docker-compose.yml</code></pre>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">gitlab</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 font-sans text-slate-400">วิ่งเข้า NPM (.32) ก่อน แล้ว NPM ส่งต่อไป .31:8080</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">dns</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 font-sans text-slate-400">วิ่งเข้า NPM (.32) ก่อน แล้ว NPM ส่งต่อไป .31:5380</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">npm</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 font-sans text-slate-400">หน้าเว็บจัดการ Nginx Proxy Manager (.32:81)</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">app</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 font-sans text-slate-400">หน้าเว็บระบบติดตามงาน (Task Tracker) ที่ Deploy สำเร็จ (.32:8080)</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">registry</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-blue-400 font-bold">172.16.48.31</td>
+                  <td class="p-3 text-blue-400 font-bold">192.168.10.31</td>
                   <td class="p-3 font-sans text-slate-400">ชี้ตรงไปที่ Docker Registry บน VM1 (.31:5000)</td>
                 </tr>
               </tbody>
@@ -953,7 +951,7 @@ sudo nano docker-compose.yml</code></pre>
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <h3 class="font-bold text-purple-300 text-base">STEP 4.2: ตั้งค่า Proxy Hosts ใน Nginx Proxy Manager (NPM)</h3>
-            <span class="text-xs font-mono bg-emerald-950 text-emerald-300 px-3 py-1 rounded border border-emerald-500/30">URL: http://172.16.48.32:81 (Login แรก: admin@example.com / changeme)</span>
+            <span class="text-xs font-mono bg-emerald-950 text-emerald-300 px-3 py-1 rounded border border-emerald-500/30">URL: http://192.168.10.32:81 (Login แรก: admin@example.com / changeme)</span>
           </div>
 
           <p class="text-sm text-slate-300">ไปที่เมนู <strong>Hosts</strong> $\rightarrow$ <strong>Proxy Hosts</strong> $\rightarrow$ กดปุ่ม <strong>Add Proxy Host</strong> แล้วสร้างครบทั้ง 4 รายการตามตารางนี้:</p>
@@ -972,25 +970,25 @@ sudo nano docker-compose.yml</code></pre>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">gitlab.mydomain.lab</td>
                   <td class="p-3 text-slate-300">http</td>
-                  <td class="p-3 text-blue-400 font-bold">172.16.48.31</td>
+                  <td class="p-3 text-blue-400 font-bold">192.168.10.31</td>
                   <td class="p-3 text-emerald-400 font-bold">8080</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">dns.mydomain.lab</td>
                   <td class="p-3 text-slate-300">http</td>
-                  <td class="p-3 text-blue-400 font-bold">172.16.48.31</td>
+                  <td class="p-3 text-blue-400 font-bold">192.168.10.31</td>
                   <td class="p-3 text-emerald-400 font-bold">5380 <span class="font-sans text-xs text-rose-400">(ระวังอย่าพิมพ์เป็น 5183 หรือ 5180!)</span></td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">npm.mydomain.lab</td>
                   <td class="p-3 text-slate-300">http</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 text-emerald-400 font-bold">81</td>
                 </tr>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">app.mydomain.lab</td>
                   <td class="p-3 text-slate-300">http</td>
-                  <td class="p-3 text-emerald-400 font-bold">172.16.48.32</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 text-emerald-400 font-bold">8080 <span class="font-sans text-xs text-slate-400">(เว็บ Task Tracker ที่ CI/CD Deploy มาลง)</span></td>
                 </tr>
               </tbody>
@@ -1029,9 +1027,9 @@ ping gitlab.mydomain.lab</code></pre>
           <div class="bg-rose-950/20 border border-rose-500/30 rounded-xl p-4">
             <h4 class="font-bold text-rose-300 text-sm mb-2">🛠️ จุดเช็กด่วน! หากเข้าเว็บ gitlab.mydomain.lab ไม่ได้ (จากปัญหาที่เจอบ่อย)</h4>
             <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
-              <li>1. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วขึ้น <code class="text-rose-300">Server: one.one.one.one (1.1.1.1)</code>:</strong> แปลว่าในการ์ดแลน PC ยังไม่ได้ลบ DNS <code class="text-rose-300">1.1.1.1</code> ออก ให้ไปลบออกให้เหลือแค่ <code class="text-emerald-300">172.16.48.31</code> ตัวเดียว</li>
-              <li>2. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วได้ IP <code class="text-rose-300">172.168.16.x</code>:</strong> แปลว่าพิมพ์ IP ในหน้า Technitium DNS ผิดวง ต้องแก้เป็น <code class="text-emerald-300">172.16.48.32</code> แล้วรัน <code class="text-amber-300">ipconfig /flushdns</code> บน PC</li>
-              <li>3. <strong>ได้ IP <code class="text-emerald-300">172.16.48.32</code> ถูกต้องแล้ว แต่เปิดเว็บขึ้น <code class="text-rose-300">ERR_CONNECTION_TIMED_OUT</code>:</strong> เช็กว่าบน VM2 รัน <code class="text-emerald-300">sudo ufw allow 80/tcp</code> หรือยัง และลองเปิดผ่านโหมดไม่ระบุตัวตน (Incognito) เพื่อเลี่ยงแคชเบราว์เซอร์</li>
+              <li>1. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วขึ้น <code class="text-rose-300">Server: one.one.one.one (1.1.1.1)</code>:</strong> แปลว่าในการ์ดแลน PC ยังไม่ได้ลบ DNS <code class="text-rose-300">1.1.1.1</code> ออก ให้ไปลบออกให้เหลือแค่ <code class="text-emerald-300">192.168.10.31</code> ตัวเดียว</li>
+              <li>2. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วได้ IP <code class="text-rose-300">172.168.16.x</code>:</strong> แปลว่าพิมพ์ IP ในหน้า Technitium DNS ผิดวง ต้องแก้เป็น <code class="text-emerald-300">192.168.10.32</code> แล้วรัน <code class="text-amber-300">ipconfig /flushdns</code> บน PC</li>
+              <li>3. <strong>ได้ IP <code class="text-emerald-300">192.168.10.32</code> ถูกต้องแล้ว แต่เปิดเว็บขึ้น <code class="text-rose-300">ERR_CONNECTION_TIMED_OUT</code>:</strong> เช็กว่าบน VM2 รัน <code class="text-emerald-300">sudo ufw allow 80/tcp</code> หรือยัง และลองเปิดผ่านโหมดไม่ระบุตัวตน (Incognito) เพื่อเลี่ยงแคชเบราว์เซอร์</li>
             </ul>
           </div>
         </div>
@@ -1127,7 +1125,7 @@ sudo systemctl enable --now gitlab-runner</code></pre>
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>echo "172.16.48.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/hosts</code></pre>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>echo "192.168.10.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/hosts</code></pre>
           </div>
 
           <div class="code-box">
@@ -1165,7 +1163,7 @@ sudo systemctl status gitlab-runner --no-pager</code></pre>
         <!-- Step 5.4: SSH Key from gitlab-runner (VM1) to user1@VM2 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
           <h3 class="font-bold text-orange-300 text-base">STEP 5.4: สร้าง SSH Key ให้ <code class="text-white">gitlab-runner</code> บน VM1 ข้ามไปสั่งงาน VM2 (.32) โดยไม่ถามรหัสผ่าน</h3>
-          <p class="text-xs sm:text-sm text-slate-300">ขั้นตอนนี้สำคัญมาก! เพราะตอนรัน Stage <code class="text-amber-300">deploy</code> ตัว GitLab Runner (ซึ่งทำงานภายใต้ชื่อผู้ใช้ <code class="text-orange-300">gitlab-runner</code> บน VM1) จะต้อง SSH ข้ามไปที่ <code class="text-emerald-300">user1@172.16.48.32</code> พอร์ต <code class="text-emerald-300">2222</code> เพื่อสั่งดึง Image และรันเว็บแอป</p>
+          <p class="text-xs sm:text-sm text-slate-300">ขั้นตอนนี้สำคัญมาก! เพราะตอนรัน Stage <code class="text-amber-300">deploy</code> ตัว GitLab Runner (ซึ่งทำงานภายใต้ชื่อผู้ใช้ <code class="text-orange-300">gitlab-runner</code> บน VM1) จะต้อง SSH ข้ามไปที่ <code class="text-emerald-300">user1@192.168.10.32</code> พอร์ต <code class="text-emerald-300">2222</code> เพื่อสั่งดึง Image และรันเว็บแอป</p>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
@@ -1176,13 +1174,13 @@ sudo systemctl status gitlab-runner --no-pager</code></pre>
             </div>
             <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo su - gitlab-runner
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
-ssh-copy-id -p 2222 user1@172.16.48.32</code></pre>
+ssh-copy-id -p 2222 user1@192.168.10.32</code></pre>
           </div>
           <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
             ⚠️ ถ้า <strong>SSH Login ครั้งแรกไม่ผ่าน</strong> หรือเคย login กับ VM2 แล้ว key เปลี่ยน/ล้าสมัย ให้ล้าง cache host key ก่อน:
-            <code class="text-white font-bold">ssh-keygen -R "[172.16.48.31]:2222"</code>
+            <code class="text-white font-bold">ssh-keygen -R "[192.168.10.31]:2222"</code>
             หรือถ้าต้องการล้าง host key ของ VM2 แบบตรงไปตรงมา ให้ใช้:
-            <code class="text-white font-bold">ssh-keygen -R "172.16.48.32"</code>
+            <code class="text-white font-bold">ssh-keygen -R "192.168.10.32"</code>
             แล้วลอง login ใหม่อีกครั้ง
           </div>
           <p class="text-xs text-slate-400">* ตอนรัน <code class="text-amber-300">ssh-copy-id</code> ระบบจะถาม <code class="text-white">Are you sure you want to continue connecting (yes/no)?</code> ให้พิมพ์ <code class="text-emerald-300 font-bold">yes</code> แล้วกรอกรหัสผ่านของ <code class="text-emerald-300">user1</code> บนเครื่อง VM2</p>
@@ -1194,7 +1192,7 @@ ssh-copy-id -p 2222 user1@172.16.48.32</code></pre>
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>ssh -p 2222 user1@172.16.48.32 "sudo docker ps"
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>ssh -p 2222 user1@192.168.10.32 "sudo docker ps"
 rm -f ~/.bash_logout
 exit</code></pre>
           </div>
@@ -1448,9 +1446,9 @@ EXPOSE 80
   - deploy
 
 variables:
-  REGISTRY_URL: "172.16.48.31:5000"
-  IMAGE_NAME: "172.16.48.31:5000/task-app:latest"
-  PROD_SERVER: "user1@172.16.48.32"
+  REGISTRY_URL: "192.168.10.31:5000"
+  IMAGE_NAME: "192.168.10.31:5000/task-app:latest"
+  PROD_SERVER: "user1@192.168.10.32"
   SSH_PORT: "2222"
 
 # 1. Stage Build: สร้าง Docker Image จาก Dockerfile
@@ -1525,7 +1523,7 @@ git push -u origin main</code></pre>
               <li>เมื่อระบบถาม Username / Password ตอน Push: ให้ใส่ Username = <code class="text-amber-300 font-bold">root</code> และ Password = รหัสผ่าน root ของ GitLab</li>
               <li>เปิดหน้าเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab/root/task-app</code>) $\rightarrow$ ไปที่เมนูซ้ายมือ <strong>Build</strong> $\rightarrow$ <strong>Pipelines</strong></li>
               <li>จะเห็นสถานะ Pipeline รันผ่านเป็น <strong>สีเขียว (Passed)</strong> ครบทั้ง 4 Stages: <code class="text-emerald-300">build</code> $\rightarrow$ <code class="text-emerald-300">test</code> $\rightarrow$ <code class="text-emerald-300">push</code> $\rightarrow$ <code class="text-emerald-300">deploy</code></li>
-              <li>เปิดแท็บใหม่บนเบราว์เซอร์เข้า <strong class="text-emerald-400 underline">http://app.mydomain.lab</strong> (หรือ <code class="text-emerald-300">http://172.16.48.32:8080</code>) จะพบหน้าเว็บ <strong>ระบบติดตามงานและสถานะ (Task Tracker)</strong> พร้อมใช้งานทันที!</li>
+              <li>เปิดแท็บใหม่บนเบราว์เซอร์เข้า <strong class="text-emerald-400 underline">http://app.mydomain.lab</strong> (หรือ <code class="text-emerald-300">http://192.168.10.32:8080</code>) จะพบหน้าเว็บ <strong>ระบบติดตามงานและสถานะ (Task Tracker)</strong> พร้อมใช้งานทันที!</li>
             </ol>
           </div>
         </div>
@@ -1925,25 +1923,25 @@ deploy_job:
       <pre id="full-plaintext" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed select-all">################################################################################
 #
 #   คู่มือซ้อมแข่งขัน ปวส. 2569: PROXMOX + VM1 (GitLab/DNS) + VM2 (Prod/NPM)
-#   (ฉบับสมบูรณ์: แยกส่วน Proxmox / VM1 / VM2 ชัดเจน | วงแลน 172.16.48.0/22)
+#   (ฉบับสมบูรณ์: แยกส่วน Proxmox / VM1 / VM2 ชัดเจน | วง Server 192.168.10.0/24 | วง PC 192.168.20.0/24)
 #
-#   ผังการจัดสรร IP Address (Subnet Mask: 255.255.252.0 หรือ /22):
-#     - Gateway กรรมการ: 172.16.48.1
-#     - Proxmox Host:    172.16.48.30  (https://172.16.48.30:8006)
-#     - VM 1 (GitLab):   172.16.48.31  (DNS :53/:5380, GitLab :8080, Registry :5000)
-#     - VM 2 (Prod/NPM): 172.16.48.32  (NPM Proxy :80/:443, NPM Admin :81, Web :8080)
-#     - PC1, PC2, PC3:   172.16.48.35, 172.16.48.36, 172.16.48.37 (DNS: 172.16.48.31)
+#   ผังการจัดสรร IP Address (Subnet Mask: 255.255.255.0 หรือ /24):
+#     - Gateway VLAN 10: 192.168.10.1  (SVI VLAN 10 บนสวิตช์ TP-Link)
+#     - Proxmox Host:    192.168.10.30  (https://192.168.10.30:8006)
+#     - VM 1 (GitLab):   192.168.10.31  (DNS :53/:5380, GitLab :8080, Registry :5000)
+#     - VM 2 (Prod/NPM): 192.168.10.32  (NPM Proxy :80/:443, NPM Admin :81, Web :8080)
+#     - PC1, PC2, PC3:   192.168.20.36, 192.168.20.37, 192.168.20.38 (VLAN 20, Gateway: 192.168.20.1, DNS: 192.168.10.31)
 #
 ################################################################################
 
 
 ================================================================================
-  ส่วนที่ 1: การตั้งค่าเครื่องแม่ PROXMOX HOST (IP: 172.16.48.30)
+  ส่วนที่ 1: การตั้งค่าเครื่องแม่ PROXMOX HOST (IP: 192.168.10.30)
 ================================================================================
 
 [STEP 1.1] นำไฟล์ Ubuntu ISO จาก USB เข้า Proxmox (ทำที่หน้าจอ Shell ของ Proxmox)
 1. เสียบ USB Drive เข้าที่เครื่อง Server
-2. เข้าเว็บ Proxmox (https://172.16.48.30:8006) -> เลือก Node (เช่น oh) -> เลือก Shell
+2. เข้าเว็บ Proxmox (https://192.168.10.30:8006) -> เลือก Node (เช่น oh) -> เลือก Shell
 3. เช็กชื่อ USB และดึงไฟล์ ISO เข้าเครื่อง:
 lsblk
 mkdir -p /mnt/usb
@@ -1954,8 +1952,8 @@ umount /mnt/usb
 [STEP 1.2] ตั้งค่า Network และ Firewall บน Proxmox (หน้าเว็บ UI)
 1. ไปที่ System -> Network -> แก้ไข vmbr0:
    - Bridge ports: enp0s31f6
-   - IPv4/CIDR: 172.16.48.30/22
-   - Gateway: 172.16.48.1
+   - IPv4/CIDR: 192.168.10.30/24
+   - Gateway: 192.168.10.1
    - กด OK -> กด Apply Configuration
 2. ไปที่ System -> DNS -> ตั้ง DNS Server: 8.8.8.8
 3. ปิด Firewall เครื่องแม่ (Datacenter -> Firewall -> Options -> Firewall เป็น No)
@@ -1979,14 +1977,14 @@ sysctl -p
 
 
 ================================================================================
-  ส่วนที่ 2: เฉพาะเครื่อง VM1 (IP: 172.16.48.31) -> DNS + GitLab + Registry
+  ส่วนที่ 2: เฉพาะเครื่อง VM1 (IP: 192.168.10.31) -> DNS + GitLab + Registry
 ================================================================================
 
 [STEP 2.1] ติดตั้ง Ubuntu และตั้งค่า Netplan บน VM1
 1. หน้า Network ตอนติดตั้ง เลือก Edit IPv4 -> Manual:
-   - Subnet: 172.16.48.0/22
-   - Address: 172.16.48.31
-   - Gateway: 172.16.48.1
+   - Subnet: 192.168.10.0/24
+   - Address: 192.168.10.31
+   - Gateway: 192.168.10.1
    - Name servers: 8.8.8.8
 2. หน้า Profile -> ติ๊ก [x] Install OpenSSH server -> ติดตั้งจนเสร็จแล้ว Reboot
 3. ล็อกอินเข้า VM1 แล้วแก้ไฟล์ Netplan:
@@ -1998,13 +1996,13 @@ network:
   ethernets:
     ens18:
       addresses:
-        - 172.16.48.31/22
+        - 192.168.10.31/24
       nameservers:
         search: [mydomain.lab]
         addresses: [8.8.8.8, 1.1.1.1]
       routes:
         - to: default
-          via: 172.16.48.1
+          via: 192.168.10.1
 ---------------------------------
 
 4. บันทึกแล้วรันคำสั่งบน VM1:
@@ -2035,7 +2033,8 @@ sudo ufw default allow outgoing
 sudo ufw allow 2222/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
-sudo ufw allow from 172.16.48.0/22 to any port 53
+sudo ufw allow from 192.168.10.0/24 to any port 53
+sudo ufw allow from 192.168.20.0/24 to any port 53
 sudo ufw allow 5380/tcp
 sudo ufw allow 5000/tcp
 sudo ufw allow 8080/tcp
@@ -2051,8 +2050,7 @@ sudo nano /etc/docker/daemon.json
 --- เนื้อหาไฟล์ /etc/docker/daemon.json ---
 {
   "insecure-registries": [
-    "172.16.48.10:5000",
-    "172.16.48.31:5000"
+    "192.168.10.31:5000"
   ]
 }
 ------------------------------------------
@@ -2121,14 +2119,14 @@ sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 
 
 ================================================================================
-  ส่วนที่ 3: เฉพาะเครื่อง VM2 (IP: 172.16.48.32) -> Prod & Nginx Proxy Manager
+  ส่วนที่ 3: เฉพาะเครื่อง VM2 (IP: 192.168.10.32) -> Prod & Nginx Proxy Manager
 ================================================================================
 
 [STEP 3.1] ติดตั้ง Ubuntu และตั้งค่า Netplan บน VM2
 1. หน้า Network ตอนติดตั้ง เลือก Edit IPv4 -> Manual:
-   - Subnet: 172.16.48.0/22
-   - Address: 172.16.48.32
-   - Gateway: 172.16.48.1
+   - Subnet: 192.168.10.0/24
+   - Address: 192.168.10.32
+   - Gateway: 192.168.10.1
    - Name servers: 8.8.8.8
 2. หน้า Profile -> ติ๊ก [x] Install OpenSSH server -> ติดตั้งจนเสร็จแล้ว Reboot
 3. ล็อกอินเข้า VM2 แล้วแก้ไฟล์ Netplan:
@@ -2140,13 +2138,13 @@ network:
   ethernets:
     ens18:
       addresses:
-        - 172.16.48.32/22
+        - 192.168.10.32/24
       nameservers:
         search: [mydomain.lab]
         addresses: [8.8.8.8, 1.1.1.1]
       routes:
         - to: default
-          via: 172.16.48.1
+          via: 192.168.10.1
 ---------------------------------
 
 4. บันทึกแล้วรันคำสั่งบน VM2:
@@ -2191,8 +2189,7 @@ sudo nano /etc/docker/daemon.json
 --- เนื้อหาไฟล์ /etc/docker/daemon.json ---
 {
   "insecure-registries": [
-    "172.16.48.10:5000",
-    "172.16.48.31:5000"
+    "192.168.10.31:5000"
   ]
 }
 ------------------------------------------
@@ -2222,25 +2219,25 @@ sudo docker compose up -d
   ส่วนที่ 4: ตั้งค่าหน้าเว็บ DNS + NPM + เครื่องลูกข่าย PC
 ================================================================================
 
-1. ตั้งค่า Technitium DNS (เข้าเว็บ http://172.16.48.31:5380 | admin / admin1234):
+1. ตั้งค่า Technitium DNS (เข้าเว็บ http://192.168.10.31:5380 | admin / admin1234):
    - ไปที่เมนู Zones -> Add Zone -> ชื่อโซน: mydomain.lab -> กด Add
-   - กด Add Record สร้าง A Record ชี้ไปที่ 172.16.48.32 (VM2) ทั้งหมด:
-       * Name: gitlab    | Type: A | IP Address: 172.16.48.32
-       * Name: dns       | Type: A | IP Address: 172.16.48.32
-       * Name: npm       | Type: A | IP Address: 172.16.48.32
-       * Name: registry  | Type: A | IP Address: 172.16.48.32
+   - กด Add Record สร้าง A Record ชี้ไปที่ 192.168.10.32 (VM2) ทั้งหมด:
+       * Name: gitlab    | Type: A | IP Address: 192.168.10.32
+       * Name: dns       | Type: A | IP Address: 192.168.10.32
+       * Name: npm       | Type: A | IP Address: 192.168.10.32
+       * Name: registry  | Type: A | IP Address: 192.168.10.32
    - ไปที่เมนู Settings -> Proxy & Forwarders -> ช่อง Forwarders ใส่ 8.8.8.8 และ 1.1.1.1 -> Save
 
-2. ตั้งค่า Nginx Proxy Manager (เข้าเว็บ http://172.16.48.32:81 | admin@example.com / changeme):
+2. ตั้งค่า Nginx Proxy Manager (เข้าเว็บ http://192.168.10.32:81 | admin@example.com / changeme):
    - ไปที่ Hosts -> Proxy Hosts -> Add Proxy Host:
-       * ตัวที่ 1: Domain: gitlab.mydomain.lab | Scheme: http | Forward IP: 172.16.48.31 | Port: 8080
-       * ตัวที่ 2: Domain: dns.mydomain.lab    | Scheme: http | Forward IP: 172.16.48.31 | Port: 5380
-       * ตัวที่ 3: Domain: npm.mydomain.lab    | Scheme: http | Forward IP: 172.16.48.32 | Port: 81
+       * ตัวที่ 1: Domain: gitlab.mydomain.lab | Scheme: http | Forward IP: 192.168.10.31 | Port: 8080
+       * ตัวที่ 2: Domain: dns.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.31 | Port: 5380
+       * ตัวที่ 3: Domain: npm.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 81
 
-3. ตั้งค่าเครื่อง PC ลูกข่าย (PC1 = 172.16.48.35, PC2 = .36, PC3 = .37):
-   - Subnet Mask: 255.255.252.0
-   - Default Gateway: 172.16.48.1
-   - Preferred DNS Server: 172.16.48.31 (ใส่ตัวเดียว ห้ามใส่ 1.1.1.1 เด็ดขาด)
+3. ตั้งค่าเครื่อง PC ลูกข่าย VLAN 20 (PC1 = 192.168.20.36, PC2 = .37, PC3 = .38 หรือรับ DHCP .100+):
+   - Subnet Mask: 255.255.255.0
+   - Default Gateway: 192.168.20.1 (SVI VLAN 20 ของสวิตช์ TP-Link)
+   - Preferred DNS Server: 192.168.10.31 (ใส่ตัวเดียว ห้ามใส่ 1.1.1.1 เด็ดขาด)
    - เปิด CMD ทดสอบ:
        ipconfig /flushdns
        nslookup gitlab.mydomain.lab
@@ -2265,7 +2262,7 @@ sudo apt install -y gitlab-runner
 sudo usermod -aG docker gitlab-runner
 sudo systemctl restart docker
 sudo systemctl enable --now gitlab-runner
-echo "172.16.48.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/hosts
+echo "192.168.10.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/hosts
 
 sudo gitlab-runner register \
   --non-interactive \
@@ -2285,11 +2282,11 @@ sudo gitlab-runner verify
 sudo systemctl status gitlab-runner --no-pager
 จากนั้นกลับไปหน้าโปรเจกต์ Settings -> CI/CD -> Runners ตรวจว่ามี Runner ที่ลงทะเบียนไว้
 
-5. สร้าง SSH Key ในชื่อ gitlab-runner บน VM1 ส่งไปที่ user1@172.16.48.32 พอร์ต 2222:
+5. สร้าง SSH Key ในชื่อ gitlab-runner บน VM1 ส่งไปที่ user1@192.168.10.32 พอร์ต 2222:
 sudo su - gitlab-runner
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
-ssh-copy-id -p 2222 user1@172.16.48.32
-ssh -p 2222 user1@172.16.48.32 "sudo docker ps"
+ssh-copy-id -p 2222 user1@192.168.10.32
+ssh -p 2222 user1@192.168.10.32 "sudo docker ps"
 rm -f ~/.bash_logout
 exit
 
@@ -2311,9 +2308,9 @@ stages:
   - deploy
 
 variables:
-  REGISTRY_URL: "172.16.48.31:5000"
-  IMAGE_NAME: "172.16.48.31:5000/task-app:latest"
-  PROD_SERVER: "user1@172.16.48.32"
+  REGISTRY_URL: "192.168.10.31:5000"
+  IMAGE_NAME: "192.168.10.31:5000/task-app:latest"
+  PROD_SERVER: "user1@192.168.10.32"
   SSH_PORT: "2222"
 
 build_job:
@@ -2389,28 +2386,36 @@ git push -u origin main</pre>
       };
     }
 
+    // แทนค่า IP แบบปลอดภัย: เนื้อหาในหน้าเขียนเป็นค่าเริ่มต้น (192.168.10.x / 192.168.20.x) ไว้แล้ว
+    // ฟังก์ชันนี้แทนเฉพาะ IP ที่ตรงทั้งตัว (ไม่ให้ .1 ไปโดน .10/.100) และแทนรอบเดียวจากข้อความต้นฉบับเสมอ
+    function escapeRegExp(text) {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    const defaultIpEntries = Object.entries(defaultIpConfig).sort((a, b) => b[1].length - a[1].length);
+    const defaultIpPattern = new RegExp(
+      '(?<![0-9.])(' + defaultIpEntries.map(([, ip]) => escapeRegExp(ip)).join('|') + ')(?![0-9]|\\.[0-9])',
+      'g'
+    );
+    const defaultIpToKey = Object.fromEntries(defaultIpEntries.map(([key, ip]) => [ip, key]));
+
     function replaceIpsInString(str, config) {
-      let s = str;
-      s = s.replaceAll('172.16.48.0/22', '192.168.10.0/24');
-      s = s.replaceAll('255.255.252.0', '255.255.255.0');
-      s = s.replaceAll('172.16.48.30/22', `${config.proxmox}/24`);
-      s = s.replaceAll('172.16.48.31/22', `${config.vm1}/24`);
-      s = s.replaceAll('172.16.48.32/22', `${config.vm2}/24`);
-      s = s.replaceAll('172.16.48.1', config.gateway);
-      s = s.replaceAll('192.168.10.1', config.gateway);
-      s = s.replaceAll('172.16.48.30', config.proxmox);
-      s = s.replaceAll('192.168.10.30', config.proxmox);
-      s = s.replaceAll('172.16.48.31', config.vm1);
-      s = s.replaceAll('192.168.10.31', config.vm1);
-      s = s.replaceAll('172.16.48.32', config.vm2);
-      s = s.replaceAll('192.168.10.32', config.vm2);
-      s = s.replaceAll('172.16.48.35', config.pc1);
-      s = s.replaceAll('192.168.20.36', config.pc1);
-      s = s.replaceAll('172.16.48.36', config.pc2);
-      s = s.replaceAll('192.168.20.37', config.pc2);
-      s = s.replaceAll('172.16.48.37', config.pc3);
-      s = s.replaceAll('192.168.20.38', config.pc3);
-      return s;
+      return str.replace(defaultIpPattern, match => config[defaultIpToKey[match]] || match);
+    }
+
+    const originalTextNodes = [];
+    function collectIpTextNodes() {
+      const root = document.querySelector('main');
+      if (!root) return;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        defaultIpPattern.lastIndex = 0;
+        if (defaultIpPattern.test(node.nodeValue)) {
+          originalTextNodes.push({ node, base: node.nodeValue });
+        }
+      }
+      defaultIpPattern.lastIndex = 0;
     }
 
     function updateIpDisplay() {
@@ -2423,41 +2428,22 @@ git push -u origin main</pre>
       const dnsTarget = document.getElementById('dns-target');
       const proxmoxWebui = document.getElementById('proxmox-webui');
       const liveIpSummary = document.getElementById('live-ip-summary');
-      const rawTextEl = document.getElementById('full-plaintext');
 
-      if (gatewayValue) gatewayValue.innerText = config.gateway;
-      if (proxmoxValue) proxmoxValue.innerText = config.proxmox;
-      if (vm1Value) vm1Value.innerText = config.vm1;
-      if (vm2Value) vm2Value.innerText = config.vm2;
-      if (dnsTarget) dnsTarget.innerText = config.vm1;
-      if (proxmoxWebui) proxmoxWebui.innerText = `https://${config.proxmox}:8006`;
-      if (pcRangeValue) pcRangeValue.innerText = `${config.pc1} / ${config.pc2} / ${config.pc3}`;
+      if (gatewayValue) gatewayValue.textContent = config.gateway;
+      if (proxmoxValue) proxmoxValue.textContent = config.proxmox;
+      if (vm1Value) vm1Value.textContent = config.vm1;
+      if (vm2Value) vm2Value.textContent = config.vm2;
+      if (dnsTarget) dnsTarget.textContent = config.vm1;
+      if (proxmoxWebui) proxmoxWebui.textContent = `https://${config.proxmox}:8006`;
+      if (pcRangeValue) pcRangeValue.textContent = `${config.pc1} / ${config.pc2} / ${config.pc3}`;
       if (liveIpSummary) {
-        liveIpSummary.innerText = `Gateway ${config.gateway} • Proxmox ${config.proxmox} • VM1 ${config.vm1} • VM2 ${config.vm2} • PC ${config.pc1} / ${config.pc2} / ${config.pc3}`;
+        liveIpSummary.textContent = `Gateway ${config.gateway} • Proxmox ${config.proxmox} • VM1 ${config.vm1} • VM2 ${config.vm2} • PC ${config.pc1} / ${config.pc2} / ${config.pc3}`;
       }
 
-      document.querySelectorAll('main pre code, main code, main td, main span, main li, main p, main h2, main h3').forEach(el => {
-        if (el.children.length === 0 && (el.innerText.includes('172.16.48.') || el.innerText.includes('192.168.') || el.dataset.baseText)) {
-          if (!el.dataset.baseText) {
-            el.dataset.baseText = el.innerText;
-          }
-          el.innerText = replaceIpsInString(el.dataset.baseText, config);
-        }
+      originalTextNodes.forEach(item => {
+        const updated = replaceIpsInString(item.base, config);
+        if (item.node.nodeValue !== updated) item.node.nodeValue = updated;
       });
-
-      document.querySelectorAll('main pre code').forEach(el => {
-        if (!el.dataset.baseCode) {
-          el.dataset.baseCode = el.innerText;
-        }
-        el.innerText = replaceIpsInString(el.dataset.baseCode, config);
-      });
-
-      if (rawTextEl) {
-        if (!rawTextEl.dataset.baseText) {
-          rawTextEl.dataset.baseText = rawTextEl.innerText;
-        }
-        rawTextEl.innerText = replaceIpsInString(rawTextEl.dataset.baseText, config);
-      }
     }
 
     function applyDefaultIpConfig() {
@@ -2487,6 +2473,7 @@ git push -u origin main</pre>
       }, 2600);
     }
 
+    collectIpTextNodes();
     updateIpDisplay();
 
     function fallbackCopyText(text) {

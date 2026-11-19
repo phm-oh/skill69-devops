@@ -370,7 +370,7 @@
   <p><strong>การไหลของแพ็กเก็ตที่ต้องต่อกันได้จริง:</strong></p>
   <ol>
     <li>โน้ตบุ๊คใน VLAN 20 ใช้เกตเวย์ <code>192.168.20.1</code> (SVI ของสวิตช์ TP-Link) ไม่ใช่ไอพีของ MikroTik</li>
-    <li>เวลาคุยข้ามไปเครื่องใน VLAN 10 (เช่น Proxmox <code>192.168.10.10</code>) สวิตช์ TP-Link ส่งข้ามวงให้เองโดยตรง แพ็กเก็ตไม่ผ่าน MikroTik</li>
+    <li>เวลาคุยข้ามไปเครื่องใน VLAN 10 (เช่น Proxmox <code>192.168.10.30</code>) สวิตช์ TP-Link ส่งข้ามวงให้เองโดยตรง แพ็กเก็ตไม่ผ่าน MikroTik</li>
     <li>เวลาออกอินเทอร์เน็ต สวิตช์ TP-Link ส่งตาม Default Route (<code>0.0.0.0/0</code>) ไปที่ <code>192.168.99.1</code> (<code>ether3</code>) แล้ว MikroTik ทำ NAT ออก <code>ether1</code></li>
     <li>ขากลับ MikroTik มี Route <code>192.168.10.0/24</code> และ <code>192.168.20.0/24</code> ชี้กลับมาที่ <code>192.168.99.2</code> (ขา VLAN 99 ของสวิตช์ TP-Link)</li>
   </ol>
@@ -479,17 +479,17 @@
       </tr>
       <tr>
         <td><strong>Proxmox Host</strong></td>
-        <td><code>192.168.10.10/24</code></td>
+        <td><code>192.168.10.30/24</code></td>
         <td>เกตเวย์ <code>192.168.10.1</code> ต่อพอร์ต 2 <strong>ไม่ใส่ VLAN tag</strong></td>
       </tr>
       <tr>
         <td><strong>VM1 (เช่น GitLab / Jenkins)</strong></td>
-        <td><code>192.168.10.11/24</code></td>
+        <td><code>192.168.10.31/24</code></td>
         <td>เกตเวย์ <code>192.168.10.1</code> <strong>ไม่ใส่ VLAN tag</strong></td>
       </tr>
       <tr>
         <td><strong>VM2 (เช่น Production)</strong></td>
-        <td><code>192.168.10.12/24</code></td>
+        <td><code>192.168.10.32/24</code></td>
         <td>เกตเวย์ <code>192.168.10.1</code> <strong>ไม่ใส่ VLAN tag</strong></td>
       </tr>
       <tr>
@@ -956,7 +956,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </ul>
 
   <h4>ขั้น ข — ตั้งค่า Excluded Address เพื่อบังคับให้แจกเฉพาะ <code>.100 – .199</code></h4>
-  <p>คลิกเปลี่ยนไปที่แท็บ <strong>Excluded Address</strong> (อยู่ถัดจากแท็บ Pool Setting) แล้วกดปุ่ม <strong><code>+ Add</code></strong> เพิ่ม 4 แถวนี้เพื่อกันไม่ให้สวิตช์แจกไอพีทับเกตเวย์และเซิร์ฟเวอร์ (<code>.10, .11, .12</code>):</p>
+  <p>คลิกเปลี่ยนไปที่แท็บ <strong>Excluded Address</strong> (อยู่ถัดจากแท็บ Pool Setting) แล้วกดปุ่ม <strong><code>+ Add</code></strong> เพิ่ม 4 แถวนี้เพื่อกันไม่ให้สวิตช์แจกไอพีทับเกตเวย์และเซิร์ฟเวอร์ (<code>.30, .31, .32</code>):</p>
   <table>
     <thead>
       <tr>
@@ -1089,8 +1089,8 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
 
   <h3>6.3 ทดสอบ Inter-VLAN ไปยังเครื่องเซิร์ฟเวอร์ Proxmox (พอร์ต 2–8)</h3>
   <ul>
-    <li>ต่อสาย LAN จากเครื่อง Proxmox (ตั้งไอพี <code>192.168.10.10/24</code> เกตเวย์ <code>192.168.10.1</code> <strong>ไม่ใส่ VLAN tag</strong>) เข้าที่ <strong>พอร์ต 2</strong> ของสวิตช์ TP-Link</li>
-    <li>จากโน้ตบุ๊ควง 20 (พอร์ต 9) สั่ง <code>ping 192.168.10.10</code> ต้องติด และเปิดเว็บเข้า <code>https://192.168.10.10:8006</code> ได้ทันที</li>
+    <li>ต่อสาย LAN จากเครื่อง Proxmox (ตั้งไอพี <code>192.168.10.30/24</code> เกตเวย์ <code>192.168.10.1</code> <strong>ไม่ใส่ VLAN tag</strong>) เข้าที่ <strong>พอร์ต 2</strong> ของสวิตช์ TP-Link</li>
+    <li>จากโน้ตบุ๊ควง 20 (พอร์ต 9) สั่ง <code>ping 192.168.10.30</code> ต้องติด และเปิดเว็บเข้า <code>https://192.168.10.30:8006</code> ได้ทันที</li>
   </ul>
 
   <!-- บทที่ 7 -->
@@ -1160,7 +1160,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><strong>Inter-VLAN Routing</strong></td>
         <td style="text-align: center;"><strong>3</strong></td>
         <td>หน้า <code>L3 Features &rarr; Interface</code> มี SVI <code>192.168.10.1</code> และ <code>192.168.20.1</code> สถานะ Enable</td>
-        <td>จากโน้ตบุ๊ควง 20 ปิงข้ามไป <code>192.168.10.1</code> และ <code>192.168.10.10</code> ติด</td>
+        <td>จากโน้ตบุ๊ควง 20 ปิงข้ามไป <code>192.168.10.1</code> และ <code>192.168.10.30</code> ติด</td>
       </tr>
       <tr>
         <td><strong>DHCP ทั้งสองวง + Snooping</strong></td>
