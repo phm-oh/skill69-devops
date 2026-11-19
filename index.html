@@ -894,7 +894,7 @@ sudo nano docker-compose.yml</code></pre>
 
           <ol class="list-decimal list-inside text-sm text-slate-300 space-y-1.5">
             <li>ไปที่เมนู <strong>Zones</strong> ด้านบน $\rightarrow$ กดปุ่ม <strong>Add Zone</strong> $\rightarrow$ ช่อง Zone พิมพ์ <code class="text-amber-300 font-bold">mydomain.lab</code> $\rightarrow$ กด <strong>Add</strong></li>
-            <li>กดปุ่ม <strong>Add Record</strong> เพื่อสร้าง <strong>A Record</strong> ชี้ทุกชื่อโดเมนเว็บไปที่ <strong class="text-emerald-400 underline">192.168.10.32 (เครื่อง VM2 - NPM)</strong> และชี้ registry ไปที่ <strong class="text-blue-400 underline">192.168.10.31</strong> ตามตารางนี้เป๊ะๆ:</li>
+            <li>กดปุ่ม <strong>Add Record</strong> เพื่อสร้าง <strong>A Record</strong> ชี้ทุกชื่อโดเมนเว็บไปที่ <strong class="text-emerald-400 underline">192.168.10.32 (เครื่อง VM2 - NPM)</strong> รวมถึง registry ด้วย (ทุกชื่อเข้า NPM ก่อน แล้ว NPM ส่งต่อไปเครื่องจริง) ตามตารางนี้เป๊ะๆ:</li>
           </ol>
 
           <div class="overflow-x-auto">
@@ -935,8 +935,8 @@ sudo nano docker-compose.yml</code></pre>
                 <tr>
                   <td class="p-3 text-amber-300 font-bold">registry</td>
                   <td class="p-3 text-slate-300">A</td>
-                  <td class="p-3 text-blue-400 font-bold">192.168.10.31</td>
-                  <td class="p-3 font-sans text-slate-400">ชี้ตรงไปที่ Docker Registry บน VM1 (.31:5000)</td>
+                  <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
+                  <td class="p-3 font-sans text-slate-400">วิ่งเข้า NPM (.32) ก่อน แล้ว NPM ส่งต่อไป Docker Registry ที่ .31:5000 (ส่วน CI ยัง push ตรงไป 192.168.10.31:5000 เหมือนเดิม)</td>
                 </tr>
               </tbody>
             </table>
@@ -954,7 +954,7 @@ sudo nano docker-compose.yml</code></pre>
             <span class="text-xs font-mono bg-emerald-950 text-emerald-300 px-3 py-1 rounded border border-emerald-500/30">URL: http://192.168.10.32:81 (Login แรก: admin@example.com / changeme)</span>
           </div>
 
-          <p class="text-sm text-slate-300">ไปที่เมนู <strong>Hosts</strong> $\rightarrow$ <strong>Proxy Hosts</strong> $\rightarrow$ กดปุ่ม <strong>Add Proxy Host</strong> แล้วสร้างครบทั้ง 4 รายการตามตารางนี้:</p>
+          <p class="text-sm text-slate-300">ไปที่เมนู <strong>Hosts</strong> $\rightarrow$ <strong>Proxy Hosts</strong> $\rightarrow$ กดปุ่ม <strong>Add Proxy Host</strong> แล้วสร้างครบทั้ง 5 รายการตามตารางนี้:</p>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs sm:text-sm bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
@@ -990,6 +990,12 @@ sudo nano docker-compose.yml</code></pre>
                   <td class="p-3 text-slate-300">http</td>
                   <td class="p-3 text-emerald-400 font-bold">192.168.10.32</td>
                   <td class="p-3 text-emerald-400 font-bold">8080 <span class="font-sans text-xs text-slate-400">(เว็บ Task Tracker ที่ CI/CD Deploy มาลง)</span></td>
+                </tr>
+                <tr>
+                  <td class="p-3 text-amber-300 font-bold">registry.mydomain.lab</td>
+                  <td class="p-3 text-slate-300">http</td>
+                  <td class="p-3 text-blue-400 font-bold">192.168.10.31</td>
+                  <td class="p-3 text-emerald-400 font-bold">5000 <span class="font-sans text-xs text-slate-400">(Docker Registry บน VM1)</span></td>
                 </tr>
               </tbody>
             </table>
@@ -2225,6 +2231,7 @@ sudo docker compose up -d
        * Name: gitlab    | Type: A | IP Address: 192.168.10.32
        * Name: dns       | Type: A | IP Address: 192.168.10.32
        * Name: npm       | Type: A | IP Address: 192.168.10.32
+       * Name: app       | Type: A | IP Address: 192.168.10.32
        * Name: registry  | Type: A | IP Address: 192.168.10.32
    - ไปที่เมนู Settings -> Proxy & Forwarders -> ช่อง Forwarders ใส่ 8.8.8.8 และ 1.1.1.1 -> Save
 
@@ -2233,6 +2240,8 @@ sudo docker compose up -d
        * ตัวที่ 1: Domain: gitlab.mydomain.lab | Scheme: http | Forward IP: 192.168.10.31 | Port: 8080
        * ตัวที่ 2: Domain: dns.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.31 | Port: 5380
        * ตัวที่ 3: Domain: npm.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 81
+       * ตัวที่ 4: Domain: app.mydomain.lab    | Scheme: http | Forward IP: 192.168.10.32 | Port: 8080
+       * ตัวที่ 5: Domain: registry.mydomain.lab | Scheme: http | Forward IP: 192.168.10.31 | Port: 5000
 
 3. ตั้งค่าเครื่อง PC ลูกข่าย VLAN 20 (PC1 = 192.168.20.36, PC2 = .37, PC3 = .38 หรือรับ DHCP .100+):
    - Subnet Mask: 255.255.255.0
