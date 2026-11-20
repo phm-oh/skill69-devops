@@ -440,7 +440,7 @@ sudo hostnamectl set-hostname gitlab.mydomain.lab</code></pre>
 
         <!-- VM1 Step 2.2: Users, SSH, UFW -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-blue-300 text-base">STEP 2.2: สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และเปิด UFW Firewall บน VM1</h3>
+          <h3 class="font-bold text-blue-300 text-base">STEP 2.2: สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และปิด UFW บน VM1</h3>
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="code-box">
@@ -483,24 +483,15 @@ sudo ss -tlnp | grep 2222</code></pre>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-blue-300">[VM1] 4. ตั้งค่า UFW Firewall สำหรับ VM1 (ครบทุกพอร์ต: SSH, HTTP/S, DNS ACL, 5380, 5000, 8080)</span>
+              <span class="text-xs font-mono text-blue-300">[VM1] 4. ปิด UFW (ห้องแข่งไม่เปิดทีละพอร์ต)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-blue-500 hover:bg-blue-400 text-white font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow from 192.168.10.0/24 to any port 53
-sudo ufw allow from 192.168.20.0/24 to any port 53
-sudo ufw allow 5380/tcp
-sudo ufw allow 5000/tcp
-sudo ufw allow 8080/tcp
-sudo ufw enable</code></pre>
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw disable
+sudo ufw status</code></pre>
           </div>
-          <p class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">⚠️ พอร์ตที่ Docker เปิดด้วย <code>ports:</code> (เช่น 53, 5000, 8080) ไม่ผ่านกฎ UFW เพราะ Docker เขียน iptables เอง กฎ <code>ufw allow from ... port 53</code> จึงกันใครไม่ได้จริง ถ้าต้องจำกัดว่าใครใช้ DNS ได้ ให้ทำ ACL ที่สวิตช์ TP-Link</p>
+          <p class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">คำสั่งเดียวกันทั้ง VM1 และ VM2 <code class="text-white">sudo ufw status</code> ต้องขึ้น <code class="text-white">Status: inactive</code> ไม่ต้องจำพอร์ต 2222, 53, 5380, 5000, 8080</p>
         </div>
 
         <!-- VM1 Step 2.3: Docker & Insecure Registry -->
@@ -736,7 +727,7 @@ sudo hostnamectl set-hostname prod.mydomain.lab</code></pre>
 
         <!-- VM2 Step 3.2: Users, SSH, UFW -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-emerald-300 text-base">STEP 3.2: สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และตั้งค่า UFW บน VM2</h3>
+          <h3 class="font-bold text-emerald-300 text-base">STEP 3.2: สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และปิด UFW บน VM2</h3>
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="code-box">
@@ -779,22 +770,14 @@ sudo ss -tlnp | grep 2222</code></pre>
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-emerald-300">[VM2] 4. ตั้งค่า UFW Firewall บน VM2 (เปิด 2222, 80, 81, 443, 3000, 7000, 8080, 8081)</span>
+              <span class="text-xs font-mono text-emerald-300">[VM2] 4. ปิด UFW (ชุดเดียวกับ VM1)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 81/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 3000/tcp
-sudo ufw allow 7000/tcp
-sudo ufw allow 8080/tcp
-sudo ufw allow 8081/tcp
-sudo ufw enable</code></pre>
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw disable
+sudo ufw status</code></pre>
+            <p class="text-xs text-amber-300">ต้องเห็น <code class="text-white">Status: inactive</code> พอร์ต 80, 81, 443, 2222, 3000, 7000, 8080, 8081 ผ่านได้โดยไม่ต้อง allow ทีละตัว</p>
           </div>
         </div>
 
@@ -1054,7 +1037,7 @@ ping gitlab.mydomain.lab</code></pre>
             <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
               <li>1. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วขึ้น <code class="text-rose-300">Server: one.one.one.one (1.1.1.1)</code>:</strong> แปลว่าในการ์ดแลน PC ยังไม่ได้ลบ DNS <code class="text-rose-300">1.1.1.1</code> ออก ให้ไปลบออกให้เหลือแค่ <code class="text-emerald-300">192.168.10.31</code> ตัวเดียว</li>
               <li>2. <strong>สั่ง <code class="text-amber-300">nslookup</code> แล้วได้ IP อื่นที่ไม่ใช่ <code class="text-rose-300">192.168.10.32</code>:</strong> แปลว่าพิมพ์ IP ในหน้า Technitium DNS ผิด ต้องแก้เป็น <code class="text-emerald-300">192.168.10.32</code> แล้วรัน <code class="text-amber-300">ipconfig /flushdns</code> บน PC</li>
-              <li>3. <strong>ได้ IP <code class="text-emerald-300">192.168.10.32</code> ถูกต้องแล้ว แต่เปิดเว็บขึ้น <code class="text-rose-300">ERR_CONNECTION_TIMED_OUT</code>:</strong> เช็กว่าบน VM2 รัน <code class="text-emerald-300">sudo ufw allow 80/tcp</code> หรือยัง และลองเปิดผ่านโหมดไม่ระบุตัวตน (Incognito) เพื่อเลี่ยงแคชเบราว์เซอร์</li>
+              <li>3. <strong>ได้ IP <code class="text-emerald-300">192.168.10.32</code> ถูกต้องแล้ว แต่เปิดเว็บขึ้น <code class="text-rose-300">ERR_CONNECTION_TIMED_OUT</code>:</strong> บน VM2 รัน <code class="text-emerald-300">sudo ufw status</code> ต้องเป็น <code class="text-emerald-300">inactive</code> ถ้ายัง active ให้รัน <code class="text-emerald-300">sudo ufw disable</code> แล้วลองเปิดผ่านโหมดไม่ระบุตัวตน (Incognito)</li>
             </ul>
           </div>
         </div>
@@ -1576,19 +1559,17 @@ git push -u origin main</code></pre>
 
         <!-- PES Pre-check on VM1 & VM2 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: ตั้งค่าเพิ่มเติมบน VM2 (192.168.10.32) เพื่อรับโปรเจกต์ PES (พอร์ต 3000, 7000, 8081)</h3>
-          <p class="text-xs sm:text-sm text-slate-300">เนื่องจากโปรเจกต์ <code class="text-white">PES</code> มีทั้ง Frontend (พอร์ต <code class="text-emerald-300">3000</code>), Backend API (พอร์ต <code class="text-emerald-300">7000</code>), และ phpMyAdmin (พอร์ต <code class="text-emerald-300">8081</code>) ให้รันคำสั่งเปิดพอร์ต UFW บน <strong>VM2</strong> เพิ่มดังนี้:</p>
+          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: เช็ก VM2 ก่อนรับ PES (พอร์ต 3000, 7000, 8081)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">UFW ปิดไปแล้วตั้งแต่ STEP 3.2 ไม่ต้องเปิดพอร์ต <code class="text-emerald-300">3000</code>, <code class="text-emerald-300">7000</code>, <code class="text-emerald-300">8081</code> เพิ่ม ถ้ายังไม่แน่ใจให้รันซ้ำ:</p>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">[VM2] เปิดพอร์ต UFW สำหรับ PES (3000, 7000, 8081)</span>
+              <span class="text-xs font-mono text-cyan-300">[VM2] ปิด UFW ซ้ำได้ ไม่ต้อง allow พอร์ต PES</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw allow 3000/tcp
-sudo ufw allow 7000/tcp
-sudo ufw allow 8081/tcp
-sudo ufw reload</code></pre>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw disable
+sudo ufw status</code></pre>
           </div>
           <div class="text-xs text-slate-400">
             * เช็กว่าทำ STEP 4.1–4.2 ครบ: DNS มี <code class="text-amber-300">app</code> และ <code class="text-amber-300">api</code> และ NPM มี <code class="text-amber-300">app.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:3000</code> กับ <code class="text-amber-300">api.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:7000</code><br>
@@ -2084,7 +2065,7 @@ sudo chmod 600 /etc/netplan/00-installer-config.yaml
 sudo netplan apply
 sudo hostnamectl set-hostname gitlab.mydomain.lab
 
-[STEP 2.2] สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และเปิด UFW บน VM1
+[STEP 2.2] สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และปิด UFW บน VM1
 1. สร้าง User และตั้งค่า Sudo ไม่ถามรหัสผ่าน:
 sudo adduser user1
 sudo adduser user2
@@ -2103,18 +2084,9 @@ sudo nano /etc/ssh/sshd_config
 if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
 sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
-3. ตั้งค่า UFW Firewall บน VM1:
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow from 192.168.10.0/24 to any port 53
-sudo ufw allow from 192.168.20.0/24 to any port 53
-sudo ufw allow 5380/tcp
-sudo ufw allow 5000/tcp
-sudo ufw allow 8080/tcp
-sudo ufw enable
+3. ปิด UFW บน VM1 (ไม่ต้องจำพอร์ต, status ต้องเป็น inactive):
+sudo ufw disable
+sudo ufw status
 
 [STEP 2.3] ติดตั้ง Docker และตั้งค่า Insecure Registry บน VM1
 sudo apt update
@@ -2228,7 +2200,7 @@ sudo chmod 600 /etc/netplan/00-installer-config.yaml
 sudo netplan apply
 sudo hostnamectl set-hostname prod.mydomain.lab
 
-[STEP 3.2] สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และเปิด UFW บน VM2
+[STEP 3.2] สร้าง Users, ตั้งค่า Sudo, เปลี่ยนพอร์ต SSH และปิด UFW บน VM2
 1. สร้าง User และตั้งค่า Sudo ไม่ถามรหัสผ่าน:
 sudo adduser user1
 sudo adduser user2
@@ -2247,18 +2219,9 @@ sudo nano /etc/ssh/sshd_config
 if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
 sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
-3. ตั้งค่า UFW Firewall บน VM2 (เปิด 2222, 80, 81, 443, 3000, 7000, 8080, 8081):
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 81/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 3000/tcp
-sudo ufw allow 7000/tcp
-sudo ufw allow 8080/tcp
-sudo ufw allow 8081/tcp
-sudo ufw enable
+3. ปิด UFW บน VM2 (ชุดเดียวกับ VM1, status ต้องเป็น inactive):
+sudo ufw disable
+sudo ufw status
 
 [STEP 3.3] ติดตั้ง Docker และรัน Nginx Proxy Manager (NPM) บน VM2
 sudo apt update
@@ -2452,7 +2415,7 @@ CI/CD:   git push -&gt; GitLab (.31) -&gt; Runner shell บน VM1: build -&gt; 
          -&gt; ssh user1@192.168.10.32 -p 2222 -&gt; docker compose pull + up -d (ใน ~/pes-prod)
 
 1. เตรียม: คัดลอก PES เป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
-   (UFW ของ VM2 เปิด 3000, 7000, 8081 แล้วใน STEP 3.2 | DNS/NPM มี app และ api แล้วใน ส่วนที่ 4)
+   (UFW ของ VM2 ปิดแล้วตั้งแต่ STEP 3.2 ไม่ต้อง allow 3000/7000/8081 | DNS/NPM มี app และ api แล้วใน ส่วนที่ 4)
 
 2. schema.sql: ในตาราง attachments ใต้บรรทัด storage_path VARCHAR(1024) NOT NULL, ให้เพิ่ม
   note TEXT NULL,

@@ -23,17 +23,10 @@
 ก่อนจะส่งโค้ด `PES` ขึ้น GitLab ให้ตรวจสอบว่าบน `VM1` และ `VM2` ตั้งค่าเหล่านี้ครบแล้ว:
 
 ### 1.1 บนเครื่อง `VM1 (192.168.10.31)`
-1. **เปิด UFW Firewall รับ DNS ทั้งจาก VLAN 10 และ VLAN 20:**
+1. **ปิด UFW ทั้งก้อน** ห้องแข่งไม่เปิดทีละพอร์ต คำสั่งเดียวกันกับ VM2 และ `sudo ufw status` ต้องขึ้น `Status: inactive`:
    ```bash
-   sudo ufw allow 2222/tcp
-   sudo ufw allow 80/tcp
-   sudo ufw allow 443/tcp
-   sudo ufw allow from 192.168.10.0/24 to any port 53
-   sudo ufw allow from 192.168.20.0/24 to any port 53
-   sudo ufw allow 5380/tcp
-   sudo ufw allow 5000/tcp
-   sudo ufw allow 8080/tcp
-   sudo ufw enable
+   sudo ufw disable
+   sudo ufw status
    ```
 2. **ตั้งค่า Insecure Registry (`/etc/docker/daemon.json`):**
    ```json
@@ -55,17 +48,10 @@
    ```
 
 ### 1.2 บนเครื่อง `VM2 (192.168.10.32)`
-1. **เปิด UFW Firewall สำหรับพอร์ตของ `PES` (`3000`, `7000`, `8081`):**
+1. **ปิด UFW ทั้งก้อน** ไม่ต้อง `ufw allow` พอร์ต `3000`, `7000`, `8081`:
    ```bash
-   sudo ufw allow 2222/tcp
-   sudo ufw allow 80/tcp
-   sudo ufw allow 81/tcp
-   sudo ufw allow 443/tcp
-   sudo ufw allow 3000/tcp
-   sudo ufw allow 7000/tcp
-   sudo ufw allow 8080/tcp
-   sudo ufw allow 8081/tcp
-   sudo ufw enable
+   sudo ufw disable
+   sudo ufw status
    ```
 2. **ตั้งค่า Insecure Registry (`/etc/docker/daemon.json`) บน `VM2` ด้วย (เพื่อให้ `VM2` ดึง Image จาก `192.168.10.31:5000` ได้):**
    ```json
