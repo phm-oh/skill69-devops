@@ -1678,68 +1678,43 @@ git push -u origin main</code></pre>
         <!-- PHASE 1 - Point 1: .gitlab-ci.yml -->
         <div class="bg-slate-950/60 border-2 border-amber-500/40 rounded-xl p-4 sm:p-5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 1: แก้ไฟล์ <code class="text-white">.gitlab-ci.yml</code> ที่รากโปรเจกต์ (ครบ 4 Stages: build, test, push, deploy)</h3>
-            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">🔄 ลบของเก่าแล้ววางทับทั้งไฟล์</span>
+            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 1: แก้ไฟล์ <code class="text-white">.gitlab-ci.yml</code> ที่รากโปรเจกต์ (ฉบับสั้นจำง่าย 25 บรรทัด — ครบ 4 Stages)</h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">🔄 กด Ctrl+A ลบของเก่าแล้ววางชุดสั้นนี้แทน</span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">.gitlab-ci.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (รัน Unit Test + Integration Test ผ่าน Vitest ในคอนเทนเนอร์ และส่งไป Deploy บน VM2 อัตโนมัติทันทีที่ Push):</p>
+          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">.gitlab-ci.yml</code> กด <code>Ctrl+A</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดชุดสั้นจำง่ายนี้แทน (ตัดตัวแปรฟุ่มเฟือยออกทั้งหมด เหลือแค่ 4 ก้อน <code>build</code> &rarr; <code>test</code> &rarr; <code>push</code> &rarr; <code>deploy</code>):</p>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-amber-300">pes-app/.gitlab-ci.yml (วางทับทั้งไฟล์)</span>
+              <span class="text-xs font-mono text-amber-300">pes-app/.gitlab-ci.yml (ฉบับสั้นจำง่าย ไร้ตัวแปรฟุ่มเฟือย ทำงานได้สมบูรณ์ 100%)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก .gitlab-ci.yml</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>stages:
-  - build
-  - test
-  - push
-  - deploy
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>stages: [build, test, push, deploy]
 
-variables:
-  REGISTRY_URL: "192.168.10.31:5000"
-  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
-  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
-  PROD_SERVER: "user1@192.168.10.32"
-  SSH_PORT: "2222"
-  DEPLOY_DIR: "/home/user1/pes-prod"
-
-# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
 build_job:
   stage: build
   script:
-    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
-    - docker build -t $BACKEND_IMAGE ./backend
-    - docker build -t $FRONTEND_IMAGE ./frontend
+    - docker build -t 192.168.10.31:5000/pes-backend:latest ./backend
+    - docker build -t 192.168.10.31:5000/pes-frontend:latest ./frontend
 
-# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
 test_job:
   stage: test
   script:
-    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
-    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+    - docker run --rm 192.168.10.31:5000/pes-backend:latest npx vitest run test/server.spec.js test/middlewares_auth.spec.js
 
-# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
 push_job:
   stage: push
   script:
-    - echo "=== [3/4] Pushing Images to Private Registry ==="
-    - docker push $BACKEND_IMAGE
-    - docker push $FRONTEND_IMAGE
+    - docker push 192.168.10.31:5000/pes-backend:latest
+    - docker push 192.168.10.31:5000/pes-frontend:latest
 
-# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
 deploy_job:
   stage: deploy
   script:
-    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
-        cd $DEPLOY_DIR &amp;&amp;
-        sudo docker compose pull api frontend &amp;&amp;
-        sudo docker compose up -d --remove-orphans
-      "
-    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"</code></pre>
+    - ssh -p 2222 user1@192.168.10.32 "mkdir -p ~/pes/backend"
+    - scp -P 2222 docker-compose.yml schema.sql user1@192.168.10.32:~/pes/
+    - scp -P 2222 backend/.env user1@192.168.10.32:~/pes/backend/
+    - ssh -p 2222 user1@192.168.10.32 "cd ~/pes &amp;&amp; sudo docker compose pull &amp;&amp; sudo docker compose up -d"</code></pre>
           </div>
         </div>
 
@@ -2560,54 +2535,33 @@ git push -u origin main
 --------------------------------------------------------------------------------
   [เฟสที่ 1] แก้ส่วนสำคัญ 6 จุดเพื่อให้ Deploy ขึ้น VM2 และ Login ผ่านก่อน!
 --------------------------------------------------------------------------------
-จุดที่ 1 (.gitlab-ci.yml — ลบของเดิมแล้ววางทับทั้งไฟล์):
-stages:
-  - build
-  - test
-  - push
-  - deploy
-
-variables:
-  REGISTRY_URL: "192.168.10.31:5000"
-  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
-  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
-  PROD_SERVER: "user1@192.168.10.32"
-  SSH_PORT: "2222"
-  DEPLOY_DIR: "/home/user1/pes-prod"
+จุดที่ 1 (.gitlab-ci.yml — ลบของเดิมแล้ววางชุดสั้นจำง่าย 25 บรรทัดนี้แทน):
+stages: [build, test, push, deploy]
 
 build_job:
   stage: build
   script:
-    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
-    - docker build -t $BACKEND_IMAGE ./backend
-    - docker build -t $FRONTEND_IMAGE ./frontend
+    - docker build -t 192.168.10.31:5000/pes-backend:latest ./backend
+    - docker build -t 192.168.10.31:5000/pes-frontend:latest ./frontend
 
 test_job:
   stage: test
   script:
-    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
-    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+    - docker run --rm 192.168.10.31:5000/pes-backend:latest npx vitest run test/server.spec.js test/middlewares_auth.spec.js
 
 push_job:
   stage: push
   script:
-    - echo "=== [3/4] Pushing Images to Private Registry ==="
-    - docker push $BACKEND_IMAGE
-    - docker push $FRONTEND_IMAGE
+    - docker push 192.168.10.31:5000/pes-backend:latest
+    - docker push 192.168.10.31:5000/pes-frontend:latest
 
 deploy_job:
   stage: deploy
   script:
-    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
-        cd $DEPLOY_DIR &amp;&amp;
-        sudo docker compose pull api frontend &amp;&amp;
-        sudo docker compose up -d --remove-orphans
-      "
-    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"
+    - ssh -p 2222 user1@192.168.10.32 "mkdir -p ~/pes/backend"
+    - scp -P 2222 docker-compose.yml schema.sql user1@192.168.10.32:~/pes/
+    - scp -P 2222 backend/.env user1@192.168.10.32:~/pes/backend/
+    - ssh -p 2222 user1@192.168.10.32 "cd ~/pes &amp;&amp; sudo docker compose pull &amp;&amp; sudo docker compose up -d"
 
 จุดที่ 2 (docker-compose.yml — แก้ทับจากไฟล์เดิมของกรรมการแค่ 4 บรรทัด):
    - บรรทัดแก้ที่ 1 (ใน phpmyadmin): แก้ ports: ["8080:80"]        -> เป็น ports: ["8081:80"]

@@ -32,61 +32,36 @@
 
 # 🚀 เฟสที่ 1 (จุดที่ 1 ถึง 6): แก้ส่วนสำคัญให้ Deploy ขึ้น VM2 และ Login ผ่านก่อน!
 
-### 🛠️ [เฟส 1] จุดที่ 1: แก้ไฟล์ `.gitlab-ci.yml` ที่รากโปรเจกต์ (🔄 ลบของเก่าแล้ววางทับทั้งไฟล์)
-เปิดไฟล์ `.gitlab-ci.yml` ลบของเดิมออกทั้งหมด แล้ววางโค้ด 4 Stages (`build`, `test`, `push`, `deploy`) ชุดนี้แทน:
+### 🛠️ [เฟส 1] จุดที่ 1: แก้ไฟล์ `.gitlab-ci.yml` ที่รากโปรเจกต์ (🔄 ลบของเก่าแล้ววางชุดสั้นจำง่าย 25 บรรทัดนี้แทน)
+เปิดไฟล์ `.gitlab-ci.yml` กด `Ctrl+A` ลบของเดิมออกทั้งหมด แล้ววางโค้ด 4 Stages (`build`, `test`, `push`, `deploy`) ชุดสั้นจำง่ายนี้แทน:
 
 ```yaml
-stages:
-  - build
-  - test
-  - push
-  - deploy
+stages: [build, test, push, deploy]
 
-variables:
-  REGISTRY_URL: "192.168.10.31:5000"
-  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
-  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
-  PROD_SERVER: "user1@192.168.10.32"
-  SSH_PORT: "2222"
-  DEPLOY_DIR: "/home/user1/pes-prod"
-
-# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
 build_job:
   stage: build
   script:
-    - echo "=== [1/4] Building Backend & Frontend Docker Images ==="
-    - docker build -t $BACKEND_IMAGE ./backend
-    - docker build -t $FRONTEND_IMAGE ./frontend
+    - docker build -t 192.168.10.31:5000/pes-backend:latest ./backend
+    - docker build -t 192.168.10.31:5000/pes-frontend:latest ./frontend
 
-# 2. Stage Test: รัน Unit Test (JWT Auth Middleware) และ Integration Test (GET /health)
 test_job:
   stage: test
   script:
-    - echo "=== [2/4] Running Unit & Integration Tests (Vitest) ==="
-    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+    - docker run --rm 192.168.10.31:5000/pes-backend:latest npx vitest run test/server.spec.js test/middlewares_auth.spec.js
 
-# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
 push_job:
   stage: push
   script:
-    - echo "=== [3/4] Pushing Images to Private Registry ==="
-    - docker push $BACKEND_IMAGE
-    - docker push $FRONTEND_IMAGE
+    - docker push 192.168.10.31:5000/pes-backend:latest
+    - docker push 192.168.10.31:5000/pes-frontend:latest
 
-# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
 deploy_job:
   stage: deploy
   script:
-    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
-        cd $DEPLOY_DIR &&
-        sudo docker compose pull api frontend &&
-        sudo docker compose up -d --remove-orphans
-      "
-    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"
+    - ssh -p 2222 user1@192.168.10.32 "mkdir -p ~/pes/backend"
+    - scp -P 2222 docker-compose.yml schema.sql user1@192.168.10.32:~/pes/
+    - scp -P 2222 backend/.env user1@192.168.10.32:~/pes/backend/
+    - ssh -p 2222 user1@192.168.10.32 "cd ~/pes && sudo docker compose pull && sudo docker compose up -d"
 ```
 
 ---
