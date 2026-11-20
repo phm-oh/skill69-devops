@@ -247,6 +247,35 @@
     .port-cell.v1  { border-color: var(--purple); background: #faf5ff; color: #5b21b6; }
     .port-cell.sfp { border-color: var(--slate-300); background: #f1f5f9; color: #64748b; }
 
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      max-width: 960px;
+      margin: 0 auto 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: var(--navy);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .site-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      background: #1d4ed8;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .site-nav a.alt { background: #0d9488; }
+    .site-nav a.back { background: #334155; }
+
+    h2[id] { scroll-margin-top: 72px; }
+
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -299,6 +328,13 @@
   </style>
 </head>
 <body>
+
+<nav class="site-nav no-print">
+  <a class="back" href="index.html">กลับคู่มือ VM</a>
+  <a href="#mikrotik">ตั้งค่า MikroTik</a>
+  <a class="alt" href="#tplink">ตั้งค่า TP-Link</a>
+  <a href="#test">ต่อสายและทดสอบ</a>
+</nav>
 
 <div class="page-container">
 
@@ -556,7 +592,7 @@
   </table>
 
   <!-- บทที่ 4 -->
-  <h2>4. ตั้งค่า MikroTik E50UG (ด้วยโปรแกรม Winbox)</h2>
+  <h2 id="mikrotik">4. ตั้งค่า MikroTik E50UG (ด้วยโปรแกรม Winbox)</h2>
   <p><em>ทำบนเครื่องที่ยังไม่ต่อสาย <code>ether3</code> เข้าสวิตช์ ต่อโน้ตบุ๊คที่ <code>ether2</code> (หรือเข้าผ่าน MAC Address ในแท็บ Neighbors)</em></p>
 
   <h3>4.1 รีเซ็ตเป็นเครื่องเปล่า (No Default Configuration)</h3>
@@ -746,7 +782,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </div>
 
   <!-- บทที่ 5 -->
-  <h2>5. ตั้งค่าสวิตช์ TP-Link Omada TL-SG3428MP (เว็บ GUI แบบจับมือทำ)</h2>
+  <h2 id="tplink">5. ตั้งค่าสวิตช์ TP-Link Omada TL-SG3428MP (เว็บ GUI แบบจับมือทำ)</h2>
   <p><em>ทำบนเครื่องสวิตช์ที่ยังไม่ต่อพอร์ต 1 เข้ากับ MikroTik ให้เสียบสาย LAN จากโน้ตบุ๊คเข้าที่ <strong>พอร์ต 24</strong> ของสวิตช์</em></p>
 
   <h3>5.1 รีเซ็ตและเข้าเครื่องสวิตช์ครั้งแรก</h3>
@@ -1065,7 +1101,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </ol>
 
   <!-- บทที่ 6 -->
-  <h2>6. ต่อสายลิงก์ แล้วทดสอบทีละขั้น</h2>
+  <h2 id="test">6. ต่อสายลิงก์ แล้วทดสอบทีละขั้น</h2>
   <p>ต่อสาย LAN เชื่อมระหว่าง <strong>MikroTik พอร์ต <code>ether3</code></strong> กับ <strong>TP-Link พอร์ต <code>1</code> (<code>1/0/1</code>)</strong> เท่านั้น <em>(ห้ามต่อ <code>ether2</code> เข้าสวิตช์)</em> แล้วไล่ทดสอบตามลำดับนี้:</p>
 
   <h3>6.1 ทดสอบลิงก์ชั้น 3 ระหว่าง MikroTik กับ TP-Link</h3>
