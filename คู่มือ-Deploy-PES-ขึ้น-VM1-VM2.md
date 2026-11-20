@@ -295,14 +295,17 @@ const handleSubmit = async () => {
 
 ---
 
-### 🛠️ จุดที่ 10: แก้ไฟล์ `docker-compose.yml` ที่รากของโปรเจกต์ (สำหรับรันบน `VM2` ตอน Deploy)
-เปิดไฟล์ `docker-compose.yml` ที่รากของโปรเจกต์ แล้ว **ลบของเก่าทิ้งทั้งหมด** วางโค้ดชุดนี้แทน (ซึ่งใช้ Image ที่ Build เสร็จจาก Registry `192.168.10.31:5000` มารันคู่กับ MySQL และ phpMyAdmin ในไฟล์เดียว ได้คะแนนเกณฑ์ข้อ 2.5 เต็ม!):
+### 🛠️ จุดที่ 10: แก้ไฟล์ `docker-compose.yml` ที่รากของโปรเจกต์ (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้จากไฟล์เดิมแค่ 4 บรรทัด)
+ในไฟล์ `docker-compose.yml` ต้นฉบับของกรรมการ มีโครงสร้างครบอยู่แล้ว **ให้แก้เฉพาะ 4 บรรทัดนี้**:
+1. ใน `phpmyadmin:` แก้พอร์ตจาก `ports: ["8080:80"]` $\rightarrow$ เป็น **`ports: ["8081:80"]`** (กันชนพอร์ต 8080)
+2. ใน `api:` แก้จาก `build: ./backend` $\rightarrow$ เป็น **`image: 192.168.10.31:5000/pes-backend:latest`**
+3. ใน `frontend:` แก้จาก `build: ./frontend` $\rightarrow$ เป็น **`image: 192.168.10.31:5000/pes-frontend:latest`**
+4. ใน `frontend:` แก้ `NUXT_PUBLIC_API_BASE: http://localhost:7000` $\rightarrow$ เป็น **`NUXT_PUBLIC_API_BASE: http://api.mydomain.lab`**
 
 ```yaml
 services:
   db:
     image: mysql:8.0
-    container_name: pes-db
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -318,24 +321,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: pes-pma
     environment:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: rootpassword
-    ports: ["8081:80"]
+    ports: ["8081:80"]                                    # <-- [จุดแก้ที่ 1] เดิมเป็น "8080:80"
     depends_on: [db]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   api:
-    image: 192.168.10.31:5000/pes-backend:latest
-    container_name: pes-api
+    image: 192.168.10.31:5000/pes-backend:latest          # <-- [จุดแก้ที่ 2] เดิมเป็น build: ./backend
     env_file:
       - ./backend/.env
     ports: ["7000:7000"]
@@ -344,26 +343,23 @@ services:
         condition: service_healthy
     volumes:
       - ./backend/uploads:/app/uploads
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   frontend:
-    image: 192.168.10.31:5000/pes-frontend:latest
-    container_name: pes-frontend
+    image: 192.168.10.31:5000/pes-frontend:latest         # <-- [จุดแก้ที่ 3] เดิมเป็น build: ./frontend
     environment:
-      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab       # <-- [จุดแก้ที่ 4] เดิมเป็น http://localhost:7000
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
     depends_on: [api]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
 volumes:
   db_data:
 
 networks:
-  pes_net:
+  dev_net:
     driver: bridge
 ```
 

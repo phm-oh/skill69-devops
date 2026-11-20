@@ -41,6 +41,25 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #475569;
     }
+    /* Highlight changed lines inside code blocks */
+    .hl-edit {
+      background: rgba(250, 204, 21, 0.22);
+      color: #fde047;
+      font-weight: 700;
+      border-left: 3px solid #facc15;
+      padding: 1px 6px;
+      border-radius: 0 4px 4px 0;
+      display: inline-block;
+      width: 100%;
+    }
+    .hl-inline {
+      background: rgba(250, 204, 21, 0.25);
+      color: #fde047;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid rgba(250, 204, 21, 0.5);
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
@@ -1605,27 +1624,27 @@ sudo ufw status</code></pre>
                   <span>📋 กดเพื่อคัดลอก</span>
                 </button>
               </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>  file_name VARCHAR(255) NOT NULL,
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>  file_name VARCHAR(255) NOT NULL,
   mime_type VARCHAR(100) NOT NULL,
   size_bytes INT UNSIGNED NOT NULL,
   storage_path VARCHAR(1024) NOT NULL,
-  note TEXT NULL,
+<span class="hl-edit">  note TEXT NULL,</span>
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,</code></pre>
             </div>
           </div>
 
           <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> (เปิด CORS)</h3>
-            <p class="text-xs text-slate-300">แก้บรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง เพราะโค้ด API ไม่ตัดช่องว่างให้):</p>
+            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> (แก้แค่บรรทัด CORS_ORIGIN)</h3>
+            <p class="text-xs text-slate-300">แก้เฉพาะบรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ที่ไฮไลต์สีเหลืองให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง เพราะโค้ด API ไม่ตัดช่องว่างให้):</p>
             <div class="code-box">
               <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">backend/.env (วางทับทั้งไฟล์)</span>
+                <span class="text-xs font-mono text-cyan-300">backend/.env (แก้เฉพาะบรรทัดไฮไลต์สีเหลือง)</span>
                 <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                   <span>📋 กดเพื่อคัดลอก</span>
                 </button>
               </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
-CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
+<span class="hl-edit">CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab</span>
 
 DB_HOST=db
 DB_PORT=3306
@@ -1680,14 +1699,14 @@ dist</code></pre>
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://api.mydomain.lab'</code></li>
-            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300">'http://localhost:7000'</code> เป็น <code class="text-emerald-300 font-bold">'http://api.mydomain.lab'</code></li>
+            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
+            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
           </ul>
         </div>
 
         <!-- Point 6, 7, 8, 9 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (4 ไฟล์)</h3>
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (ไฮไลต์สีเหลืองคือบรรทัดที่ต้องเพิ่ม/แก้จากไฟล์เดิม)</h3>
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="code-box">
@@ -1697,20 +1716,20 @@ dist</code></pre>
                   <span>📋 กดเพื่อคัดลอก</span>
                 </button>
               </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
   const r = isRef(roleInput) ? roleInput : ref(roleInput)
-  const config = useRuntimeConfig()
+<span class="hl-edit">  const config = useRuntimeConfig()</span>
 
   const menu = computed(() => {
     const key = normalizeRole(r.value)
-    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')
-    const sections = MAP[key] || MAP.user
-    return sections.map((sec) => ({
-      ...sec,
-      items: sec.items.map((it) =>
-        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it
-      ),
-    }))
+<span class="hl-edit">    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')</span>
+<span class="hl-edit">    const sections = MAP[key] || MAP.user</span>
+<span class="hl-edit">    return sections.map((sec) => ({</span>
+<span class="hl-edit">      ...sec,</span>
+<span class="hl-edit">      items: sec.items.map((it) =></span>
+<span class="hl-edit">        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it</span>
+<span class="hl-edit">      ),</span>
+<span class="hl-edit">    }))</span>
   })
 
   return { menu }
@@ -1724,13 +1743,13 @@ dist</code></pre>
                   <span>📋 กดเพื่อคัดลอก</span>
                 </button>
               </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
 import { ref, computed } from 'vue'
 import { useMenu } from '~/composables/useMenu'
-import { useAuthStore } from '~/stores/auth'
+<span class="hl-edit">import { useAuthStore } from '~/stores/auth'</span>
 
-const auth = useAuthStore()
-const role = computed(() =&gt; auth.user?.role || 'user')
+<span class="hl-edit">const auth = useAuthStore()</span>
+<span class="hl-edit">const role = computed(() =&gt; auth.user?.role || 'user')</span>
 const { menu } = useMenu(role)
 const drawer = ref(true)
 &lt;/script&gt;</code></pre>
@@ -1739,19 +1758,19 @@ const drawer = ref(true)
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: แทนที่ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (แก้บั๊ก localStorage 500 Error)</span>
+              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (แก้แค่ 4 บรรทัดสีเหลือง)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
-definePageMeta({ ssr: false })
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+<span class="hl-edit">definePageMeta({ ssr: false })</span>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
 const router = useRouter();
-const config = useRuntimeConfig();
+<span class="hl-edit">const config = useRuntimeConfig();</span>
 const errorMsg = ref("");
 const showPassword = ref(false);
 
@@ -1764,10 +1783,10 @@ const vals = ref({
 
 const roles = ["evaluatee", "evaluator", "admin"];
 const handleSubmit = async () =&gt; {
-  const token = localStorage.getItem("auth_token");
+<span class="hl-edit">  const token = localStorage.getItem("auth_token");</span>
   try {
     await axios.post(
-      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,
+<span class="hl-edit">      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,</span>
       {
         name_th: vals.value.name_th,
         email: vals.value.email,
@@ -1790,26 +1809,36 @@ const handleSubmit = async () =&gt; {
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1">
-            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300">http://localhost:7000/docs</code> เป็น <code class="text-emerald-300 font-bold">http://api.mydomain.lab/docs</code></li>
-            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> แก้ไอคอนตาจาก <code class="text-rose-300">:append-inner-icon="show ? ..."</code> เป็น <code class="text-emerald-300 font-bold">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</code></li>
+            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300 line-through">http://localhost:7000/docs</code> เป็น <span class="hl-inline font-mono">http://api.mydomain.lab/docs</span></li>
+            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> แก้ไอคอนตาจาก <code class="text-rose-300 line-through">:append-inner-icon="show ? ..."</code> เป็น <span class="hl-inline font-mono">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</span></li>
           </ul>
         </div>
 
         <!-- Point 10: docker-compose.yml -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (สำหรับรัน 4 บริการบน VM2)</h3>
-          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">docker-compose.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (ใช้ Image ที่ Build จาก Registry บน VM1 <code class="text-emerald-300">192.168.10.31:5000</code>):</p>
+        <div class="bg-slate-950/60 border-2 border-amber-500/40 rounded-xl p-4 sm:p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-bold text-amber-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้จากไฟล์เดิมแค่ 4 บรรทัดสีเหลือง)</h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">✨ แก้แค่ 4 บรรทัดที่ไฮไลต์สีเหลือง!</span>
+          </div>
+          <div class="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 text-xs sm:text-sm text-slate-200 space-y-1">
+            <div class="font-bold text-amber-300">📌 สรุป 4 บรรทัดที่ต้องแก้ในไฟล์ <code>docker-compose.yml</code> ต้นฉบับของกรรมการ:</div>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>ใน <code>phpmyadmin:</code> แก้พอร์ตจาก <code class="text-rose-300 line-through">ports: ["8080:80"]</code> &rarr; เป็น <span class="hl-inline font-mono">ports: ["8081:80"]</span> (กันชนพอร์ต 8080)</li>
+              <li>ใน <code>api:</code> แก้จาก <code class="text-rose-300 line-through">build: ./backend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-backend:latest</span></li>
+              <li>ใน <code>frontend:</code> แก้จาก <code class="text-rose-300 line-through">build: ./frontend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-frontend:latest</span></li>
+              <li>ใน <code>frontend:</code> แก้ <code class="text-rose-300 line-through">NUXT_PUBLIC_API_BASE: http://localhost:7000</code> &rarr; เป็น <span class="hl-inline font-mono">NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span></li>
+            </ol>
+          </div>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">pes-app/docker-compose.yml</span>
-              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+              <span class="text-xs font-mono text-amber-300">pes-app/docker-compose.yml (ส่วนสีเทาคือของเดิมกรรมการ • ส่วนไฮไลต์สีเหลืองคือ 4 จุดที่แก้)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก docker-compose.yml</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>services:
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>services:
   db:
     image: mysql:8.0
-    container_name: pes-db
     command: &gt;
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -1825,24 +1854,20 @@ const handleSubmit = async () =&gt; {
       interval: 10s
       timeout: 5s
       retries: 10
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: pes-pma
     environment:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: rootpassword
-    ports: ["8081:80"]
+<span class="hl-edit">    ports: ["8081:80"]</span>
     depends_on: [db]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   api:
-    image: 192.168.10.31:5000/pes-backend:latest
-    container_name: pes-api
+<span class="hl-edit">    image: 192.168.10.31:5000/pes-backend:latest</span>
     env_file:
       - ./backend/.env
     ports: ["7000:7000"]
@@ -1851,26 +1876,23 @@ const handleSubmit = async () =&gt; {
         condition: service_healthy
     volumes:
       - ./backend/uploads:/app/uploads
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   frontend:
-    image: 192.168.10.31:5000/pes-frontend:latest
-    container_name: pes-frontend
+<span class="hl-edit">    image: 192.168.10.31:5000/pes-frontend:latest</span>
     environment:
-      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+<span class="hl-edit">      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span>
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
     depends_on: [api]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
 volumes:
   db_data:
 
 networks:
-  pes_net:
+  dev_net:
     driver: bridge</code></pre>
           </div>
         </div>
@@ -2461,11 +2483,16 @@ NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
    frontend/plugins/axios.client.js, frontend/composables/useMenu.js, frontend/pages/index.vue,
    frontend/pages/users/new.vue และแก้บั๊ก layouts/default.vue, pages/login.vue (โค้ดเต็มดูในแท็บ PES จุดที่ 6-9)
 
-6. docker-compose.yml (วางทับทั้งไฟล์):
+6. docker-compose.yml (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้จากไฟล์เดิมของกรรมการแค่ 4 บรรทัดนี้):
+   - จุดแก้ที่ 1 (ใน phpmyadmin): แก้ ports: ["8080:80"]        -> เป็น ports: ["8081:80"]
+   - จุดแก้ที่ 2 (ใน api):        แก้ build: ./backend          -> เป็น image: 192.168.10.31:5000/pes-backend:latest
+   - จุดแก้ที่ 3 (ใน frontend):   แก้ build: ./frontend         -> เป็น image: 192.168.10.31:5000/pes-frontend:latest
+   - จุดแก้ที่ 4 (ใน frontend):   แก้ NUXT_PUBLIC_API_BASE      -> เป็น NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+
+--- โค้ดเต็มไฟล์ docker-compose.yml หลังแก้ 4 บรรทัด ---
 services:
   db:
     image: mysql:8.0
-    container_name: pes-db
     command: &gt;
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -2481,24 +2508,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: pes-pma
     environment:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: rootpassword
-    ports: ["8081:80"]
+    ports: ["8081:80"]                                    # &lt;-- [แก้บรรทัดที่ 1]
     depends_on: [db]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   api:
-    image: 192.168.10.31:5000/pes-backend:latest
-    container_name: pes-api
+    image: 192.168.10.31:5000/pes-backend:latest          # &lt;-- [แก้บรรทัดที่ 2]
     env_file:
       - ./backend/.env
     ports: ["7000:7000"]
@@ -2507,26 +2530,23 @@ services:
         condition: service_healthy
     volumes:
       - ./backend/uploads:/app/uploads
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
   frontend:
-    image: 192.168.10.31:5000/pes-frontend:latest
-    container_name: pes-frontend
+    image: 192.168.10.31:5000/pes-frontend:latest         # &lt;-- [แก้บรรทัดที่ 3]
     environment:
-      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab       # &lt;-- [แก้บรรทัดที่ 4]
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
     depends_on: [api]
-    networks: [pes_net]
-    restart: always
+    networks: [dev_net]
 
 volumes:
   db_data:
 
 networks:
-  pes_net:
+  dev_net:
     driver: bridge
 
 7. .gitlab-ci.yml (วางทับทั้งไฟล์):
