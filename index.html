@@ -1619,15 +1619,15 @@ git push -u origin main</code></pre>
       <div class="bg-gradient-to-r from-cyan-600/30 via-cyan-600/10 to-transparent px-6 py-4 border-b border-cyan-500/40 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-3">
           <span class="px-3 py-1 rounded-lg bg-cyan-500 text-slate-950 font-extrabold text-sm">ส่วนที่ 7 : โปรเจกต์จริง PES (Full-Stack)</span>
-          <h2 class="text-lg sm:text-xl font-bold text-cyan-200">ลำดับการแก้โปรเจกต์ต้นฉบับ <code class="text-white">PES</code> ของกรรมการ เพื่อทำ CI/CD 4 Stages ขึ้น VM2</h2>
+          <h2 class="text-lg sm:text-xl font-bold text-cyan-200">ลำดับการแก้โปรเจกต์ <code class="text-white">PES</code> แบ่งเป็น 2 เฟส: <span class="text-amber-300">เฟส 1 เอาขึ้น Deploy ก่อน</span> &rarr; <span class="text-emerald-300">เฟส 2 เก็บรายละเอียดแล้ว Deploy ซ้ำ</span></h2>
         </div>
-        <span class="text-xs font-mono text-cyan-200 bg-cyan-950/80 px-3 py-1.5 rounded-md border border-cyan-400/30 font-bold">แก้ตามลำดับ 11 จุดนี้ รันผ่าน 100%</span>
+        <span class="text-xs font-mono text-cyan-200 bg-cyan-950/80 px-3 py-1.5 rounded-md border border-cyan-400/30 font-bold">กลยุทธ์ 2 เฟส การันตีคะแนน CI/CD 100%</span>
       </div>
 
       <div class="p-5 sm:p-6 space-y-6">
         <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2.5">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง &amp; ลิงก์ดาวน์โหลดเทมเพลต PES ต้นฉบับ:</div>
+            <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมกลยุทธ์ 2 เฟสในห้องแข่ง &amp; ลิงก์ดาวน์โหลดเทมเพลต PES ต้นฉบับ:</div>
             <a href="https://vecskill.bncc.ac.th/files/PES.zip" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm px-3.5 py-2 rounded-lg shadow-md transition">
               <span>📦 ดาวน์โหลด PES.zip (ต้นฉบับกรรมการ)</span>
             </a>
@@ -1638,8 +1638,17 @@ git push -u origin main</code></pre>
             </div>
             <span class="text-xs text-slate-400">(โหลดแล้วแตกไฟล์ออกมาจะได้โฟลเดอร์ <code class="text-white">PES</code>)</span>
           </div>
-          <p>กรรมการจะให้โฟลเดอร์เทมเพลตต้นฉบับชื่อ <code class="text-amber-300 font-bold">PES</code> (ประกอบด้วย <code class="text-white">backend</code>, <code class="text-white">frontend</code>, <code class="text-white">schema.sql</code>, <code class="text-white">docker-compose.yml</code>, <code class="text-white">.gitlab-ci.yml</code>) ซึ่งไฟล์ต้นฉบับของกรรมการมีการวางยา/บั๊กไว้หลายจุด และยังชี้ IP ไปที่ <code class="text-rose-300">localhost:7000</code> หรือ <code class="text-rose-300">172.16.3.105</code></p>
-          <p><strong>วิธีเตรียมตัวก่อนเริ่มแก้:</strong> แตกไฟล์ <code class="text-amber-300">PES.zip</code> แล้วเปลี่ยนชื่อโฟลเดอร์ (หรือคัดลอกออกมา) เป็นชื่อ <code class="text-emerald-300 font-bold">pes-app</code> จากนั้น<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> แล้วเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code เพื่อไล่ทำตามลำดับด้านล่างนี้ครับ</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            <div class="bg-amber-950/30 border border-amber-500/40 rounded-lg p-3">
+              <div class="font-bold text-amber-300">🚀 เฟสที่ 1 (จุดที่ 1–6): แก้แกนหลักให้ Deploy &amp; Login ผ่านก่อน!</div>
+              <p class="text-xs text-slate-300 mt-1">แก้ไฟล์ระบบ CI/CD, Compose, CORS, Schema และ URL ล็อกอิน แล้วสั่ง <code class="text-white">git push</code> รอบแรกทันที เพื่อให้ Pipeline เขียวครบ 4 Stages และเว็บออนไลน์บน VM2 ก่อน (การันตีคะแนนก้อนใหญ่ในมือทันที!)</p>
+            </div>
+            <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-lg p-3">
+              <div class="font-bold text-emerald-300">🎯 เฟสที่ 2 (จุดที่ 7–11): เก็บรายละเอียดบั๊กหน้าเว็บ แล้ว Push รอบ 2!</div>
+              <p class="text-xs text-slate-300 mt-1">พอเว็บขึ้นแล้ว ค่อยตามแก้บั๊กเมนูแอดมิน, หน้าสร้าง User, ปุ่ม API Docs, ไอคอนลูกตา แล้วสั่ง <code class="text-white">git push</code> รอบที่ 2 เพื่อให้เกิด Auto-Trigger Deploy อัปเดตระบบจนสมบูรณ์ 100%!</p>
+            </div>
+          </div>
+          <p><strong>วิธีเตรียมตัวก่อนเริ่มเฟส 1:</strong> แตกไฟล์ <code class="text-amber-300">PES.zip</code> แล้วคัดลอกออกมาเป็นโฟลเดอร์ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> จากนั้น<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> แล้วเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code</p>
           <div class="flex flex-wrap gap-2 pt-1 text-xs">
             <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">➕ สีเขียว = พิมพ์แทรกบรรทัดใหม่เพิ่มเข้าไป</span>
             <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">✏️ สีเหลือง = แก้ทับบรรทัดเดิมของกรรมการ</span>
@@ -1648,232 +1657,97 @@ git push -u origin main</code></pre>
         </div>
 
         <!-- PES Pre-check on VM1 & VM2 -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: เช็ก VM2 ก่อนรับ PES (พอร์ต 3000, 7000, 8081)</h3>
-          <p class="text-xs sm:text-sm text-slate-300">UFW ปิดไปแล้วตั้งแต่ STEP 3.2 ไม่ต้องเปิดพอร์ต <code class="text-emerald-300">3000</code>, <code class="text-emerald-300">7000</code>, <code class="text-emerald-300">8081</code> เพิ่ม ถ้ายังไม่แน่ใจให้รันซ้ำ:</p>
-          <div class="code-box">
-            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">[VM2] ปิด UFW ซ้ำได้ ไม่ต้อง allow พอร์ต PES</span>
-              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                <span>📋 กดเพื่อคัดลอก</span>
-              </button>
-            </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo ufw disable
-sudo ufw status</code></pre>
-          </div>
-          <div class="text-xs text-slate-400">
-            * เช็กว่าทำ STEP 4.1–4.2 ครบ: DNS มี <code class="text-amber-300">app</code> และ <code class="text-amber-300">api</code> และ NPM มี <code class="text-amber-300">app.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:3000</code> กับ <code class="text-amber-300">api.mydomain.lab</code> → <code class="text-emerald-300">192.168.10.32:7000</code><br>
-            * เส้นทางจริง: PC เปิด <code>http://app.mydomain.lab</code> → NPM → Nuxt <code>:3000</code> → หน้าเว็บในเบราว์เซอร์เรียก <code>http://api.mydomain.lab</code> → NPM → API <code>:7000</code> → MySQL (<code>db</code> ใน compose)
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: เช็กความพร้อมบน VM2 ก่อนเริ่ม (UFW ปิดแล้ว + มี DNS &amp; NPM ของ <code class="text-white">app</code> และ <code class="text-white">api</code>)</h3>
+          <div class="text-xs sm:text-sm text-slate-300 space-y-1">
+            <div>• บน <strong>VM1 และ VM2</strong> รัน <code class="text-emerald-300">sudo ufw disable</code> ไว้แล้วตั้งแต่ STEP 2.2 และ 3.2 (พอร์ต <code class="text-emerald-300">3000</code>, <code class="text-emerald-300">7000</code>, <code class="text-emerald-300">8081</code> เปิดทะลุอัตโนมัติ)</div>
+            <div>• เช็กว่าทำ STEP 4.1–4.2 ครบ: DNS มี A Record <code class="text-amber-300">app</code> และ <code class="text-amber-300">api</code> ชี้ไป <code class="text-emerald-300">192.168.10.32</code> และใน NPM มี Proxy Host <code class="text-amber-300">app.mydomain.lab</code> &rarr; <code class="text-emerald-300">192.168.10.32:3000</code> กับ <code class="text-amber-300">api.mydomain.lab</code> &rarr; <code class="text-emerald-300">192.168.10.32:7000</code></div>
           </div>
         </div>
 
-        <!-- Point 1 & 2 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 1: แก้ไฟล์ <code class="text-white">schema.sql</code> <span class="text-xs font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40 ml-1">➕ เพิ่มใหม่ 1 บรรทัด</span></h3>
-            <p class="text-xs text-slate-300">กด <code class="text-amber-300">Ctrl+F</code> หา <code class="text-amber-300">storage_path VARCHAR(1024)</code> ในตาราง <code class="text-white">attachments</code> (บรรทัด ~149) แล้ว<strong>พิมพ์แทรกบรรทัดสีเขียว</strong> <code class="text-emerald-300 font-bold">note TEXT NULL,</code> ต่อท้าย:</p>
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">schema.sql (ตาราง attachments)</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>  file_name VARCHAR(255) NOT NULL,
-  mime_type VARCHAR(100) NOT NULL,
-  size_bytes INT UNSIGNED NOT NULL,
-  storage_path VARCHAR(1024) NOT NULL,
-<span class="hl-add" data-tag="➕ พิมพ์แทรกเพิ่มใหม่ (ของเดิมไม่มี)">  note TEXT NULL,</span>
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,</code></pre>
-            </div>
-          </div>
-
-          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> <span class="text-xs font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40 ml-1">✏️ แก้ทับ 1 บรรทัด</span></h3>
-            <p class="text-xs text-slate-300">แก้เฉพาะบรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ที่ไฮไลต์สีเหลืองให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง):</p>
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">backend/.env (แก้เฉพาะบรรทัดไฮไลต์สีเหลือง)</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
-<span class="hl-edit" data-tag="✏️ แก้ทับบรรทัดเดิม (เติมต่อท้าย)">CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab</span>
-
-DB_HOST=db
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=rootpassword
-DB_NAME=skills_db
-
-JWT_SECRET=testing123
-JWT_EXPIRES=2h</code></pre>
-            </div>
-            <p class="text-xs text-amber-300">ไฟล์นี้ถูก <code class="text-white">.gitignore</code> ตัดไว้ ตอน push ต้องสั่ง <code class="text-white">git add -f backend/.env</code> ตาม STEP 7.12</p>
-          </div>
+        <!-- =============================================================== -->
+        <!-- PHASE 1 HEADER                                                  -->
+        <!-- =============================================================== -->
+        <div class="bg-gradient-to-r from-amber-500/25 via-amber-500/10 to-transparent border-l-4 border-amber-400 rounded-r-xl p-4">
+          <h3 class="text-base sm:text-lg font-extrabold text-amber-300 flex items-center gap-2">
+            <span>🚀 เฟสที่ 1 (จุดที่ 1 ถึง 6): แก้ส่วนสำคัญให้ Deploy ขึ้น VM2 และ Login ผ่านก่อน!</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">ทำแค่ 6 จุดนี้ให้เสร็จก่อน แล้วสั่ง <strong>Deploy รอบที่ 1 (STEP 7.1)</strong> ทันที เพื่อให้ระบบออนไลน์และ Pipeline 4 Stages เขียวครบก่อน!</p>
         </div>
 
-        <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-2">
-          <div class="font-bold text-cyan-300">รหัสใน schema.sql ของ PES</div>
-          <div>ทุกบัญชีตัวอย่างใช้รหัสตัวอักษร <code class="text-emerald-300 font-bold">12345678</code> เข้ารหัสแบบ bcrypt <code>$2b$</code> cost 10 คำว่า password ใช้ล็อกอินไม่ได้ hash คนละบรรทัดเพราะ salt ไม่ซ้ำ</div>
-          <pre class="text-xs text-amber-300 overflow-x-auto whitespace-pre">admin@ccollege.ac.th   $2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6
-eva.me@ccollege.ac.th  $2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm
-eva.it@ccollege.ac.th  $2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe
-t.it01@ccollege.ac.th  $2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy
-t.me01@ccollege.ac.th  $2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC
-t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW</pre>
-        </div>
-
-        <!-- Point 3, 4, 5 -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 3–5: สร้าง <code class="text-white">frontend/.dockerignore</code>, <code class="text-white">frontend/.env</code> และแก้ <code class="text-white">nuxt.config.ts</code> + <code class="text-white">axios.client.js</code></h3>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">จุดที่ 3.1: สร้างไฟล์ frontend/.dockerignore</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>node_modules
-.nuxt
-.output
-dist</code></pre>
-            </div>
-
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">จุดที่ 3.2: สร้างไฟล์ frontend/.env</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>NUXT_PUBLIC_API_BASE=http://api.mydomain.lab</code></pre>
-            </div>
-          </div>
-
-          <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>• <strong>จุดที่ 4 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> แก้จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
-            <li>• <strong>จุดที่ 5 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> แก้จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
-          </ul>
-        </div>
-
-        <!-- Point 6, 7, 8, 9 -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (มีป้ายบอกชัดเจนว่า ➕ เพิ่มใหม่ / ✏️ แก้จากเดิม / 🔀 ย้ายบรรทัด)</h3>
-          
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">จุดที่ 6: ท้ายไฟล์ frontend/composables/useMenu.js</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
-  const r = isRef(roleInput) ? roleInput : ref(roleInput)
-<span class="hl-add" data-tag="➕ เพิ่มใหม่">  const config = useRuntimeConfig()</span>
-
-  const menu = computed(() =&gt; {
-    const key = normalizeRole(r.value)
-<span class="hl-edit" data-tag="✏️ แก้จาก return MAP[key] || MAP.user">    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')</span>
-<span class="hl-edit">    const sections = MAP[key] || MAP.user</span>
-<span class="hl-edit">    return sections.map((sec) =&gt; ({</span>
-<span class="hl-edit">      ...sec,</span>
-<span class="hl-edit">      items: sec.items.map((it) =&gt;</span>
-<span class="hl-edit">        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it</span>
-<span class="hl-edit">      ),</span>
-<span class="hl-edit">    }))</span>
-  })
-
-  return { menu }
-}</code></pre>
-            </div>
-
-            <div class="code-box">
-              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-                <span class="text-xs font-mono text-cyan-300">จุดที่ 9.1: ส่วน &lt;script setup&gt; ใน frontend/layouts/default.vue</span>
-                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                  <span>📋 กดเพื่อคัดลอก</span>
-                </button>
-              </div>
-              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
-import { ref, computed } from 'vue'
-import { useMenu } from '~/composables/useMenu'
-<span class="hl-add" data-tag="➕ เพิ่มใหม่">import { useAuthStore } from '~/stores/auth'</span>
-
-<span class="hl-add" data-tag="➕ เพิ่มใหม่">const auth = useAuthStore()</span>
-<span class="hl-edit" data-tag="✏️ แก้จากเดิม const role = ref('user')">const role = computed(() =&gt; auth.user?.role || 'user')</span>
-const { menu } = useMenu(role)
-const drawer = ref(true)
-&lt;/script&gt;</code></pre>
-            </div>
-          </div>
-
-          <div class="code-box">
-            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (เพิ่ม 2 บรรทัดสีเขียว • ย้าย 1 บรรทัดสีฟ้า • แก้ 1 บรรทัดสีเหลือง)</span>
-              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                <span>📋 กดเพื่อคัดลอก</span>
-              </button>
-            </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
-<span class="hl-add" data-tag="➕ 1. พิมพ์เพิ่มใหม่บรรทัดบนสุด">definePageMeta({ ssr: false })</span>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-
-const router = useRouter();
-<span class="hl-add" data-tag="➕ 2. พิมพ์เพิ่มใหม่">const config = useRuntimeConfig();</span>
-const errorMsg = ref("");
-const showPassword = ref(false);
-
-const vals = ref({
-  name_th: "",
-  email: "",
-  password: "",
-  role: "evaluatee",
-});
-
-const roles = ["evaluatee", "evaluator", "admin"];
-const handleSubmit = async () =&gt; {
-<span class="hl-move" data-tag="🔀 3. ย้ายบรรทัดนี้จากข้างบน (บรรทัด 95) ลงมาไว้ใน handleSubmit">  const token = localStorage.getItem("auth_token");</span>
-  try {
-    await axios.post(
-<span class="hl-edit" data-tag="✏️ 4. แก้จากเดิม &quot;http://localhost:7000/api/users&quot;">      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,</span>
-      {
-        name_th: vals.value.name_th,
-        email: vals.value.email,
-        password: vals.value.password,
-        role: vals.value.role,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      }
-    );
-    router.push("/");
-  } catch (e) {
-    errorMsg.value = e?.response?.data?.message || e.message || "Create failed";
-  }
-};
-&lt;/script&gt;</code></pre>
-          </div>
-
-          <ul class="text-xs sm:text-sm text-slate-300 space-y-1">
-            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ลิงก์ Open API Docs จาก <code class="text-rose-300 line-through">http://localhost:7000/docs</code> เป็น <span class="hl-inline font-mono">http://api.mydomain.lab/docs</span></li>
-            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ไอคอนตาจาก <code class="text-rose-300 line-through">:append-inner-icon="show ? ..."</code> เป็น <span class="hl-inline font-mono">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</span></li>
-          </ul>
-        </div>
-
-        <!-- Point 10: docker-compose.yml -->
+        <!-- PHASE 1 - Point 1: .gitlab-ci.yml -->
         <div class="bg-slate-950/60 border-2 border-amber-500/40 rounded-xl p-4 sm:p-5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <h3 class="font-bold text-amber-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้ทับจากไฟล์เดิมแค่ 4 บรรทัดสีเหลือง)</h3>
-            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">✏️ แก้ทับของเดิมแค่ 4 บรรทัด (ไม่ต้องเพิ่มบรรทัดใหม่เลย!)</span>
+            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 1: แก้ไฟล์ <code class="text-white">.gitlab-ci.yml</code> ที่รากโปรเจกต์ (ครบ 4 Stages: build, test, push, deploy)</h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">🔄 ลบของเก่าแล้ววางทับทั้งไฟล์</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">.gitlab-ci.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (รัน Unit Test + Integration Test ผ่าน Vitest ในคอนเทนเนอร์ และส่งไป Deploy บน VM2 อัตโนมัติทันทีที่ Push):</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-amber-300">pes-app/.gitlab-ci.yml (วางทับทั้งไฟล์)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก .gitlab-ci.yml</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  REGISTRY_URL: "192.168.10.31:5000"
+  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
+  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
+  PROD_SERVER: "user1@192.168.10.32"
+  SSH_PORT: "2222"
+  DEPLOY_DIR: "/home/user1/pes-prod"
+
+# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
+build_job:
+  stage: build
+  script:
+    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
+    - docker build -t $BACKEND_IMAGE ./backend
+    - docker build -t $FRONTEND_IMAGE ./frontend
+
+# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
+test_job:
+  stage: test
+  script:
+    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
+    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
+
+# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
+push_job:
+  stage: push
+  script:
+    - echo "=== [3/4] Pushing Images to Private Registry ==="
+    - docker push $BACKEND_IMAGE
+    - docker push $FRONTEND_IMAGE
+
+# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
+deploy_job:
+  stage: deploy
+  script:
+    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
+    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
+        cd $DEPLOY_DIR &amp;&amp;
+        sudo docker compose pull api frontend &amp;&amp;
+        sudo docker compose up -d --remove-orphans
+      "
+    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"</code></pre>
+          </div>
+        </div>
+
+        <!-- PHASE 1 - Point 2: docker-compose.yml -->
+        <div class="bg-slate-950/60 border-2 border-amber-500/40 rounded-xl p-4 sm:p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 2: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (แก้ทับจากไฟล์เดิมแค่ 4 บรรทัดสีเหลือง)</h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">✏️ แก้ทับของเดิมแค่ 4 บรรทัด!</span>
           </div>
           <div class="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 text-xs sm:text-sm text-slate-200 space-y-1">
             <div class="font-bold text-amber-300">📌 สรุป 4 บรรทัดที่ต้องแก้ทับในไฟล์ <code>docker-compose.yml</code> ต้นฉบับของกรรมการ:</div>
@@ -1952,83 +1826,104 @@ networks:
           </div>
         </div>
 
-        <!-- Point 11: .gitlab-ci.yml -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 11: แก้ไฟล์ <code class="text-white">.gitlab-ci.yml</code> ที่รากโปรเจกต์ (ครบ 4 Stages: build, test, push, deploy)</h3>
-          <p class="text-xs sm:text-sm text-slate-300">เปิดไฟล์ <code class="text-amber-300">.gitlab-ci.yml</code> ลบของเดิมออกทั้งหมด แล้ววางโค้ดนี้แทน (รัน Unit Test + Integration Test ผ่าน Vitest ในคอนเทนเนอร์ และส่งไป Deploy บน VM2 อัตโนมัติทันทีที่ Push):</p>
-          <div class="code-box">
-            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">pes-app/.gitlab-ci.yml</span>
-              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
-                <span>📋 กดเพื่อคัดลอก .gitlab-ci.yml</span>
-              </button>
+        <!-- PHASE 1 - Point 3 & 4: schema.sql & backend/.env -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="bg-slate-950/60 border border-amber-500/30 rounded-xl p-4 sm:p-5 space-y-3">
+            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 3: แก้ไฟล์ <code class="text-white">schema.sql</code> <span class="text-xs font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40 ml-1">➕ เพิ่ม 1 บรรทัด</span></h3>
+            <p class="text-xs text-slate-300">ต้องแก้ก่อน Deploy ครั้งแรก (เพราะ MySQL อ่านไฟล์นี้แค่ตอนสร้าง DB ครั้งแรก) กด <code class="text-amber-300">Ctrl+F</code> หา <code class="text-amber-300">storage_path VARCHAR(1024)</code> ในตาราง <code class="text-white">attachments</code> แล้ว<strong>พิมพ์แทรกบรรทัดสีเขียว</strong>:</p>
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-amber-300">schema.sql (ตาราง attachments)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>  file_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  size_bytes INT UNSIGNED NOT NULL,
+  storage_path VARCHAR(1024) NOT NULL,
+<span class="hl-add" data-tag="➕ พิมพ์แทรกเพิ่มใหม่ (ของเดิมไม่มี)">  note TEXT NULL,</span>
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,</code></pre>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>stages:
-  - build
-  - test
-  - push
-  - deploy
+          </div>
 
-variables:
-  REGISTRY_URL: "192.168.10.31:5000"
-  BACKEND_IMAGE: "192.168.10.31:5000/pes-backend:latest"
-  FRONTEND_IMAGE: "192.168.10.31:5000/pes-frontend:latest"
-  PROD_SERVER: "user1@192.168.10.32"
-  SSH_PORT: "2222"
-  DEPLOY_DIR: "/home/user1/pes-prod"
+          <div class="bg-slate-950/60 border border-amber-500/30 rounded-xl p-4 sm:p-5 space-y-3">
+            <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 4: แก้ไฟล์ <code class="text-white">backend/.env</code> <span class="text-xs font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40 ml-1">✏️ แก้ทับ 1 บรรทัด</span></h3>
+            <p class="text-xs text-slate-300">แก้เฉพาะบรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ที่ไฮไลต์สีเหลือง เพื่อให้หน้าเว็บล็อกอินผ่านโดเมน <code class="text-emerald-300">app.mydomain.lab</code> และ IP <code class="text-emerald-300">192.168.10.32:3000</code> ได้ไม่ติด CORS:</p>
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-amber-300">backend/.env (แก้เฉพาะบรรทัดไฮไลต์สีเหลือง)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
+<span class="hl-edit" data-tag="✏️ แก้ทับบรรทัดเดิม (เติมต่อท้าย)">CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab</span>
 
-# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
-build_job:
-  stage: build
-  script:
-    - echo "=== [1/4] Building Backend &amp; Frontend Docker Images ==="
-    - docker build -t $BACKEND_IMAGE ./backend
-    - docker build -t $FRONTEND_IMAGE ./frontend
+DB_HOST=db
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=rootpassword
+DB_NAME=skills_db
 
-# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
-test_job:
-  stage: test
-  script:
-    - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
-    - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
-
-# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
-push_job:
-  stage: push
-  script:
-    - echo "=== [3/4] Pushing Images to Private Registry ==="
-    - docker push $BACKEND_IMAGE
-    - docker push $FRONTEND_IMAGE
-
-# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
-deploy_job:
-  stage: deploy
-  script:
-    - echo "=== [4/4] Deploying PES Full-Stack to Production Server (VM2) ==="
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "mkdir -p $DEPLOY_DIR/backend/uploads"
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT docker-compose.yml schema.sql $PROD_SERVER:$DEPLOY_DIR/
-    - scp -o StrictHostKeyChecking=no -P $SSH_PORT backend/.env $PROD_SERVER:$DEPLOY_DIR/backend/.env
-    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $PROD_SERVER "
-        cd $DEPLOY_DIR &amp;&amp;
-        sudo docker compose pull api frontend &amp;&amp;
-        sudo docker compose up -d --remove-orphans
-      "
-    - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"</code></pre>
+JWT_SECRET=testing123
+JWT_EXPIRES=2h</code></pre>
+            </div>
+            <p class="text-xs text-amber-300">* ตอนสั่ง git push ต้องมี <code class="text-white">git add -f backend/.env</code> ด้วย เพราะ <code class="text-white">.gitignore</code> ซ่อนไฟล์นี้ไว้</p>
           </div>
         </div>
 
-        <!-- Step 7.12: GitLab project + runner + push + checks -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-          <h3 class="font-bold text-cyan-300 text-base">STEP 7.12: สร้างโปรเจกต์ <code class="text-white">pes-app</code> ใน GitLab, ผูก Runner, Push และตรวจผล</h3>
-          <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>ที่ <code class="text-amber-300">http://gitlab.mydomain.lab</code> สร้าง Blank project ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (Public และติ๊กออก <em>Initialize repository with a README</em>)</li>
-            <li>Runner จาก STEP 5.2–5.3 ผูกกับโปรเจกต์ <code>task-app</code> เท่านั้น ให้ทำ STEP 5.2–5.3 ซ้ำในโปรเจกต์ <code>pes-app</code> (เอา token <code>glrt-...</code> ตัวใหม่ไป register บน VM1 อีกตัว ตั้ง description เป็น <code>vm1-shell-runner-pes</code>) ส่วน SSH Key จาก STEP 5.4 ใช้ของเดิมได้</li>
-            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่าง</li>
+        <!-- PHASE 1 - Point 5 & 6: frontend/.dockerignore, .env, nuxt.config.ts, axios.client.js -->
+        <div class="bg-slate-950/60 border border-amber-500/30 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-amber-300 text-base">[เฟส 1] จุดที่ 5–6: สร้าง <code class="text-white">frontend/.dockerignore</code>, <code class="text-white">frontend/.env</code> และแก้ URL ล็อกอินใน <code class="text-white">nuxt.config.ts</code> + <code class="text-white">axios.client.js</code></h3>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-amber-300">จุดที่ 5.1: สร้างไฟล์ใหม่ frontend/.dockerignore</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>node_modules
+.nuxt
+.output
+dist</code></pre>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-amber-300">จุดที่ 5.2: สร้างไฟล์ใหม่ frontend/.env</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>NUXT_PUBLIC_API_BASE=http://api.mydomain.lab</code></pre>
+            </div>
+          </div>
+
+          <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
+            <li>• <strong>จุดที่ 6.1 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
+            <li>• <strong>จุดที่ 6.2 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span> (เพื่อให้กดปุ่ม Sign in แล้วล็อกอินเข้าหน้าตารางผู้ใช้ได้ทันที!)</li>
+          </ul>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- STEP 7.1: DEPLOY ROUND 1 (CHECKPOINT 1)                         -->
+        <!-- =============================================================== -->
+        <div class="bg-emerald-950/30 border-2 border-emerald-500/60 rounded-xl p-4 sm:p-5 space-y-3 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-extrabold text-emerald-300 text-base sm:text-lg">🚀 STEP 7.1 (จุดเช็คพอยต์ที่ 1): สั่ง Git Push เพื่อ Deploy รอบแรกขึ้น VM2 ทันที!</h3>
+            <span class="text-xs bg-emerald-500 text-slate-950 font-extrabold px-3 py-1 rounded-md">เอาคะแนน CI/CD 4 Stages + เว็บออนไลน์ไว้ในมือก่อน!</span>
+          </div>
+          <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-200 space-y-1.5">
+            <li>เปิดเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>) สร้าง Blank project ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (เลือก <strong>Public</strong> และติ๊กออก <em>Initialize repository with a README</em>)</li>
+            <li>ผูก Runner เข้ากับโปรเจกต์ <code>pes-app</code>: ไปที่ <strong>Settings &rarr; CI/CD &rarr; Runners</strong> กดปุ่ม <strong>Enable for this project</strong> ที่ตัว Runner เดิม (หรือกด <strong>New project runner</strong> ติ๊ก <code class="text-emerald-300">[x] Run untagged jobs</code> แล้วนำ token <code class="text-amber-300">glrt-...</code> ไปรัน <code>sudo gitlab-runner register</code> บน VM1 อีกตัว)</li>
+            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong>:</li>
           </ol>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">[PC Terminal] Push โปรเจกต์ pes-app</span>
-              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+              <span class="text-xs font-mono text-emerald-300">[PC Terminal] คำสั่ง Git Push รอบที่ 1 (เอาโปรเจกต์ขึ้น Deploy ทันที)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
@@ -2039,18 +1934,175 @@ git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
 git add -f backend/.env
 git add .
 git status --short
-git commit -m "Deploy PES with 4-stage CI/CD"
+git commit -m "Phase 1: Initial deploy PES with 4-stage CI/CD"
 git push -u origin main</code></pre>
-            <p class="text-xs text-amber-300">ไฟล์ <code class="text-white">.gitignore</code> ตัด <code class="text-white">.env</code> ออก ต้อง <code class="text-white">git add -f backend/.env</code> แล้วเช็กใน <code class="text-white">git status</code> ว่ามีไฟล์นี้ ไม่งั้นขั้น deploy สั่ง <code class="text-white">scp backend/.env</code> ไม่เจอไฟล์</p>
+          </div>
+          <div class="text-xs sm:text-sm text-slate-200 bg-slate-900/90 border border-emerald-500/30 rounded-lg p-3 space-y-1">
+            <div class="font-bold text-emerald-300">✅ ผลลัพธ์ที่ได้ทันทีหลังจบเฟส 1 (รอ Pipeline เขียวครบ 4 วง):</div>
+            <div>1. เปิด <code class="text-emerald-300">http://api.mydomain.lab/health</code> &rarr; ขึ้น <code>{"service":"okoak",...}</code></div>
+            <div>2. เปิด <code class="text-emerald-300">http://app.mydomain.lab/login</code> &rarr; ล็อกอินด้วยอีเมล <code class="text-amber-300 font-bold">admin@ccollege.ac.th</code> รหัส <code class="text-amber-300 font-bold">12345678</code> เข้าหน้าตารางรายชื่อผู้ใช้ได้สำเร็จ!</div>
+            <div>3. จากนั้นค่อยเดินหน้าทำ <strong>เฟสที่ 2 (จุดที่ 7–11 ด้านล่าง)</strong> เพื่อเก็บคะแนนความถูกต้องของหน้าเว็บด้านในแบบสบายๆ ไม่กดดันเรื่องเวลา!</div>
+          </div>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- PHASE 2 HEADER                                                  -->
+        <!-- =============================================================== -->
+        <div class="bg-gradient-to-r from-cyan-500/25 via-cyan-500/10 to-transparent border-l-4 border-cyan-400 rounded-r-xl p-4 mt-4">
+          <h3 class="text-base sm:text-lg font-extrabold text-cyan-300 flex items-center gap-2">
+            <span>🎯 เฟสที่ 2 (จุดที่ 7 ถึง 11): เก็บรายละเอียดบั๊กความถูกต้องด้านใน แล้วสั่ง Git Push รอบที่ 2!</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">เมื่อระบบออนไลน์จากเฟส 1 แล้ว ให้แก้บั๊กฝั่ง Frontend อีก 5 จุดนี้ แล้วสั่ง <strong>Git Push รอบที่ 2 (STEP 7.2)</strong> เพื่อให้เกิด Auto-Trigger อัปเดตระบบจริง!</p>
+        </div>
+
+        <!-- PHASE 2 - Point 7..11 -->
+        <div class="bg-slate-950/60 border border-cyan-500/30 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-cyan-300 text-base">[เฟส 2] จุดที่ 7–11: แก้บั๊กเมนูแอดมิน, หน้าสร้างผู้ใช้ (Create User), ปุ่ม API Docs และไอคอนลูกตา</h3>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 7: ส่วน &lt;script setup&gt; ใน frontend/layouts/default.vue (แก้เมนูแอดมิน)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+import { ref, computed } from 'vue'
+import { useMenu } from '~/composables/useMenu'
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">import { useAuthStore } from '~/stores/auth'</span>
+
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">const auth = useAuthStore()</span>
+<span class="hl-edit" data-tag="✏️ แก้จากเดิม const role = ref('user')">const role = computed(() =&gt; auth.user?.role || 'user')</span>
+const { menu } = useMenu(role)
+const drawer = ref(true)
+&lt;/script&gt;</code></pre>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">จุดที่ 9: ท้ายไฟล์ frontend/composables/useMenu.js (แก้ลิงก์เมนู API Docs)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
+  const r = isRef(roleInput) ? roleInput : ref(roleInput)
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">  const config = useRuntimeConfig()</span>
+
+  const menu = computed(() =&gt; {
+    const key = normalizeRole(r.value)
+<span class="hl-edit" data-tag="✏️ แก้จาก return MAP[key] || MAP.user">    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')</span>
+<span class="hl-edit">    const sections = MAP[key] || MAP.user</span>
+<span class="hl-edit">    return sections.map((sec) =&gt; ({</span>
+<span class="hl-edit">      ...sec,</span>
+<span class="hl-edit">      items: sec.items.map((it) =&gt;</span>
+<span class="hl-edit">        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it</span>
+<span class="hl-edit">      ),</span>
+<span class="hl-edit">    }))</span>
+  })
+
+  return { menu }
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (แก้บั๊กกดปุ่ม Create User แล้วขึ้น 500 localStorage)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
+<span class="hl-add" data-tag="➕ 1. พิมพ์เพิ่มใหม่บรรทัดบนสุด">definePageMeta({ ssr: false })</span>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+
+const router = useRouter();
+<span class="hl-add" data-tag="➕ 2. พิมพ์เพิ่มใหม่">const config = useRuntimeConfig();</span>
+const errorMsg = ref("");
+const showPassword = ref(false);
+
+const vals = ref({
+  name_th: "",
+  email: "",
+  password: "",
+  role: "evaluatee",
+});
+
+const roles = ["evaluatee", "evaluator", "admin"];
+const handleSubmit = async () =&gt; {
+<span class="hl-move" data-tag="🔀 3. ย้ายบรรทัดนี้จากข้างบน (บรรทัด 95) ลงมาไว้ใน handleSubmit">  const token = localStorage.getItem("auth_token");</span>
+  try {
+    await axios.post(
+<span class="hl-edit" data-tag="✏️ 4. แก้จากเดิม &quot;http://localhost:7000/api/users&quot;">      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,</span>
+      {
+        name_th: vals.value.name_th,
+        email: vals.value.email,
+        password: vals.value.password,
+        role: vals.value.role,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      }
+    );
+    router.push("/");
+  } catch (e) {
+    errorMsg.value = e?.response?.data?.message || e.message || "Create failed";
+  }
+};
+&lt;/script&gt;</code></pre>
+          </div>
+
+          <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
+            <li>• <strong>จุดที่ 10 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ลิงก์ปุ่ม Open API Docs จาก <code class="text-rose-300 line-through">http://localhost:7000/docs</code> เป็น <span class="hl-inline font-mono">http://api.mydomain.lab/docs</span></li>
+            <li>• <strong>จุดที่ 11 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ไอคอนตาดูรหัสผ่านจาก <code class="text-rose-300 line-through">:append-inner-icon="show ? ..."</code> เป็น <span class="hl-inline font-mono">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</span></li>
+          </ul>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- STEP 7.2: DEPLOY ROUND 2 (CHECKPOINT 2)                         -->
+        <!-- =============================================================== -->
+        <div class="bg-cyan-950/30 border-2 border-cyan-500/60 rounded-xl p-4 sm:p-5 space-y-3 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-extrabold text-cyan-300 text-base sm:text-lg">🎯 STEP 7.2 (จุดเช็คพอยต์ที่ 2): สั่ง Git Commit &amp; Push รอบที่ 2 เพื่ออัปเดตความถูกต้องทั้งหมดขึ้น Production!</h3>
+            <span class="text-xs bg-cyan-400 text-slate-950 font-extrabold px-3 py-1 rounded-md">ได้คะแนน Auto-Trigger Pipeline + ระบบสมบูรณ์ 100%!</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300">เมื่อแก้จุดที่ 7–11 เสร็จแล้ว ให้รัน 3 คำสั่งนี้ใน Terminal ของ VS Code เพื่อส่งโค้ดที่แก้บั๊กครบแล้วขึ้นไป Trigger Pipeline รอบที่ 2:</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-cyan-300">[PC Terminal] คำสั่ง Git Push รอบที่ 2 (อัปเดตฟีเจอร์ข้างในทั้งหมด)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git add .
+git commit -m "Phase 2: Fix admin menu, user creation SSR, and API docs links"
+git push</code></pre>
           </div>
           <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-1">
-            <div class="font-bold text-cyan-300">✅ ตรวจผลหลัง Pipeline เขียวครบ 4 Stages (ไล่จากหลังบ้านไปหน้าบ้าน):</div>
-            <div>1. <code class="text-emerald-300">http://api.mydomain.lab/health</code> ต้องได้ <code>{"service":"okoak",...}</code> (ถ้าไม่ได้ ลอง <code>http://192.168.10.32:7000/health</code> เพื่อแยกว่าเสียที่ NPM หรือที่ API)</div>
-            <div>2. <code class="text-emerald-300">http://192.168.10.32:8081</code> (phpMyAdmin) ต้องเห็นฐานข้อมูล <code>skills_db</code> และตาราง <code>attachments</code> มีคอลัมน์ <code>note</code></div>
-            <div>3. <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code class="text-emerald-300">12345678</code></div>
-            <div class="text-slate-400">hash ใน <code>schema.sql</code> ของแอดมินคือ <code class="text-amber-300 break-all">$2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6</code> เป็น bcrypt ของคำว่า <code class="text-emerald-300">12345678</code> ไม่ใช่คำว่า password บัญชีตัวอย่างที่เหลือใช้รหัสเดียวกันแต่คนละ salt</div>
-            <div class="text-amber-300">⚠️ MySQL รัน <code>schema.sql</code> เฉพาะตอน volume ยังว่าง ถ้าแก้ schema หลัง Deploy ไปแล้ว ให้รันบน VM2: <code>cd ~/pes-prod &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job deploy</div>
+            <div class="font-bold text-cyan-300">✅ ตรวจผลหลัง Pipeline รอบที่ 2 เขียวครบ 4 Stages:</div>
+            <div>1. เปิด <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code class="text-emerald-300">12345678</code> &rarr; เมนูซ้ายแสดงครบ (<code>Users</code>, <code>Periods</code>, <code>API Docs</code>)</div>
+            <div>2. กดปุ่ม <strong>Create User</strong> (<code class="text-emerald-300">http://app.mydomain.lab/users/new</code>) &rarr; เปิดฟอร์มสร้างผู้ใช้ได้ไม่ขึ้น Error 500 และบันทึกผู้ใช้ใหม่ได้จริง</div>
+            <div>3. เปิดหน้า <strong>Upload</strong> (<code class="text-emerald-300">http://app.mydomain.lab/upload</code>) &rarr; อัปโหลดไฟล์พร้อมบันทึก <code>note</code> ได้ และปุ่ม <strong>Open API Docs</strong> เปิดไปที่ <code class="text-emerald-300">http://api.mydomain.lab/docs</code> ได้ถูกต้อง!</div>
+            <div class="text-amber-300 pt-1">⚠️ หมายเหตุ: หากใครลืมแก้ <code>schema.sql</code> ในเฟส 1 แล้วเพิ่งมาแก้ในเฟส 2 ให้รันบน VM2: <code>cd ~/pes-prod &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job <code>deploy_job</code> เพื่อให้ MySQL สร้างตารางใหม่พร้อมคอลัมน์ <code>note</code></div>
           </div>
+        </div>
+
+        <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-2">
+          <div class="font-bold text-cyan-300">ข้อมูลอ้างอิง: รหัสผ่านบัญชีตัวอย่างใน schema.sql ของ PES</div>
+          <div>ทุกบัญชีตัวอย่างใช้รหัสตัวอักษร <code class="text-emerald-300 font-bold">12345678</code> เข้ารหัสแบบ bcrypt <code>$2b$</code> cost 10 คำว่า password ใช้ล็อกอินไม่ได้ hash คนละบรรทัดเพราะ salt ไม่ซ้ำ</div>
+          <pre class="text-xs text-amber-300 overflow-x-auto whitespace-pre">admin@ccollege.ac.th   $2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6
+eva.me@ccollege.ac.th  $2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm
+eva.it@ccollege.ac.th  $2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe
+t.it01@ccollege.ac.th  $2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy
+t.me01@ccollege.ac.th  $2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC
+t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW</pre>
         </div>
       </div>
     </section>
@@ -2500,112 +2552,15 @@ git commit -m "Initial commit: Task Tracker App with Full CI/CD Pipeline"
 git push -u origin main
 
 ================================================================================
-  ส่วนที่ 7: โปรเจกต์จริง PES (Frontend :3000 | API :7000 | phpMyAdmin :8081 บน VM2)
+  ส่วนที่ 7: โปรเจกต์จริง PES แบ่งเป็น 2 เฟส (เฟส 1 เอาขึ้น Deploy ก่อน -> เฟส 2 เก็บรายละเอียด)
 ================================================================================
-เส้นทาง: PC -&gt; http://app.mydomain.lab -&gt; NPM (.32:80) -&gt; Nuxt (.32:3000)
-         เบราว์เซอร์เรียก API -&gt; http://api.mydomain.lab -&gt; NPM -&gt; API (.32:7000) -&gt; MySQL (db ใน compose)
-CI/CD:   git push -&gt; GitLab (.31) -&gt; Runner shell บน VM1: build -&gt; test -&gt; push 192.168.10.31:5000
-         -&gt; ssh user1@192.168.10.32 -p 2222 -&gt; docker compose pull + up -d (ใน ~/pes-prod)
+ลิงก์ดาวน์โหลดเทมเพลตต้นฉบับ: https://vecskill.bncc.ac.th/files/PES.zip
+เตรียมโฟลเดอร์: แตกไฟล์ PES.zip คัดลอกออกมาเป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
 
-1. เตรียม: ดาวน์โหลดไฟล์ต้นฉบับ https://vecskill.bncc.ac.th/files/PES.zip แล้วแตกไฟล์คัดลอก PES เป็น pes-app
-   จากนั้นลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
-   (UFW ของ VM2 ปิดแล้วตั้งแต่ STEP 3.2 ไม่ต้อง allow 3000/7000/8081 | DNS/NPM มี app และ api แล้วใน ส่วนที่ 4)
-
-2. schema.sql: ในตาราง attachments ใต้บรรทัด storage_path VARCHAR(1024) NOT NULL, ให้เพิ่ม
-  note TEXT NULL,
-
-3. backend/.env (วางทับทั้งไฟล์ | CORS_ORIGIN คั่นด้วย , ห้ามมีช่องว่าง):
-PORT=7000
-CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
-
-DB_HOST=db
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=rootpassword
-DB_NAME=skills_db
-
-JWT_SECRET=testing123
-JWT_EXPIRES=2h
-
-4. frontend/.dockerignore:
-node_modules
-.nuxt
-.output
-dist
-   frontend/.env:
-NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
-
-5. แก้ http://localhost:7000 เป็น http://api.mydomain.lab ใน frontend/nuxt.config.ts (apiBase),
-   frontend/plugins/axios.client.js, frontend/composables/useMenu.js, frontend/pages/index.vue,
-   frontend/pages/users/new.vue และแก้บั๊ก layouts/default.vue, pages/login.vue (โค้ดเต็มดูในแท็บ PES จุดที่ 6-9)
-
-6. docker-compose.yml (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้จากไฟล์เดิมของกรรมการแค่ 4 บรรทัดนี้):
-   - จุดแก้ที่ 1 (ใน phpmyadmin): แก้ ports: ["8080:80"]        -> เป็น ports: ["8081:80"]
-   - จุดแก้ที่ 2 (ใน api):        แก้ build: ./backend          -> เป็น image: 192.168.10.31:5000/pes-backend:latest
-   - จุดแก้ที่ 3 (ใน frontend):   แก้ build: ./frontend         -> เป็น image: 192.168.10.31:5000/pes-frontend:latest
-   - จุดแก้ที่ 4 (ใน frontend):   แก้ NUXT_PUBLIC_API_BASE      -> เป็น NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
-
---- โค้ดเต็มไฟล์ docker-compose.yml หลังแก้ 4 บรรทัด ---
-services:
-  db:
-    image: mysql:8.0
-    command: &gt;
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: skills_db
-      TZ: Asia/Bangkok
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    networks: [dev_net]
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: rootpassword
-    ports: ["8081:80"]                                    # &lt;-- [แก้บรรทัดที่ 1]
-    depends_on: [db]
-    networks: [dev_net]
-
-  api:
-    image: 192.168.10.31:5000/pes-backend:latest          # &lt;-- [แก้บรรทัดที่ 2]
-    env_file:
-      - ./backend/.env
-    ports: ["7000:7000"]
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./backend/uploads:/app/uploads
-    networks: [dev_net]
-
-  frontend:
-    image: 192.168.10.31:5000/pes-frontend:latest         # &lt;-- [แก้บรรทัดที่ 3]
-    environment:
-      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab       # &lt;-- [แก้บรรทัดที่ 4]
-      NITRO_PORT: 3000
-      HOST: 0.0.0.0
-    ports: ["3000:3000"]
-    depends_on: [api]
-    networks: [dev_net]
-
-volumes:
-  db_data:
-
-networks:
-  dev_net:
-    driver: bridge
-
-7. .gitlab-ci.yml (วางทับทั้งไฟล์):
+--------------------------------------------------------------------------------
+  [เฟสที่ 1] แก้ส่วนสำคัญ 6 จุดเพื่อให้ Deploy ขึ้น VM2 และ Login ผ่านก่อน!
+--------------------------------------------------------------------------------
+จุดที่ 1 (.gitlab-ci.yml — ลบของเดิมแล้ววางทับทั้งไฟล์):
 stages:
   - build
   - test
@@ -2620,7 +2575,6 @@ variables:
   SSH_PORT: "2222"
   DEPLOY_DIR: "/home/user1/pes-prod"
 
-# 1. Stage Build: สร้าง Docker Image ทั้ง Backend และ Frontend
 build_job:
   stage: build
   script:
@@ -2628,14 +2582,12 @@ build_job:
     - docker build -t $BACKEND_IMAGE ./backend
     - docker build -t $FRONTEND_IMAGE ./frontend
 
-# 2. Stage Test: รัน Unit Test (JWT Middleware) และ Integration Test (GET /health)
 test_job:
   stage: test
   script:
     - echo "=== [2/4] Running Unit &amp; Integration Tests (Vitest) ==="
     - docker run --rm $BACKEND_IMAGE npx vitest run test/middlewares_auth.spec.js test/server.spec.js
 
-# 3. Stage Push: ส่ง Image ทั้งสองตัวขึ้น Private Registry บน VM1 (192.168.10.31:5000)
 push_job:
   stage: push
   script:
@@ -2643,7 +2595,6 @@ push_job:
     - docker push $BACKEND_IMAGE
     - docker push $FRONTEND_IMAGE
 
-# 4. Stage Deploy: ส่งไฟล์คอนฟิกไปที่ VM2 (192.168.10.32) แล้วสั่งรัน Docker Compose
 deploy_job:
   stage: deploy
   script:
@@ -2658,9 +2609,33 @@ deploy_job:
       "
     - echo "Deployment Completed! App is live at http://app.mydomain.lab (or http://192.168.10.32:3000)"
 
-8. GitLab: สร้าง Blank project ชื่อ pes-app (Public, ไม่ติ๊ก README)
-   -&gt; ทำ ส่วนที่ 5 ข้อ 3 ซ้ำในโปรเจกต์ pes-app แล้วรันเฉพาะคำสั่ง sudo gitlab-runner register ของข้อ 4 (token glrt- ตัวใหม่, description vm1-shell-runner-pes)
-   -&gt; SSH Key ของ gitlab-runner ใช้ของเดิมได้
+จุดที่ 2 (docker-compose.yml — แก้ทับจากไฟล์เดิมของกรรมการแค่ 4 บรรทัด):
+   - บรรทัดแก้ที่ 1 (ใน phpmyadmin): แก้ ports: ["8080:80"]        -> เป็น ports: ["8081:80"]
+   - บรรทัดแก้ที่ 2 (ใน api):        แก้ build: ./backend          -> เป็น image: 192.168.10.31:5000/pes-backend:latest
+   - บรรทัดแก้ที่ 3 (ใน frontend):   แก้ build: ./frontend         -> เป็น image: 192.168.10.31:5000/pes-frontend:latest
+   - บรรทัดแก้ที่ 4 (ใน frontend):   แก้ NUXT_PUBLIC_API_BASE      -> เป็น NUXT_PUBLIC_API_BASE: http://api.mydomain.lab
+
+จุดที่ 3 (schema.sql — เพิ่มใหม่ 1 บรรทัดในตาราง attachments ใต้บรรทัด storage_path):
+  note TEXT NULL,
+
+จุดที่ 4 (backend/.env — แก้ทับบรรทัด CORS_ORIGIN คั่นด้วย , ห้ามมีช่องว่าง):
+CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab
+
+จุดที่ 5 (สร้างไฟล์ใหม่ 2 ไฟล์ในโฟลเดอร์ frontend):
+   - frontend/.dockerignore:
+node_modules
+.nuxt
+.output
+dist
+   - frontend/.env:
+NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
+
+จุดที่ 6 (แก้ URL ล็อกอินจาก http://localhost:7000 เป็น http://api.mydomain.lab):
+   - frontend/nuxt.config.ts (บรรทัด 52)
+   - frontend/plugins/axios.client.js (บรรทัด 10)
+
+&gt;&gt;&gt; [STEP 7.1] สั่ง Git Push เพื่อ Deploy รอบที่ 1 ทันที! &lt;&lt;&lt;
+(สร้าง Blank project ชื่อ pes-app บน GitLab + ผูก Runner ก่อนรันชุดนี้)
 rm -rf .git
 git init
 git switch -c main
@@ -2668,22 +2643,30 @@ git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
 git add -f backend/.env
 git add .
 git status --short
-git commit -m "Deploy PES with 4-stage CI/CD"
+git commit -m "Phase 1: Initial deploy PES with 4-stage CI/CD"
 git push -u origin main
-   (.gitignore ตัด .env ออก ถ้าไม่ git add -f backend/.env ขั้น deploy จะ scp ไม่เจอไฟล์)
 
-9. ตรวจผลหลัง Pipeline เขียว:
-   - http://api.mydomain.lab/health  -&gt; {"service":"okoak",...}  (ถ้าไม่ได้ ลอง http://192.168.10.32:7000/health)
-   - http://192.168.10.32:8081       -&gt; phpMyAdmin เห็น skills_db และ attachments มีคอลัมน์ note
-   - http://app.mydomain.lab/login   -&gt; admin@ccollege.ac.th / 12345678
-   - password_hash ใน schema.sql (bcrypt $2b$ cost 10 ของคำว่า 12345678 ทั้งชุด คนละ salt):
-     admin@ccollege.ac.th   $2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6
-     eva.me@ccollege.ac.th  $2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm
-     eva.it@ccollege.ac.th  $2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe
-     t.it01@ccollege.ac.th  $2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy
-     t.me01@ccollege.ac.th  $2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC
-     t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW
-   - ถ้าแก้ schema.sql หลัง Deploy ไปแล้ว: บน VM2 รัน cd ~/pes-prod &amp;&amp; sudo docker compose down -v แล้ว Retry job deploy</pre>
+--------------------------------------------------------------------------------
+  [เฟสที่ 2] เก็บรายละเอียดบั๊กความถูกต้องด้านใน (จุดที่ 7–11) แล้วสั่ง Deploy รอบที่ 2!
+--------------------------------------------------------------------------------
+จุดที่ 7 (frontend/layouts/default.vue — แก้เมนูแอดมิน):
+   เพิ่ม import { useAuthStore } from '~/stores/auth' และ const auth = useAuthStore()
+   แก้ const role = computed(() =&gt; auth.user?.role || 'user')
+
+จุดที่ 8 (frontend/pages/users/new.vue — แก้บั๊กกดปุ่ม Create User แล้วขึ้น 500):
+   เพิ่ม definePageMeta({ ssr: false }) บนสุดใน &lt;script setup&gt;
+   เพิ่ม const config = useRuntimeConfig();
+   ย้าย const token = localStorage.getItem("auth_token"); เข้ามาไว้ในฟังก์ชัน handleSubmit
+   แก้ URL ใน axios.post เป็น `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`
+
+จุดที่ 9 (frontend/composables/useMenu.js — แก้ลิงก์เมนู API Docs ให้ใช้ apiBase)
+จุดที่ 10 (frontend/pages/index.vue บรรทัด 91 — แก้ลิงก์ปุ่ม Open API Docs เป็น http://api.mydomain.lab/docs)
+จุดที่ 11 (frontend/pages/login.vue บรรทัด 20 — แก้ไอคอนตาจาก show ? เป็น showPw ?)
+
+&gt;&gt;&gt; [STEP 7.2] สั่ง Git Push รอบที่ 2 เพื่อ Auto-Trigger Pipeline อัปเดตระบบ! &lt;&lt;&lt;
+git add .
+git commit -m "Phase 2: Fix admin menu, user creation SSR, and API docs links"
+git push</pre>
     </section>
 
   </main>
