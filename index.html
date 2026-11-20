@@ -2065,7 +2065,7 @@ git push</code></pre>
             <div>1. เปิด <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code class="text-emerald-300">12345678</code> &rarr; เมนูซ้ายแสดงครบ (<code>Users</code>, <code>Periods</code>, <code>API Docs</code>)</div>
             <div>2. กดปุ่ม <strong>Create User</strong> (<code class="text-emerald-300">http://app.mydomain.lab/users/new</code>) &rarr; เปิดฟอร์มสร้างผู้ใช้ได้ไม่ขึ้น Error 500 และบันทึกผู้ใช้ใหม่ได้จริง</div>
             <div>3. เปิดหน้า <strong>Upload</strong> (<code class="text-emerald-300">http://app.mydomain.lab/upload</code>) &rarr; อัปโหลดไฟล์พร้อมบันทึก <code>note</code> ได้ และปุ่ม <strong>Open API Docs</strong> เปิดไปที่ <code class="text-emerald-300">http://api.mydomain.lab/docs</code> ได้ถูกต้อง!</div>
-            <div class="text-amber-300 pt-1">⚠️ หมายเหตุ: หากใครลืมแก้ <code>schema.sql</code> ในเฟส 1 แล้วเพิ่งมาแก้ในเฟส 2 ให้รันบน VM2: <code>cd ~/pes-prod &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job <code>deploy_job</code> เพื่อให้ MySQL สร้างตารางใหม่พร้อมคอลัมน์ <code>note</code></div>
+            <div class="text-amber-300 pt-1">⚠️ หมายเหตุ: หากใครลืมแก้ <code>schema.sql</code> ในเฟส 1 แล้วเพิ่งมาแก้ในเฟส 2 ให้รันบน VM2: <code>cd ~/pes &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job <code>deploy_job</code> เพื่อให้ MySQL สร้างตารางใหม่พร้อมคอลัมน์ <code>note</code></div>
           </div>
         </div>
 
