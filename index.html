@@ -42,7 +42,7 @@
       background: #475569;
     }
     /* Highlight changed lines inside code blocks */
-    .hl-edit {
+    .hl-edit, .hl-add, .hl-move {
       background: rgba(250, 204, 21, 0.22);
       color: #fde047;
       font-weight: 700;
@@ -51,6 +51,45 @@
       border-radius: 0 4px 4px 0;
       display: inline-block;
       width: 100%;
+      position: relative;
+    }
+    .hl-add {
+      background: rgba(16, 185, 129, 0.22);
+      color: #6ee7b7;
+      border-left-color: #10b981;
+    }
+    .hl-move {
+      background: rgba(56, 189, 248, 0.22);
+      color: #7dd3fc;
+      border-left-color: #38bdf8;
+    }
+    .hl-edit[data-tag]::after,
+    .hl-add[data-tag]::after,
+    .hl-move[data-tag]::after {
+      content: attr(data-tag);
+      float: right;
+      font-size: 11px;
+      font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+      font-weight: 600;
+      padding: 0 6px;
+      border-radius: 4px;
+      margin-left: 12px;
+      opacity: 0.95;
+    }
+    .hl-edit[data-tag]::after {
+      background: rgba(250, 204, 21, 0.25);
+      color: #fef08a;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+    }
+    .hl-add[data-tag]::after {
+      background: rgba(16, 185, 129, 0.25);
+      color: #a7f3d0;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+    }
+    .hl-move[data-tag]::after {
+      background: rgba(56, 189, 248, 0.25);
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.45);
     }
     .hl-inline {
       background: rgba(250, 204, 21, 0.25);
@@ -1587,9 +1626,14 @@ git push -u origin main</code></pre>
 
       <div class="p-5 sm:p-6 space-y-6">
         <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2">
-          <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง:</div>
+          <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง &amp; ความหมายของสีไฮไลต์:</div>
           <p>กรรมการจะให้โฟลเดอร์เทมเพลตต้นฉบับชื่อ <code class="text-amber-300 font-bold">PES</code> (ประกอบด้วย <code class="text-white">backend</code>, <code class="text-white">frontend</code>, <code class="text-white">schema.sql</code>, <code class="text-white">docker-compose.yml</code>, <code class="text-white">.gitlab-ci.yml</code>) ซึ่งไฟล์ต้นฉบับของกรรมการมีการวางยา/บั๊กไว้หลายจุด และยังชี้ IP ไปที่ <code class="text-rose-300">localhost:7000</code> หรือ <code class="text-rose-300">172.16.3.105</code></p>
           <p><strong>วิธีเตรียมตัวก่อนเริ่มแก้:</strong> คัดลอกโฟลเดอร์ <code class="text-amber-300">PES</code> ออกมาเป็นโฟลเดอร์ใหม่ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> แล้ว<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> จากนั้นเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code แล้วไล่ทำตามลำดับด้านล่างนี้ครับ</p>
+          <div class="flex flex-wrap gap-2 pt-1 text-xs">
+            <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">➕ สีเขียว = พิมพ์แทรกบรรทัดใหม่เพิ่มเข้าไป</span>
+            <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">✏️ สีเหลือง = แก้ทับบรรทัดเดิมของกรรมการ</span>
+            <span class="px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">🔀 สีฟ้า = ย้ายบรรทัดเดิมจากข้างบนลงมาไว้ตรงนี้</span>
+          </div>
         </div>
 
         <!-- PES Pre-check on VM1 & VM2 -->
@@ -1615,8 +1659,8 @@ sudo ufw status</code></pre>
         <!-- Point 1 & 2 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 1: แก้ไฟล์ <code class="text-white">schema.sql</code> (เพิ่มคอลัมน์ note)</h3>
-            <p class="text-xs text-slate-300">กด <code class="text-amber-300">Ctrl+F</code> หา <code class="text-amber-300">storage_path VARCHAR(1024)</code> ในตาราง <code class="text-white">attachments</code> (บรรทัด ~149) แล้วแทรกบรรทัด <code class="text-emerald-300 font-bold">note TEXT NULL,</code> ต่อท้าย:</p>
+            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 1: แก้ไฟล์ <code class="text-white">schema.sql</code> <span class="text-xs font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40 ml-1">➕ เพิ่มใหม่ 1 บรรทัด</span></h3>
+            <p class="text-xs text-slate-300">กด <code class="text-amber-300">Ctrl+F</code> หา <code class="text-amber-300">storage_path VARCHAR(1024)</code> ในตาราง <code class="text-white">attachments</code> (บรรทัด ~149) แล้ว<strong>พิมพ์แทรกบรรทัดสีเขียว</strong> <code class="text-emerald-300 font-bold">note TEXT NULL,</code> ต่อท้าย:</p>
             <div class="code-box">
               <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
                 <span class="text-xs font-mono text-cyan-300">schema.sql (ตาราง attachments)</span>
@@ -1628,14 +1672,14 @@ sudo ufw status</code></pre>
   mime_type VARCHAR(100) NOT NULL,
   size_bytes INT UNSIGNED NOT NULL,
   storage_path VARCHAR(1024) NOT NULL,
-<span class="hl-edit">  note TEXT NULL,</span>
+<span class="hl-add" data-tag="➕ พิมพ์แทรกเพิ่มใหม่ (ของเดิมไม่มี)">  note TEXT NULL,</span>
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,</code></pre>
             </div>
           </div>
 
           <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> (แก้แค่บรรทัด CORS_ORIGIN)</h3>
-            <p class="text-xs text-slate-300">แก้เฉพาะบรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ที่ไฮไลต์สีเหลืองให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง เพราะโค้ด API ไม่ตัดช่องว่างให้):</p>
+            <h3 class="font-bold text-cyan-300 text-base">จุดที่ 2: แก้ไฟล์ <code class="text-white">backend/.env</code> <span class="text-xs font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40 ml-1">✏️ แก้ทับ 1 บรรทัด</span></h3>
+            <p class="text-xs text-slate-300">แก้เฉพาะบรรทัด <code class="text-amber-300">CORS_ORIGIN</code> ที่ไฮไลต์สีเหลืองให้ยอมรับทั้ง IP ของ VM2 (<code class="text-emerald-300">192.168.10.32:3000</code>) และโดเมน <code class="text-emerald-300">app.mydomain.lab</code> (คั่นด้วย <code>,</code> ห้ามมีช่องว่าง):</p>
             <div class="code-box">
               <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
                 <span class="text-xs font-mono text-cyan-300">backend/.env (แก้เฉพาะบรรทัดไฮไลต์สีเหลือง)</span>
@@ -1644,7 +1688,7 @@ sudo ufw status</code></pre>
                 </button>
               </div>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>PORT=7000
-<span class="hl-edit">CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab</span>
+<span class="hl-edit" data-tag="✏️ แก้ทับบรรทัดเดิม (เติมต่อท้าย)">CORS_ORIGIN=http://localhost:3000,http://127.0.0.1:3000,http://192.168.10.32:3000,http://app.mydomain.lab,https://app.mydomain.lab</span>
 
 DB_HOST=db
 DB_PORT=3306
@@ -1706,7 +1750,7 @@ dist</code></pre>
 
         <!-- Point 6, 7, 8, 9 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (ไฮไลต์สีเหลืองคือบรรทัดที่ต้องเพิ่ม/แก้จากไฟล์เดิม)</h3>
+          <h3 class="font-bold text-cyan-300 text-base">จุดที่ 6–9: แก้บั๊กฝั่ง Frontend ที่กรรมการวางยาไว้ (มีป้ายบอกชัดเจนว่า ➕ เพิ่มใหม่ / ✏️ แก้จากเดิม / 🔀 ย้ายบรรทัด)</h3>
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div class="code-box">
@@ -1718,15 +1762,15 @@ dist</code></pre>
               </div>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>export function useMenu(roleInput = 'user') {
   const r = isRef(roleInput) ? roleInput : ref(roleInput)
-<span class="hl-edit">  const config = useRuntimeConfig()</span>
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">  const config = useRuntimeConfig()</span>
 
-  const menu = computed(() => {
+  const menu = computed(() =&gt; {
     const key = normalizeRole(r.value)
-<span class="hl-edit">    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')</span>
+<span class="hl-edit" data-tag="✏️ แก้จาก return MAP[key] || MAP.user">    const base = String(config.public.apiBase || 'http://api.mydomain.lab').replace(/\/$/, '')</span>
 <span class="hl-edit">    const sections = MAP[key] || MAP.user</span>
-<span class="hl-edit">    return sections.map((sec) => ({</span>
+<span class="hl-edit">    return sections.map((sec) =&gt; ({</span>
 <span class="hl-edit">      ...sec,</span>
-<span class="hl-edit">      items: sec.items.map((it) =></span>
+<span class="hl-edit">      items: sec.items.map((it) =&gt;</span>
 <span class="hl-edit">        it.label === 'API Docs' ? { ...it, href: `${base}/docs` } : it</span>
 <span class="hl-edit">      ),</span>
 <span class="hl-edit">    }))</span>
@@ -1746,10 +1790,10 @@ dist</code></pre>
               <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
 import { ref, computed } from 'vue'
 import { useMenu } from '~/composables/useMenu'
-<span class="hl-edit">import { useAuthStore } from '~/stores/auth'</span>
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">import { useAuthStore } from '~/stores/auth'</span>
 
-<span class="hl-edit">const auth = useAuthStore()</span>
-<span class="hl-edit">const role = computed(() =&gt; auth.user?.role || 'user')</span>
+<span class="hl-add" data-tag="➕ เพิ่มใหม่">const auth = useAuthStore()</span>
+<span class="hl-edit" data-tag="✏️ แก้จากเดิม const role = ref('user')">const role = computed(() =&gt; auth.user?.role || 'user')</span>
 const { menu } = useMenu(role)
 const drawer = ref(true)
 &lt;/script&gt;</code></pre>
@@ -1758,19 +1802,19 @@ const drawer = ref(true)
 
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (แก้แค่ 4 บรรทัดสีเหลือง)</span>
+              <span class="text-xs font-mono text-cyan-300">จุดที่ 8: ส่วน &lt;script setup&gt; ท้ายไฟล์ frontend/pages/users/new.vue (เพิ่ม 2 บรรทัดสีเขียว • ย้าย 1 บรรทัดสีฟ้า • แก้ 1 บรรทัดสีเหลือง)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
             <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-slate-400 overflow-x-auto border border-t-0 border-slate-800"><code>&lt;script setup&gt;
-<span class="hl-edit">definePageMeta({ ssr: false })</span>
+<span class="hl-add" data-tag="➕ 1. พิมพ์เพิ่มใหม่บรรทัดบนสุด">definePageMeta({ ssr: false })</span>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
 const router = useRouter();
-<span class="hl-edit">const config = useRuntimeConfig();</span>
+<span class="hl-add" data-tag="➕ 2. พิมพ์เพิ่มใหม่">const config = useRuntimeConfig();</span>
 const errorMsg = ref("");
 const showPassword = ref(false);
 
@@ -1783,10 +1827,10 @@ const vals = ref({
 
 const roles = ["evaluatee", "evaluator", "admin"];
 const handleSubmit = async () =&gt; {
-<span class="hl-edit">  const token = localStorage.getItem("auth_token");</span>
+<span class="hl-move" data-tag="🔀 3. ย้ายบรรทัดนี้จากข้างบน (บรรทัด 95) ลงมาไว้ใน handleSubmit">  const token = localStorage.getItem("auth_token");</span>
   try {
     await axios.post(
-<span class="hl-edit">      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,</span>
+<span class="hl-edit" data-tag="✏️ 4. แก้จากเดิม &quot;http://localhost:7000/api/users&quot;">      `${config.public.apiBase || "http://api.mydomain.lab"}/api/users`,</span>
       {
         name_th: vals.value.name_th,
         email: vals.value.email,
@@ -1809,29 +1853,29 @@ const handleSubmit = async () =&gt; {
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1">
-            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> แก้ลิงก์ Open API Docs จาก <code class="text-rose-300 line-through">http://localhost:7000/docs</code> เป็น <span class="hl-inline font-mono">http://api.mydomain.lab/docs</span></li>
-            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> แก้ไอคอนตาจาก <code class="text-rose-300 line-through">:append-inner-icon="show ? ..."</code> เป็น <span class="hl-inline font-mono">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</span></li>
+            <li>• <strong>จุดที่ 7 (<code class="text-amber-300">frontend/pages/index.vue</code> บรรทัด 91):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ลิงก์ Open API Docs จาก <code class="text-rose-300 line-through">http://localhost:7000/docs</code> เป็น <span class="hl-inline font-mono">http://api.mydomain.lab/docs</span></li>
+            <li>• <strong>จุดที่ 9.2 (<code class="text-amber-300">frontend/pages/login.vue</code> บรรทัด 20):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> ไอคอนตาจาก <code class="text-rose-300 line-through">:append-inner-icon="show ? ..."</code> เป็น <span class="hl-inline font-mono">:append-inner-icon="showPw ? 'mdi-eye-off' : 'mdi-eye'"</span></li>
           </ul>
         </div>
 
         <!-- Point 10: docker-compose.yml -->
         <div class="bg-slate-950/60 border-2 border-amber-500/40 rounded-xl p-4 sm:p-5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <h3 class="font-bold text-amber-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้จากไฟล์เดิมแค่ 4 บรรทัดสีเหลือง)</h3>
-            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">✨ แก้แค่ 4 บรรทัดที่ไฮไลต์สีเหลือง!</span>
+            <h3 class="font-bold text-amber-300 text-base">จุดที่ 10: แก้ไฟล์ <code class="text-white">docker-compose.yml</code> ที่รากโปรเจกต์ (ไม่ต้องพิมพ์ใหม่ทั้งไฟล์! แก้ทับจากไฟล์เดิมแค่ 4 บรรทัดสีเหลือง)</h3>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-md font-bold">✏️ แก้ทับของเดิมแค่ 4 บรรทัด (ไม่ต้องเพิ่มบรรทัดใหม่เลย!)</span>
           </div>
           <div class="bg-amber-950/30 border border-amber-500/30 rounded-lg p-3 text-xs sm:text-sm text-slate-200 space-y-1">
-            <div class="font-bold text-amber-300">📌 สรุป 4 บรรทัดที่ต้องแก้ในไฟล์ <code>docker-compose.yml</code> ต้นฉบับของกรรมการ:</div>
+            <div class="font-bold text-amber-300">📌 สรุป 4 บรรทัดที่ต้องแก้ทับในไฟล์ <code>docker-compose.yml</code> ต้นฉบับของกรรมการ:</div>
             <ol class="list-decimal list-inside space-y-1">
-              <li>ใน <code>phpmyadmin:</code> แก้พอร์ตจาก <code class="text-rose-300 line-through">ports: ["8080:80"]</code> &rarr; เป็น <span class="hl-inline font-mono">ports: ["8081:80"]</span> (กันชนพอร์ต 8080)</li>
-              <li>ใน <code>api:</code> แก้จาก <code class="text-rose-300 line-through">build: ./backend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-backend:latest</span></li>
-              <li>ใน <code>frontend:</code> แก้จาก <code class="text-rose-300 line-through">build: ./frontend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-frontend:latest</span></li>
-              <li>ใน <code>frontend:</code> แก้ <code class="text-rose-300 line-through">NUXT_PUBLIC_API_BASE: http://localhost:7000</code> &rarr; เป็น <span class="hl-inline font-mono">NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span></li>
+              <li>ใน <code>phpmyadmin:</code> <strong>[✏️ แก้ทับ]</strong> พอร์ตจาก <code class="text-rose-300 line-through">ports: ["8080:80"]</code> &rarr; เป็น <span class="hl-inline font-mono">ports: ["8081:80"]</span> (กันชนพอร์ต 8080)</li>
+              <li>ใน <code>api:</code> <strong>[✏️ แก้ทับ]</strong> จาก <code class="text-rose-300 line-through">build: ./backend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-backend:latest</span></li>
+              <li>ใน <code>frontend:</code> <strong>[✏️ แก้ทับ]</strong> จาก <code class="text-rose-300 line-through">build: ./frontend</code> &rarr; เป็น <span class="hl-inline font-mono">image: 192.168.10.31:5000/pes-frontend:latest</span></li>
+              <li>ใน <code>frontend:</code> <strong>[✏️ แก้ทับ]</strong> จาก <code class="text-rose-300 line-through">NUXT_PUBLIC_API_BASE: http://localhost:7000</code> &rarr; เป็น <span class="hl-inline font-mono">NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span></li>
             </ol>
           </div>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
-              <span class="text-xs font-mono text-amber-300">pes-app/docker-compose.yml (ส่วนสีเทาคือของเดิมกรรมการ • ส่วนไฮไลต์สีเหลืองคือ 4 จุดที่แก้)</span>
+              <span class="text-xs font-mono text-amber-300">pes-app/docker-compose.yml (ส่วนสีเทาคือของเดิมกรรมการ • ส่วนไฮไลต์สีเหลืองคือ 4 จุดที่แก้ทับ)</span>
               <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
                 <span>📋 กดเพื่อคัดลอก docker-compose.yml</span>
               </button>
@@ -1862,12 +1906,12 @@ const handleSubmit = async () =&gt; {
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: rootpassword
-<span class="hl-edit">    ports: ["8081:80"]</span>
+<span class="hl-edit" data-tag="✏️ 1. แก้จากเดิม ports: [&quot;8080:80&quot;]">    ports: ["8081:80"]</span>
     depends_on: [db]
     networks: [dev_net]
 
   api:
-<span class="hl-edit">    image: 192.168.10.31:5000/pes-backend:latest</span>
+<span class="hl-edit" data-tag="✏️ 2. แก้จากเดิม build: ./backend">    image: 192.168.10.31:5000/pes-backend:latest</span>
     env_file:
       - ./backend/.env
     ports: ["7000:7000"]
@@ -1879,9 +1923,9 @@ const handleSubmit = async () =&gt; {
     networks: [dev_net]
 
   frontend:
-<span class="hl-edit">    image: 192.168.10.31:5000/pes-frontend:latest</span>
+<span class="hl-edit" data-tag="✏️ 3. แก้จากเดิม build: ./frontend">    image: 192.168.10.31:5000/pes-frontend:latest</span>
     environment:
-<span class="hl-edit">      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span>
+<span class="hl-edit" data-tag="✏️ 4. แก้จากเดิม http://localhost:7000">      NUXT_PUBLIC_API_BASE: http://api.mydomain.lab</span>
       NITRO_PORT: 3000
       HOST: 0.0.0.0
     ports: ["3000:3000"]
