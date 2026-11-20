@@ -1625,10 +1625,21 @@ git push -u origin main</code></pre>
       </div>
 
       <div class="p-5 sm:p-6 space-y-6">
-        <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2">
-          <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง &amp; ความหมายของสีไฮไลต์:</div>
+        <div class="bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="font-bold text-cyan-300 text-base">📌 ภาพรวมสถานการณ์จริงในห้องแข่ง &amp; ลิงก์ดาวน์โหลดเทมเพลต PES ต้นฉบับ:</div>
+            <a href="https://vecskill.bncc.ac.th/files/PES.zip" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm px-3.5 py-2 rounded-lg shadow-md transition">
+              <span>📦 ดาวน์โหลด PES.zip (ต้นฉบับกรรมการ)</span>
+            </a>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-lg p-3 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-2">
+            <div>
+              🔗 <strong>URL ดาวน์โหลดไฟล์ต้นฉบับ:</strong> <a href="https://vecskill.bncc.ac.th/files/PES.zip" target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-amber-200 underline font-mono font-bold">https://vecskill.bncc.ac.th/files/PES.zip</a>
+            </div>
+            <span class="text-xs text-slate-400">(โหลดแล้วแตกไฟล์ออกมาจะได้โฟลเดอร์ <code class="text-white">PES</code>)</span>
+          </div>
           <p>กรรมการจะให้โฟลเดอร์เทมเพลตต้นฉบับชื่อ <code class="text-amber-300 font-bold">PES</code> (ประกอบด้วย <code class="text-white">backend</code>, <code class="text-white">frontend</code>, <code class="text-white">schema.sql</code>, <code class="text-white">docker-compose.yml</code>, <code class="text-white">.gitlab-ci.yml</code>) ซึ่งไฟล์ต้นฉบับของกรรมการมีการวางยา/บั๊กไว้หลายจุด และยังชี้ IP ไปที่ <code class="text-rose-300">localhost:7000</code> หรือ <code class="text-rose-300">172.16.3.105</code></p>
-          <p><strong>วิธีเตรียมตัวก่อนเริ่มแก้:</strong> คัดลอกโฟลเดอร์ <code class="text-amber-300">PES</code> ออกมาเป็นโฟลเดอร์ใหม่ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> แล้ว<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> จากนั้นเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code แล้วไล่ทำตามลำดับด้านล่างนี้ครับ</p>
+          <p><strong>วิธีเตรียมตัวก่อนเริ่มแก้:</strong> แตกไฟล์ <code class="text-amber-300">PES.zip</code> แล้วเปลี่ยนชื่อโฟลเดอร์ (หรือคัดลอกออกมา) เป็นชื่อ <code class="text-emerald-300 font-bold">pes-app</code> จากนั้น<strong>ลบโฟลเดอร์ <code class="text-rose-300">backend/node_modules</code>, <code class="text-rose-300">frontend/node_modules</code>, และ <code class="text-rose-300">frontend/.nuxt</code> ทิ้งทันที</strong> แล้วเปิดโฟลเดอร์ <code class="text-emerald-300">pes-app</code> ใน VS Code เพื่อไล่ทำตามลำดับด้านล่างนี้ครับ</p>
           <div class="flex flex-wrap gap-2 pt-1 text-xs">
             <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">➕ สีเขียว = พิมพ์แทรกบรรทัดใหม่เพิ่มเข้าไป</span>
             <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">✏️ สีเหลือง = แก้ทับบรรทัดเดิมของกรรมการ</span>
@@ -2496,7 +2507,8 @@ git push -u origin main
 CI/CD:   git push -&gt; GitLab (.31) -&gt; Runner shell บน VM1: build -&gt; test -&gt; push 192.168.10.31:5000
          -&gt; ssh user1@192.168.10.32 -p 2222 -&gt; docker compose pull + up -d (ใน ~/pes-prod)
 
-1. เตรียม: คัดลอก PES เป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
+1. เตรียม: ดาวน์โหลดไฟล์ต้นฉบับ https://vecskill.bncc.ac.th/files/PES.zip แล้วแตกไฟล์คัดลอก PES เป็น pes-app
+   จากนั้นลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
    (UFW ของ VM2 ปิดแล้วตั้งแต่ STEP 3.2 ไม่ต้อง allow 3000/7000/8081 | DNS/NPM มี app และ api แล้วใน ส่วนที่ 4)
 
 2. schema.sql: ในตาราง attachments ใต้บรรทัด storage_path VARCHAR(1024) NOT NULL, ให้เพิ่ม
