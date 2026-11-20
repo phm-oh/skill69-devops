@@ -245,6 +245,7 @@
     .port-cell.v10 { border-color: var(--blue); background: #eff6ff; color: #1e40af; }
     .port-cell.v20 { border-color: var(--green); background: #f0fdf4; color: #166534; }
     .port-cell.v1  { border-color: var(--purple); background: #faf5ff; color: #5b21b6; }
+    .port-cell.v30 { border-color: #c026d3; background: #fdf4ff; color: #86198f; }
     .port-cell.sfp { border-color: var(--slate-300); background: #f1f5f9; color: #64748b; }
 
     .site-nav {
@@ -333,6 +334,7 @@
   <a class="back" href="index.html">กลับคู่มือ VM</a>
   <a href="#mikrotik">ตั้งค่า MikroTik</a>
   <a class="alt" href="#tplink">ตั้งค่า TP-Link</a>
+  <a href="#acl">ACL วงแขก</a>
   <a href="#test">ต่อสายและทดสอบ</a>
 </nav>
 
@@ -383,7 +385,7 @@
       <tr>
         <td><strong>VLAN วงเซิร์ฟเวอร์กับวง dev ที่ไม่ใช่ VLAN เริ่มต้น (2 คะแนน)</strong></td>
         <td>TP-Link SG3428MP</td>
-        <td>เมนู <code>L2 FEATURES &rarr; VLAN &rarr; 802.1Q VLAN</code> สร้าง VLAN 10, 20, 99 เลือกพอร์ตแบบ <strong>Untagged</strong> และตั้ง <strong>PVID</strong> ให้ตรงกัน</td>
+        <td>เมนู <code>L2 FEATURES &rarr; VLAN &rarr; 802.1Q VLAN</code> สร้าง VLAN 10, 20, 30, 99 เลือกพอร์ตแบบ <strong>Untagged</strong> และตั้ง <strong>PVID</strong> ให้ตรงกัน</td>
       </tr>
       <tr>
         <td><strong>Inter-VLAN Routing (3 คะแนน)</strong></td>
@@ -393,12 +395,12 @@
       <tr>
         <td><strong>DHCP ทั้งสองวง + DHCP Snooping (3 คะแนน)</strong></td>
         <td>TP-Link SG3428MP</td>
-        <td>เมนู <code>L3 FEATURES &rarr; DHCP Service &rarr; DHCP Server</code> สร้าง 2 พูล + ตั้ง Excluded Address และเปิด <code>SECURITY &rarr; IP-MAC Binding &rarr; DHCP Snooping</code> บน VLAN 10, 20</td>
+        <td>เมนู <code>L3 FEATURES &rarr; DHCP Service &rarr; DHCP Server</code> สร้างพูล VLAN 10, 20, 30 + Excluded Address และเปิด <code>DHCP Snooping</code> บน VLAN 10, 20, 30</td>
       </tr>
       <tr>
         <td><strong>NAT ทั้งสองวงออกอินเทอร์เน็ต (2 คะแนน)</strong></td>
         <td>MikroTik E50UG</td>
-        <td>ทำ <code>masquerade</code> ขาออก <code>ether1</code> และใส่ Static Route ขากลับไปหา <code>192.168.10.0/24</code> และ <code>192.168.20.0/24</code> ผ่าน <code>192.168.99.2</code></td>
+        <td>ทำ <code>masquerade</code> ขาออก <code>ether1</code> และใส่ Static Route ขากลับไปหา <code>192.168.10.0/24</code>, <code>192.168.20.0/24</code>, และ <code>192.168.30.0/24</code> ผ่าน <code>192.168.99.2</code></td>
       </tr>
     </tbody>
   </table>
@@ -408,7 +410,7 @@
     <li>โน้ตบุ๊คใน VLAN 20 ใช้เกตเวย์ <code>192.168.20.1</code> (SVI ของสวิตช์ TP-Link) ไม่ใช่ไอพีของ MikroTik</li>
     <li>เวลาคุยข้ามไปเครื่องใน VLAN 10 (เช่น Proxmox <code>192.168.10.30</code>) สวิตช์ TP-Link ส่งข้ามวงให้เองโดยตรง แพ็กเก็ตไม่ผ่าน MikroTik</li>
     <li>เวลาออกอินเทอร์เน็ต สวิตช์ TP-Link ส่งตาม Default Route (<code>0.0.0.0/0</code>) ไปที่ <code>192.168.99.1</code> (<code>ether3</code>) แล้ว MikroTik ทำ NAT ออก <code>ether1</code></li>
-    <li>ขากลับ MikroTik มี Route <code>192.168.10.0/24</code> และ <code>192.168.20.0/24</code> ชี้กลับมาที่ <code>192.168.99.2</code> (ขา VLAN 99 ของสวิตช์ TP-Link)</li>
+    <li>ขากลับ MikroTik มี Route <code>192.168.10.0/24</code>, <code>192.168.20.0/24</code>, และ <code>192.168.30.0/24</code> ชี้กลับมาที่ <code>192.168.99.2</code> (ขา VLAN 99 ของสวิตช์ TP-Link)</li>
   </ol>
 
   <!-- ผังภาพ -->
@@ -468,8 +470,8 @@
         <div class="port-cell v1"><span class="p-num">Port 18</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
         <div class="port-cell v1"><span class="p-num">Port 19</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
         <div class="port-cell v1"><span class="p-num">Port 20</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
-        <div class="port-cell v1"><span class="p-num">Port 21</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
-        <div class="port-cell v1"><span class="p-num">Port 22</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
+        <div class="port-cell v30"><span class="p-num">Port 21</span>VLAN 30<br>PVID 30<br>(Guest)</div>
+        <div class="port-cell v30"><span class="p-num">Port 22</span>VLAN 30<br>PVID 30<br>(Guest)</div>
         <div class="port-cell v1"><span class="p-num">Port 23</span>VLAN 1<br>PVID 1<br>(สำรอง)</div>
         <div class="port-cell v1"><span class="p-num">Port 24</span>VLAN 1<br>PVID 1<br><strong>(ตั้งค่าสวิตช์)</strong></div>
       </div>
@@ -544,9 +546,19 @@
         <td>ตั้ง Network <code>192.168.20.0/24</code> แล้ว Exclude <code>.1–.99</code> และ <code>.200–.254</code>, DNS <code>192.168.10.31</code></td>
       </tr>
       <tr>
+        <td><strong>เกตเวย์ VLAN 30 Guest (TP-Link)</strong></td>
+        <td><code>192.168.30.1/24</code></td>
+        <td>SVI บน TP-Link พอร์ต 21–22 ACL ให้เข้าได้แค่เว็บ <code>.32:80</code> และ DNS <code>.31:53</code></td>
+      </tr>
+      <tr>
+        <td><strong>พูล DHCP VLAN 30</strong></td>
+        <td><code>192.168.30.100 – 199</code></td>
+        <td>Network <code>192.168.30.0/24</code> เกตเวย์ <code>192.168.30.1</code> DNS <code>192.168.10.31</code></td>
+      </tr>
+      <tr>
         <td><strong>ฉุกเฉิน VLAN 1 ของ TP-Link</strong></td>
         <td><code>192.168.0.1/24</code></td>
-        <td>ค่าเริ่มต้นของ TP-Link เก็บพอร์ต 17–24 ไว้เข้าหน้าเว็บ GUI เสมอ</td>
+        <td>พอร์ต 17–20 และ 23–24 อยู่ VLAN 1 เข้าหน้าเว็บ GUI ที่พอร์ต 24 ได้ พอร์ต 21–22 เป็นวงแขก VLAN 30</td>
       </tr>
     </tbody>
   </table>
@@ -636,14 +648,15 @@
     </tbody>
   </table>
 
-  <h3>4.3 ใส่ Static Route ขากลับไปหาวงเซิร์ฟเวอร์ (VLAN 10) และวง dev (VLAN 20)</h3>
-  <p>ไปที่เมนูซ้าย <strong>IP &rarr; Routes</strong> กดปุ่ม <strong><code>+</code></strong> สองครั้ง:</p>
+  <h3>4.3 ใส่ Static Route ขากลับไปหา VLAN 10, VLAN 20, และ VLAN 30</h3>
+  <p>ไปที่เมนูซ้าย <strong>IP &rarr; Routes</strong> กดปุ่ม <strong><code>+</code></strong> สามครั้ง:</p>
   <table>
     <thead>
       <tr>
         <th>ชื่อช่องใน Winbox</th>
         <th>ค่าแถวที่ 1 (กลับไปวง Server)</th>
         <th>ค่าแถวที่ 2 (กลับไปวง Dev)</th>
+        <th>ค่าแถวที่ 3 (กลับไปวง Guest)</th>
       </tr>
     </thead>
     <tbody>
@@ -651,15 +664,17 @@
         <td><strong>Dst. Address</strong></td>
         <td><code>192.168.10.0/24</code></td>
         <td><code>192.168.20.0/24</code></td>
+        <td><code>192.168.30.0/24</code></td>
       </tr>
       <tr>
         <td><strong>Gateway</strong></td>
         <td><code>192.168.99.2</code></td>
         <td><code>192.168.99.2</code></td>
+        <td><code>192.168.99.2</code></td>
       </tr>
     </tbody>
   </table>
-  <p>กด <strong>OK</strong> ทั้งคู่ <em>(ตอนนี้ยังไม่ได้เสียบสายลิงก์ แถวจะขึ้นสถานะ <code>unreachable</code> เป็นเรื่องปกติ พอเสียบสายในบทที่ 6 จะเปลี่ยนเป็น <code>reachable</code> ทันที)</em></p>
+  <p>กด <strong>OK</strong> ทั้งสามแถว <em>(ตอนนี้ยังไม่ได้เสียบสายลิงก์ แถวจะขึ้นสถานะ <code>unreachable</code> เป็นเรื่องปกติ พอเสียบสายในบทที่ 6 จะเปลี่ยนเป็น <code>reachable</code> ทันที)</em> ถ้าไม่มีแถววง <code>192.168.30.0/24</code> เครื่องแขกจะออกเน็ตแล้วแพ็กเก็ตกลับไม่ถึง</p>
 
   <h3>4.4 ใส่กฎ NAT แบบ Masquerade</h3>
   <p>ไปที่เมนูซ้าย <strong>IP &rarr; Firewall</strong> เลือกแท็บ <strong>NAT</strong> แล้วกดปุ่ม <strong><code>+</code></strong>:</p>
@@ -760,10 +775,11 @@ add address=192.168.1.1/24 interface=ether2 comment="MGMT"
 add address=192.168.99.1/30 interface=ether3 comment="LINK_TO_SWITCH"
 add address=172.16.48.29/22 interface=ether1 comment="WAN_IP_CHANGE_ON_MATCH_DAY"
 
-# 2. ใส่ Route ขากลับเข้า VLAN 10, 20 และใส่ Default Route ออกอินเทอร์เน็ต (0.0.0.0/0)
+# 2. ใส่ Route ขากลับเข้า VLAN 10, 20, 30 และใส่ Default Route ออกอินเทอร์เน็ต (0.0.0.0/0)
 /ip route
 add dst-address=192.168.10.0/24 gateway=192.168.99.2 comment="RETURN_VLAN10"
 add dst-address=192.168.20.0/24 gateway=192.168.99.2 comment="RETURN_VLAN20"
+add dst-address=192.168.30.0/24 gateway=192.168.99.2 comment="RETURN_VLAN30"
 add dst-address=0.0.0.0/0 gateway=172.16.48.1 comment="WAN_GATEWAY"
 
 # 3. ตั้งค่า DNS และ NAT Masquerade ขาออก ether1
@@ -775,7 +791,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
     <strong>✅ เช็คลิสต์ตรวจทาน MikroTik ก่อนจบหัวข้อที่ 4 (ต้องครบทั้ง 4 ข้อ!):</strong>
     <ul style="margin-bottom: 0;">
       <li>หน้า <strong>IP &rarr; Addresses</strong> ต้องมีครบ <strong>3 แถว</strong> คือ <code>ether1</code> (WAN), <code>ether2</code> (<code>.1.1/24</code>), และ <code>ether3</code> (<code>.99.1/30</code>)</li>
-      <li>หน้า <strong>IP &rarr; Routes</strong> ต้องมีครบ <strong>3 เส้นทาง</strong> คือ <code>0.0.0.0/0</code> (ชี้ไปเกตเวย์ WAN), <code>192.168.10.0/24</code> (ชี้ไป <code>192.168.99.2</code>), และ <code>192.168.20.0/24</code> (ชี้ไป <code>192.168.99.2</code>)</li>
+      <li>หน้า <strong>IP &rarr; Routes</strong> ต้องมีครบ <strong>4 เส้นทาง</strong> คือ <code>0.0.0.0/0</code> (ชี้ไปเกตเวย์ WAN), <code>192.168.10.0/24</code>, <code>192.168.20.0/24</code>, และ <code>192.168.30.0/24</code> (ทั้งสามวงชี้ไป <code>192.168.99.2</code>)</li>
       <li>หน้า <strong>IP &rarr; DNS</strong> ต้องมี Servers <code>1.1.1.1, 8.8.8.8</code> และติ๊กถูก <strong><code>[✓] Allow Remote Requests</code></strong></li>
       <li>หน้า <strong>IP &rarr; Firewall &rarr; NAT</strong> ต้องมี <code>srcnat</code> ออก <code>ether1</code> แบบ <code>masquerade</code></li>
     </ul>
@@ -783,7 +799,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
 
   <!-- บทที่ 5 -->
   <h2 id="tplink">5. ตั้งค่าสวิตช์ TP-Link Omada TL-SG3428MP (เว็บ GUI แบบจับมือทำ)</h2>
-  <p><em>ทำบนเครื่องสวิตช์ที่ยังไม่ต่อพอร์ต 1 เข้ากับ MikroTik ให้เสียบสาย LAN จากโน้ตบุ๊คเข้าที่ <strong>พอร์ต 24</strong> ของสวิตช์</em></p>
+  <p><em>ทำบนเครื่องสวิตช์ที่ยังไม่ต่อพอร์ต 1 เข้ากับ MikroTik ให้เสียบสาย LAN จากโน้ตบุ๊คเข้าที่ <strong>พอร์ต 24</strong> ของสวิตช์ พอร์ต 17–20 และ 23–24 คงอยู่ VLAN 1</em></p>
 
   <h3>5.1 รีเซ็ตและเข้าเครื่องสวิตช์ครั้งแรก</h3>
   <ol>
@@ -796,21 +812,22 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
     <li><strong>ล็อกไอพี VLAN 1 ให้เป็น Static:</strong> ไปที่เมนูด้านบนสุด <strong>L3 FEATURES</strong> &rarr; เมนูซ้าย <strong>Interface</strong> &rarr; กดปุ่ม <strong>Edit (รูปดินสอ)</strong> ที่แถว <code>VLAN 1</code> &rarr; ตรวจว่า <strong>IPv4 Address Mode</strong> เป็น <code>Static</code> (<code>192.168.0.1</code> / <code>255.255.255.0</code>) แล้วกด <strong>Apply</strong></li>
   </ol>
 
-  <h3>5.2 สร้าง VLAN 10, 20, 99 และกำหนดพอร์ต Access + PVID (สำคัญที่สุด!)</h3>
+  <h3>5.2 สร้าง VLAN 10, 20, 30, 99 และกำหนดพอร์ต Access + PVID (สำคัญที่สุด!)</h3>
   <div class="callout danger">
     <strong>🚨 จุดตายของ TP-Link ที่ห้ามพลาด:</strong> บนสวิตช์ TP-Link การทำพอร์ต Access ต้องทำ <strong>2 ขั้นตอนคู่กันเสมอ</strong> คือ <strong>ขั้น ก (สร้าง VLAN + ติ๊กพอร์ต Untagged)</strong> และ <strong>ขั้น ข (ตั้งค่า PVID ของพอร์ตให้ตรงกับเลข VLAN)</strong> ถ้าทำแค่ขั้น ก อย่างเดียว เครื่องลูกจะยังอยู่ VLAN 1 และขอ DHCP ไม่ได้!
   </div>
 
-  <h4>ขั้น ก — สร้าง VLAN 10, 20, 99 และเลือกพอร์ตแบบ Untagged</h4>
+  <h4>ขั้น ก — สร้าง VLAN 10, 20, 30, 99 และเลือกพอร์ตแบบ Untagged</h4>
   <p>คลิกแถบเมนูด้านบนสุด <strong>L2 FEATURES</strong> &rarr; เมนูซ้ายคลิก <strong>VLAN</strong> &rarr; คลิก <strong>802.1Q VLAN</strong> (อยู่ในแท็บแรกชื่อ <strong>VLAN Config</strong>) แล้วกดปุ่ม <strong><code>+ Add</code></strong> (มุมขวาบนของตาราง) สร้างทีละวงตามตารางนี้:</p>
 
   <table>
     <thead>
       <tr>
-        <th style="width: 28%;">ชื่อช่องในหน้า Add (VLAN Config)</th>
-        <th style="width: 24%;">ครั้งที่ 1 (VLAN 10)</th>
-        <th style="width: 24%;">ครั้งที่ 2 (VLAN 20)</th>
-        <th style="width: 24%;">ครั้งที่ 3 (VLAN 99)</th>
+        <th>ชื่อช่องในหน้า Add (VLAN Config)</th>
+        <th>ครั้งที่ 1 (VLAN 10)</th>
+        <th>ครั้งที่ 2 (VLAN 20)</th>
+        <th>ครั้งที่ 3 (VLAN 99)</th>
+        <th>ครั้งที่ 4 (VLAN 30)</th>
       </tr>
     </thead>
     <tbody>
@@ -819,21 +836,25 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><code>10</code></td>
         <td><code>20</code></td>
         <td><code>99</code></td>
+        <td><code>30</code></td>
       </tr>
       <tr>
         <td><strong>VLAN Name</strong></td>
         <td><code>SERVER</code></td>
         <td><code>DEV</code></td>
         <td><code>LINK</code></td>
+        <td><code>GUEST</code></td>
       </tr>
       <tr>
         <td><strong>Untagged Ports</strong></td>
         <td>ติ๊กพอร์ต <strong>2 ถึง 8</strong><br>(<code>1/0/2</code> – <code>1/0/8</code>)</td>
         <td>ติ๊กพอร์ต <strong>9 ถึง 16</strong><br>(<code>1/0/9</code> – <code>1/0/16</code>)</td>
         <td>ติ๊กพอร์ต <strong>1</strong><br>(<code>1/0/1</code>)</td>
+        <td>ติ๊กพอร์ต <strong>21 และ 22</strong><br>(<code>1/0/21</code> – <code>1/0/22</code>)</td>
       </tr>
       <tr>
         <td><strong>Tagged Ports</strong></td>
+        <td><em>ไม่ต้องติ๊กพอร์ตใดเลย</em></td>
         <td><em>ไม่ต้องติ๊กพอร์ตใดเลย</em></td>
         <td><em>ไม่ต้องติ๊กพอร์ตใดเลย</em></td>
         <td><em>ไม่ต้องติ๊กพอร์ตใดเลย</em></td>
@@ -843,10 +864,11 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td>กดปุ่ม <strong>Create</strong></td>
         <td>กดปุ่ม <strong>Create</strong></td>
         <td>กดปุ่ม <strong>Create</strong></td>
+        <td>กดปุ่ม <strong>Create</strong></td>
       </tr>
     </tbody>
   </table>
-  <p>เมื่อทำครบ ตาราง <strong>VLAN Config</strong> จะต้องมี 4 แถว คือ VLAN <code>1</code>, <code>10</code>, <code>20</code>, และ <code>99</code></p>
+  <p>เมื่อทำครบ ตาราง <strong>VLAN Config</strong> จะต้องมี 5 แถว คือ VLAN <code>1</code>, <code>10</code>, <code>20</code>, <code>30</code>, และ <code>99</code></p>
 
   <h4>ขั้น ข — ตั้งค่า PVID ของพอร์ตให้ตรงกับ VLAN (แท็บ Port Config)</h4>
   <p>ยังอยู่ในหน้า <strong>802.1Q VLAN</strong> ให้คลิกเปลี่ยนไปที่แท็บ <strong>Port Config</strong> (อยู่ข้างๆ แท็บ VLAN Config ด้านบนตาราง) แล้วตั้งค่าทีละกลุ่มพอร์ตดังนี้:</p>
@@ -880,7 +902,13 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td>กดปุ่ม <strong>Apply</strong></td>
       </tr>
       <tr>
-        <td>พอร์ต <strong><code>1/0/17</code> ถึง <code>1/0/24</code> (พอร์ต 17–24)</strong></td>
+        <td>ติ๊กพอร์ต <strong><code>1/0/21</code> และ <code>1/0/22</code> (พอร์ต 21–22)</strong></td>
+        <td><code>Access</code> (หรือ <code>General</code>)</td>
+        <td><strong><code>30</code></strong></td>
+        <td>กดปุ่ม <strong>Apply</strong></td>
+      </tr>
+      <tr>
+        <td>พอร์ต <strong><code>1/0/17</code> ถึง <code>1/0/20</code> และ <code>1/0/23</code> ถึง <code>1/0/24</code></strong></td>
         <td>ปล่อยค่าเดิม</td>
         <td><strong><code>1</code></strong> (ค่าเดิม)</td>
         <td>ไม่ต้องเปลี่ยน</td>
@@ -891,20 +919,22 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
 
   <h3>5.3 สร้างเกตเวย์ (SVI / L3 Interface) เพื่อเปิด Inter-VLAN Routing</h3>
   <p>บน TP-Link TL-SG3428MP เมื่อเราสร้าง L3 Interface ให้แต่ละ VLAN ตัวสวิตช์จะทำการ Route ข้ามวง (Inter-VLAN) ให้อัตโนมัติทันที</p>
-  <p>คลิกแถบเมนูด้านบนสุด <strong>L3 FEATURES</strong> &rarr; เมนูซ้ายคลิก <strong>Interface</strong> &rarr; กดปุ่ม <strong><code>+ Add</code></strong> (มุมขวาของตาราง) สร้าง 3 แถวตามตารางนี้ <em>(ห้ามลบ VLAN 1)</em>:</p>
+  <p>คลิกแถบเมนูด้านบนสุด <strong>L3 FEATURES</strong> &rarr; เมนูซ้ายคลิก <strong>Interface</strong> &rarr; กดปุ่ม <strong><code>+ Add</code></strong> (มุมขวาของตาราง) สร้าง 4 แถวตามตารางนี้ <em>(ห้ามลบ VLAN 1)</em>:</p>
 
   <table>
     <thead>
       <tr>
-        <th style="width: 28%;">ชื่อช่องในหน้า Add Interface</th>
-        <th style="width: 24%;">ครั้งที่ 1 (VLAN 10)</th>
-        <th style="width: 24%;">ครั้งที่ 2 (VLAN 20)</th>
-        <th style="width: 24%;">ครั้งที่ 3 (VLAN 99)</th>
+        <th>ชื่อช่องในหน้า Add Interface</th>
+        <th>ครั้งที่ 1 (VLAN 10)</th>
+        <th>ครั้งที่ 2 (VLAN 20)</th>
+        <th>ครั้งที่ 3 (VLAN 99)</th>
+        <th>ครั้งที่ 4 (VLAN 30)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><strong>Interface Type</strong></td>
+        <td><code>VLAN</code></td>
         <td><code>VLAN</code></td>
         <td><code>VLAN</code></td>
         <td><code>VLAN</code></td>
@@ -914,9 +944,11 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><code>10</code></td>
         <td><code>20</code></td>
         <td><code>99</code></td>
+        <td><code>30</code></td>
       </tr>
       <tr>
         <td><strong>Admin Status</strong></td>
+        <td><code>Enable</code></td>
         <td><code>Enable</code></td>
         <td><code>Enable</code></td>
         <td><code>Enable</code></td>
@@ -926,28 +958,32 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><code>Static</code></td>
         <td><code>Static</code></td>
         <td><code>Static</code></td>
+        <td><code>Static</code></td>
       </tr>
       <tr>
         <td><strong>IP Address</strong></td>
         <td><code>192.168.10.1</code></td>
         <td><code>192.168.20.1</code></td>
         <td><code>192.168.99.2</code></td>
+        <td><code>192.168.30.1</code></td>
       </tr>
       <tr>
         <td><strong>Subnet Mask</strong></td>
         <td><code>255.255.255.0</code></td>
         <td><code>255.255.255.0</code></td>
         <td><strong><code>255.255.255.252</code></strong> <em>(ระวัง! /30)</em></td>
+        <td><code>255.255.255.0</code></td>
       </tr>
       <tr>
         <td><strong>การยืนยัน</strong></td>
         <td>กด <strong>Create</strong> (หรือ Apply)</td>
         <td>กด <strong>Create</strong> (หรือ Apply)</td>
         <td>กด <strong>Create</strong> (หรือ Apply)</td>
+        <td>กด <strong>Create</strong> (หรือ Apply)</td>
       </tr>
     </tbody>
   </table>
-  <p>ตาราง <strong>Interface</strong> จะต้องแสดงครบ 4 แถว คือ <code>VLAN 1</code> (<code>192.168.0.1</code>), <code>VLAN 10</code> (<code>192.168.10.1</code>), <code>VLAN 20</code> (<code>192.168.20.1</code>), และ <code>VLAN 99</code> (<code>192.168.99.2</code>)</p>
+  <p>ตาราง <strong>Interface</strong> จะต้องแสดงครบ 5 แถว คือ <code>VLAN 1</code> (<code>192.168.0.1</code>), <code>VLAN 10</code> (<code>192.168.10.1</code>), <code>VLAN 20</code> (<code>192.168.20.1</code>), <code>VLAN 30</code> (<code>192.168.30.1</code>), และ <code>VLAN 99</code> (<code>192.168.99.2</code>)</p>
 
   <h3>5.4 ใส่ Default Route ชี้ไปหา MikroTik</h3>
   <p>คลิกแถบเมนูด้านบนสุด <strong>L3 FEATURES</strong> &rarr; เมนูซ้ายคลิก <strong>Static Routing</strong> &rarr; คลิก <strong>IPv4 Static Routing</strong> &rarr; กดปุ่ม <strong><code>+ Add</code></strong>:</p>
@@ -979,7 +1015,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </table>
   <p>กดปุ่ม <strong>Create</strong> แล้วคลิกปุ่ม <strong>Save</strong> (มุมขวาบน)</p>
 
-  <h3>5.5 เปิด DHCP Server และสร้าง 2 พูล (แจกช่วง <code>.100 – .199</code>)</h3>
+  <h3>5.5 เปิด DHCP Server และสร้าง 3 พูล (แจกช่วง <code>.100 – .199</code>)</h3>
   <div class="callout">
     <strong>💡 ข้อควรรู้:</strong> ในหมวด <strong>L3 FEATURES &rarr; DHCP Service</strong> จะมีเมนูย่อย <code>DHCP Server</code>, <code>DHCP Relay</code>, และ <code>DHCP L2 Relay</code> <strong>ให้เราใช้งานเฉพาะเมนู <code>DHCP Server</code> เท่านั้น ไม่ต้องกดเข้าไปยุ่งกับ <code>DHCP Relay</code> เลย!</strong>
   </div>
@@ -992,7 +1028,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </ul>
 
   <h4>ขั้น ข — ตั้งค่า Excluded Address เพื่อบังคับให้แจกเฉพาะ <code>.100 – .199</code></h4>
-  <p>คลิกเปลี่ยนไปที่แท็บ <strong>Excluded Address</strong> (อยู่ถัดจากแท็บ Pool Setting) แล้วกดปุ่ม <strong><code>+ Add</code></strong> เพิ่ม 4 แถวนี้เพื่อกันไม่ให้สวิตช์แจกไอพีทับเกตเวย์และเซิร์ฟเวอร์ (<code>.30, .31, .32</code>):</p>
+  <p>คลิกเปลี่ยนไปที่แท็บ <strong>Excluded Address</strong> (อยู่ถัดจากแท็บ Pool Setting) แล้วกดปุ่ม <strong><code>+ Add</code></strong> เพิ่ม 6 แถวนี้เพื่อกันไม่ให้สวิตช์แจกไอพีทับเกตเวย์และเซิร์ฟเวอร์ (<code>.30, .31, .32</code>):</p>
   <table>
     <thead>
       <tr>
@@ -1027,17 +1063,30 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><code>192.168.20.254</code></td>
         <td>กันช่วง <code>.200–.254</code> ของวง VLAN 20 (กด Create)</td>
       </tr>
+      <tr>
+        <td style="text-align: center;"><strong>5</strong></td>
+        <td><code>192.168.30.1</code></td>
+        <td><code>192.168.30.99</code></td>
+        <td>กันช่วง <code>.1–.99</code> ของวงแขก VLAN 30 (กด Create)</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"><strong>6</strong></td>
+        <td><code>192.168.30.200</code></td>
+        <td><code>192.168.30.254</code></td>
+        <td>กันช่วง <code>.200–.254</code> ของวง VLAN 30 (กด Create)</td>
+      </tr>
     </tbody>
   </table>
 
-  <h4>ขั้น ค — สร้างพูลแจกไอพีทั้งสองวง (แท็บ Pool Setting)</h4>
-  <p>คลิกกลับมาที่แท็บ <strong>Pool Setting</strong> แล้วกดปุ่ม <strong><code>+ Add</code></strong> สร้าง 2 พูลตามตารางนี้:</p>
+  <h4>ขั้น ค — สร้างพูลแจกไอพีทั้งสามวง (แท็บ Pool Setting)</h4>
+  <p>คลิกกลับมาที่แท็บ <strong>Pool Setting</strong> แล้วกดปุ่ม <strong><code>+ Add</code></strong> สร้าง 3 พูลตามตารางนี้:</p>
   <table>
     <thead>
       <tr>
-        <th style="width: 32%;">ชื่อช่องในหน้า Add Pool</th>
-        <th style="width: 34%;">พูลที่ 1 (วงเซิร์ฟเวอร์ VLAN 10)</th>
-        <th style="width: 34%;">พูลที่ 2 (วงพัฒนา VLAN 20)</th>
+        <th>ชื่อช่องในหน้า Add Pool</th>
+        <th>พูลที่ 1 (วงเซิร์ฟเวอร์ VLAN 10)</th>
+        <th>พูลที่ 2 (วงพัฒนา VLAN 20)</th>
+        <th>พูลที่ 3 (วงแขก VLAN 30)</th>
       </tr>
     </thead>
     <tbody>
@@ -1045,14 +1094,17 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><strong>Pool Name</strong></td>
         <td><code>VLAN10-SERVER</code></td>
         <td><code>VLAN20-DEV</code></td>
+        <td><code>VLAN30-GUEST</code></td>
       </tr>
       <tr>
         <td><strong>Network Address</strong></td>
         <td><code>192.168.10.0</code></td>
         <td><code>192.168.20.0</code></td>
+        <td><code>192.168.30.0</code></td>
       </tr>
       <tr>
         <td><strong>Subnet Mask</strong></td>
+        <td><code>255.255.255.0</code></td>
         <td><code>255.255.255.0</code></td>
         <td><code>255.255.255.0</code></td>
       </tr>
@@ -1060,9 +1112,11 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><strong>Default Gateway</strong></td>
         <td><code>192.168.10.1</code></td>
         <td><code>192.168.20.1</code></td>
+        <td><code>192.168.30.1</code></td>
       </tr>
       <tr>
         <td><strong>DNS Server</strong></td>
+        <td><code>192.168.10.31</code></td>
         <td><code>192.168.10.31</code></td>
         <td><code>192.168.10.31</code></td>
       </tr>
@@ -1070,9 +1124,11 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
         <td><strong>Lease Time</strong></td>
         <td>ปล่อยค่าเริ่มต้น (เช่น <code>1440</code> นาที)</td>
         <td>ปล่อยค่าเริ่มต้น (เช่น <code>1440</code> นาที)</td>
+        <td>ปล่อยค่าเริ่มต้น (เช่น <code>1440</code> นาที)</td>
       </tr>
       <tr>
         <td><strong>การยืนยัน</strong></td>
+        <td>กดปุ่ม <strong>Create</strong></td>
         <td>กดปุ่ม <strong>Create</strong></td>
         <td>กดปุ่ม <strong>Create</strong></td>
       </tr>
@@ -1080,13 +1136,13 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   </table>
   <p><strong>DNS Server ต้องเป็น <code>192.168.10.31</code> (Technitium บน VM1)</strong> ไม่ใช่ <code>1.1.1.1</code> ไม่งั้นเครื่องที่รับ DHCP จะเปิด <code>*.mydomain.lab</code> ไม่ได้ ส่วนการออกเน็ต Technitium จะส่งต่อให้ Forwarders <code>8.8.8.8, 1.1.1.1</code> เอง</p>
 
-  <h3>5.6 เปิด DHCP Snooping บน VLAN 10 และ VLAN 20</h3>
+  <h3>5.6 เปิด DHCP Snooping บน VLAN 10, VLAN 20, และ VLAN 30</h3>
   <ol>
     <li>คลิกแถบเมนูด้านบนสุด <strong>SECURITY</strong> &rarr; เมนูซ้ายคลิก <strong>IP-MAC Binding</strong> &rarr; คลิก <strong>DHCP Snooping</strong> <em>(หรือในบางเฟิร์มแวร์ใช้ชื่อ <strong>Network Security &rarr; DHCP Snooping</strong>)</em></li>
     <li>ในแท็บ <strong>Global Config</strong> ตั้งค่าดังนี้:
       <ul>
         <li><strong>DHCP Snooping:</strong> ติ๊กเลือก <strong><code>[✓] Enable</code></strong></li>
-        <li><strong>Global Snooping VLANs (หรือ VLAN Config):</strong> ติ๊กเปิดเฉพาะ <strong><code>VLAN 10</code></strong> และ <strong><code>VLAN 20</code></strong> <em>(ไม่ต้องเปิดบน VLAN 1 และ 99)</em></li>
+        <li><strong>Global Snooping VLANs (หรือ VLAN Config):</strong> ติ๊กเปิด <strong><code>VLAN 10</code></strong>, <strong><code>VLAN 20</code></strong>, และ <strong><code>VLAN 30</code></strong> <em>(ไม่ต้องเปิดบน VLAN 1 และ 99)</em></li>
         <li><strong>Option 82:</strong> ปล่อยเป็น <strong><code>Disable</code></strong> (ไม่เปิด)</li>
       </ul>
     </li>
@@ -1094,7 +1150,64 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
     <li>ในแท็บ <strong>Port Config</strong>: ปล่อยพอร์ตลูกข่ายเป็นค่าเริ่มต้นได้เลย และ <strong>ห้ามไปเปิด ARP Inspection หรือ IP Source Guard</strong> เพราะจะทำให้เครื่องเซิร์ฟเวอร์ที่ตั้ง Static IP ออกเน็ตไม่ได้</li>
   </ol>
 
-  <h3>5.7 กด Save และสำรองไฟล์คอนฟิกเก็บไว้ในโน้ตบุ๊ค</h3>
+  <h3 id="acl">5.7 ACL วงแขก VLAN 30 ให้เข้าได้แค่หน้าเว็บ</h3>
+  <p>วงแขกอยู่พอร์ต 21–22 ไอพี <code>192.168.30.100–199</code> ออกอินเทอร์เน็ตได้ แต่เข้าวงเซิร์ฟเวอร์ <code>192.168.10.0/24</code> ได้แค่สองจุด คือถามชื่อที่ DNS ของ VM1 และเปิดหน้าเว็บที่ VM2 พอร์ต 17–20 และ 23–24 ยังเป็น VLAN 1</p>
+  <table>
+    <thead>
+      <tr>
+        <th>อนุญาต</th>
+        <th>ปิด</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>192.168.10.31</code> พอร์ต <code>53</code> (DNS ทั้ง UDP และ TCP)</td>
+        <td>ที่เหลือของ VM1 รวม GitLab <code>:8080</code>, Registry <code>:5000</code>, หน้า DNS <code>:5380</code></td>
+      </tr>
+      <tr>
+        <td><code>192.168.10.32</code> พอร์ต <code>80</code> (NPM หน้าเว็บ <code>app.mydomain.lab</code>)</td>
+        <td>พอร์ตอื่นของ VM2 รวม API <code>:7000</code>, phpMyAdmin <code>:8081</code>, หน้าแอดมิน NPM <code>:81</code>, เว็บตรง <code>:3000</code></td>
+      </tr>
+      <tr>
+        <td>เกตเวย์ตัวเอง <code>192.168.30.1</code> และทางออกอินเทอร์เน็ต</td>
+        <td>ทั้งวง VLAN 20, หน้าเว็บสวิตช์ <code>192.168.0.1</code>, และลิงก์ <code>192.168.99.0/30</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <ol>
+    <li>คลิกแถบเมนูด้านบนสุด <strong>SECURITY</strong> &rarr; <strong>ACL</strong> &rarr; <strong>ACL Config</strong> <em>(บางเฟิร์มแวร์อยู่ที่ Network Security &rarr; ACL)</em></li>
+    <li>กด <strong><code>+ Add</code></strong> สร้าง ACL แบบ <strong>Extend-IP</strong> ตั้ง ACL ID เป็น <code>500</code> ชื่อ <code>GUEST-WEB</code></li>
+    <li>ใน ACL นั้นกดเพิ่มกฎตามลำดับนี้ เลขน้อยถูกตรวจก่อน ห้ามสลับแถว Deny ขึ้นไปอยู่ก่อนแถว Permit:</li>
+  </ol>
+  <table>
+    <thead>
+      <tr>
+        <th>ลำดับ</th>
+        <th>Action</th>
+        <th>Protocol</th>
+        <th>Destination IP</th>
+        <th>Mask</th>
+        <th>Dest Port</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Permit</strong></td><td>UDP</td><td><code>192.168.10.31</code></td><td><code>255.255.255.255</code></td><td><code>53</code></td></tr>
+      <tr><td>2</td><td><strong>Permit</strong></td><td>TCP</td><td><code>192.168.10.31</code></td><td><code>255.255.255.255</code></td><td><code>53</code></td></tr>
+      <tr><td>3</td><td><strong>Permit</strong></td><td>TCP</td><td><code>192.168.10.32</code></td><td><code>255.255.255.255</code></td><td><code>80</code></td></tr>
+      <tr><td>4</td><td><strong>Deny</strong></td><td>IP</td><td><code>192.168.10.0</code></td><td><code>255.255.255.0</code></td><td>ว่าง</td></tr>
+      <tr><td>5</td><td><strong>Deny</strong></td><td>IP</td><td><code>192.168.20.0</code></td><td><code>255.255.255.0</code></td><td>ว่าง</td></tr>
+      <tr><td>6</td><td><strong>Deny</strong></td><td>IP</td><td><code>192.168.0.0</code></td><td><code>255.255.255.0</code></td><td>ว่าง</td></tr>
+      <tr><td>7</td><td><strong>Deny</strong></td><td>IP</td><td><code>192.168.99.0</code></td><td><code>255.255.255.252</code></td><td>ว่าง</td></tr>
+    </tbody>
+  </table>
+  <p>ช่อง Source ปล่อยเป็น Any ได้ เพราะจะผูกกฎนี้เฉพาะพอร์ตแขก ถ้าหน้าจอเรียกช่องมาสก์ว่า <strong>Wildcard Mask</strong> ให้กลับบิต: เครื่องเดียวใส่ <code>0.0.0.0</code> ทั้งวง <code>/24</code> ใส่ <code>0.0.0.255</code> และ <code>/30</code> ใส่ <code>0.0.0.3</code></p>
+  <ol start="4">
+    <li>ไปที่ <strong>ACL Binding</strong> ผูก ACL <code>500</code> เข้าพอร์ต <strong><code>1/0/21</code> และ <code>1/0/22</code></strong> ทิศทาง <strong>Ingress</strong> เท่านั้น ห้ามผูกพอร์ตอื่น</li>
+    <li>กด <strong>Apply</strong> แล้วกด <strong>Save</strong></li>
+    <li>แพ็กเก็ตที่ไม่ตรงกฎ Deny ยังผ่านได้ จึงปิง <code>8.8.8.8</code> และเปิดเว็บข้างนอกได้</li>
+  </ol>
+
+  <h3>5.8 กด Save และสำรองไฟล์คอนฟิกเก็บไว้ในโน้ตบุ๊ค</h3>
   <ol>
     <li>คลิกปุ่ม <strong>Save</strong> (รูปดิสก์มุมขวาบนสุดของหน้าเว็บ) แล้วกดยืนยัน</li>
     <li>ไปที่เมนูด้านบนสุด <strong>SYSTEM</strong> &rarr; เมนูซ้าย <strong>System Tools</strong> &rarr; <strong>Backup &amp; Restore</strong> (หรือ <strong>Config Backup</strong>) &rarr; กดปุ่ม <strong>Backup Config</strong> เพื่อดาวน์โหลดไฟล์ <code>.cfg</code> เก็บไว้ในโน้ตบุ๊คของทีม</li>
@@ -1107,7 +1220,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
   <h3>6.1 ทดสอบลิงก์ชั้น 3 ระหว่าง MikroTik กับ TP-Link</h3>
   <ul>
     <li>จาก Winbox เมนู <strong>Tools &rarr; Ping</strong> พิมพ์ <code>192.168.99.2</code> ต้องตอบกลับ</li>
-    <li>ดูที่เมนู <strong>IP &rarr; Routes</strong> ของ MikroTik แถว <code>192.168.10.0/24</code> และ <code>192.168.20.0/24</code> ต้องเปลี่ยนสถานะเป็น <strong>reachable</strong></li>
+    <li>ดูที่เมนู <strong>IP &rarr; Routes</strong> ของ MikroTik แถว <code>192.168.10.0/24</code>, <code>192.168.20.0/24</code>, และ <code>192.168.30.0/24</code> ต้องเปลี่ยนสถานะเป็น <strong>reachable</strong></li>
     <li>ถ้าไม่ติด: เช็คไฟพอร์ต 1, เช็คว่าพอร์ต 1 อยู่ VLAN 99 Untagged + <strong>PVID = 99</strong>, และเช็คมาสก์ <code>/30</code> (<code>255.255.255.252</code>) ทั้งสองฝั่ง</li>
   </ul>
 
@@ -1129,6 +1242,14 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
     <li>ต่อสาย LAN จากเครื่อง Proxmox (ตั้งไอพี <code>192.168.10.30/24</code> เกตเวย์ <code>192.168.10.1</code> <strong>ไม่ใส่ VLAN tag</strong>) เข้าที่ <strong>พอร์ต 2</strong> ของสวิตช์ TP-Link</li>
     <li>จากโน้ตบุ๊ควง 20 (พอร์ต 9) สั่ง <code>ping 192.168.10.30</code> ต้องติด และเปิดเว็บเข้า <code>https://192.168.10.30:8006</code> ได้ทันที</li>
   </ul>
+
+  <h3>6.4 ทดสอบวงแขก VLAN 30 (พอร์ต 21–22)</h3>
+  <ol>
+    <li>เสียบโน้ตบุ๊คอีกเครื่องที่ <strong>พอร์ต 21</strong> แล้วรับ DHCP ต้องได้ไอพี <code>192.168.30.100–199</code> เกตเวย์ <code>192.168.30.1</code> DNS <code>192.168.10.31</code></li>
+    <li>เปิด <code>http://192.168.10.32</code> หรือ <code>http://app.mydomain.lab</code> <strong>ต้องขึ้นหน้าเว็บ</strong></li>
+    <li>สั่ง <code>ping 192.168.10.31</code>, <code>ping 192.168.10.32</code>, และเปิด <code>http://192.168.10.31:8080</code> กับ <code>http://192.168.10.32:7000</code> <strong>ต้องไม่ติด</strong></li>
+    <li><code>ping 8.8.8.8</code> <strong>ต้องติด</strong> ถ้าสาย WAN และ route ขากลับ <code>192.168.30.0/24</code> บน MikroTik พร้อมแล้ว</li>
+  </ol>
 
   <!-- บทที่ 7 -->
   <h2>7. วันแข่ง: ใส่ไอพี WAN ที่ MikroTik แล้วทดสอบ NAT</h2>
@@ -1202,14 +1323,20 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
       <tr>
         <td><strong>DHCP ทั้งสองวง + Snooping</strong></td>
         <td style="text-align: center;"><strong>3</strong></td>
-        <td><code>DHCP Server</code> เปิด Enable, มี 2 พูล + Excluded Address (<code>.100–.199</code>), <code>DHCP Snooping</code> เปิดบน VLAN 10 และ 20</td>
+        <td><code>DHCP Server</code> เปิด Enable, มีพูล VLAN 10, 20, 30 + Excluded Address (<code>.100–.199</code>), <code>DHCP Snooping</code> เปิดบน VLAN 10, 20, 30</td>
         <td>ขอรับ DHCP จากพอร์ต 2–8 ได้ <code>.10.100+</code> และจากพอร์ต 9–16 ได้ <code>.20.100+</code></td>
       </tr>
       <tr>
         <td><strong>NAT ทั้งสองวง</strong></td>
         <td style="text-align: center;"><strong>2</strong></td>
-        <td>MikroTik มี <code>masquerade</code> ขา <code>ether1</code>, มี Route ขากลับสองวง, สวิตช์มี Default Route ไป <code>.99.1</code></td>
+        <td>MikroTik มี <code>masquerade</code> ขา <code>ether1</code>, มี Route ขากลับสามวงรวม <code>192.168.30.0/24</code>, สวิตช์มี Default Route ไป <code>.99.1</code></td>
         <td>ทั้งเครื่องใน VLAN 10 และโน้ตบุ๊คใน VLAN 20 ออกอินเทอร์เน็ตได้</td>
+      </tr>
+      <tr>
+        <td><strong>Guest VLAN 30 + ACL</strong></td>
+        <td style="text-align: center;">ตามใบงาน</td>
+        <td>พอร์ต 21–22 ได้ไอพีวง <code>192.168.30.0/24</code> ACL ผูก Ingress ที่พอร์ต 21–22 พอร์ต 23–24 ยังเป็น VLAN 1</td>
+        <td>เปิด <code>http://192.168.10.32</code> ได้ แต่ปิง VM1/VM2 และเปิดพอร์ตอื่นของเซิร์ฟเวอร์ไม่ได้</td>
       </tr>
     </tbody>
   </table>
@@ -1254,7 +1381,7 @@ add chain=srcnat out-interface=ether1 action=masquerade comment="WAN_NAT"</code>
       <tr>
         <td><strong>เปิดเข้าเว็บสวิตช์ <code>192.168.0.1</code> ไม่ได้</strong></td>
         <td>เสียบสายอยู่ในพอร์ต 1–16 ที่ย้ายไป VLAN 10/20/99 แล้ว หรือไอพีโน้ตบุ๊คไม่ใช่วง <code>0.x</code></td>
-        <td>ย้ายสายไปเสียบ <strong>พอร์ต 24</strong> ตั้งไอพีโน้ตบุ๊คเป็น <code>192.168.0.10/24</code> (หรือถ้าเสียบพอร์ต 9 ที่ได้ DHCP แล้ว ให้เข้าเว็บสวิตช์ผ่าน <code>http://192.168.20.1</code> ได้เลย!)</td>
+        <td>ย้ายสายไปเสียบ <strong>พอร์ต 24</strong> (หรือ 17–20, 23) ตั้งไอพีโน้ตบุ๊คเป็น <code>192.168.0.10/24</code></td>
       </tr>
     </tbody>
   </table>
