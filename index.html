@@ -1140,7 +1140,9 @@ curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/s
 sudo apt install -y gitlab-runner
 sudo usermod -aG docker gitlab-runner
 sudo systemctl restart docker
+sudo systemctl restart gitlab-runner
 sudo systemctl enable --now gitlab-runner</code></pre>
+            <p class="text-xs text-amber-300">คำสั่ง <code class="text-white">apt install gitlab-runner</code> เปิดบริการไว้ก่อนเข้ากลุ่ม docker ดังนั้นต้อง <code class="text-white">restart gitlab-runner</code> ด้วย ไม่งั้นขั้น build จะขึ้น permission denied ที่ <code class="text-white">/var/run/docker.sock</code></p>
           </div>
 
           <div class="code-box">
@@ -1637,7 +1639,19 @@ DB_NAME=skills_db
 JWT_SECRET=testing123
 JWT_EXPIRES=2h</code></pre>
             </div>
+            <p class="text-xs text-amber-300">ไฟล์นี้ถูก <code class="text-white">.gitignore</code> ตัดไว้ ตอน push ต้องสั่ง <code class="text-white">git add -f backend/.env</code> ตาม STEP 7.12</p>
           </div>
+        </div>
+
+        <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-2">
+          <div class="font-bold text-cyan-300">รหัสใน schema.sql ของ PES</div>
+          <div>ทุกบัญชีตัวอย่างใช้รหัสตัวอักษร <code class="text-emerald-300 font-bold">12345678</code> เข้ารหัสแบบ bcrypt <code>$2b$</code> cost 10 คำว่า password ใช้ล็อกอินไม่ได้ hash คนละบรรทัดเพราะ salt ไม่ซ้ำ</div>
+          <pre class="text-xs text-amber-300 overflow-x-auto whitespace-pre">admin@ccollege.ac.th   $2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6
+eva.me@ccollege.ac.th  $2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm
+eva.it@ccollege.ac.th  $2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe
+t.it01@ccollege.ac.th  $2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy
+t.me01@ccollege.ac.th  $2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC
+t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW</pre>
         </div>
 
         <!-- Point 3, 4, 5 -->
@@ -1948,15 +1962,19 @@ deploy_job:
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git add -f backend/.env
 git add .
+git status --short
 git commit -m "Deploy PES with 4-stage CI/CD"
 git push -u origin main</code></pre>
+            <p class="text-xs text-amber-300">ไฟล์ <code class="text-white">.gitignore</code> ตัด <code class="text-white">.env</code> ออก ต้อง <code class="text-white">git add -f backend/.env</code> แล้วเช็กใน <code class="text-white">git status</code> ว่ามีไฟล์นี้ ไม่งั้นขั้น deploy สั่ง <code class="text-white">scp backend/.env</code> ไม่เจอไฟล์</p>
           </div>
           <div class="text-xs sm:text-sm text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 space-y-1">
             <div class="font-bold text-cyan-300">✅ ตรวจผลหลัง Pipeline เขียวครบ 4 Stages (ไล่จากหลังบ้านไปหน้าบ้าน):</div>
             <div>1. <code class="text-emerald-300">http://api.mydomain.lab/health</code> ต้องได้ <code>{"service":"okoak",...}</code> (ถ้าไม่ได้ ลอง <code>http://192.168.10.32:7000/health</code> เพื่อแยกว่าเสียที่ NPM หรือที่ API)</div>
             <div>2. <code class="text-emerald-300">http://192.168.10.32:8081</code> (phpMyAdmin) ต้องเห็นฐานข้อมูล <code>skills_db</code> และตาราง <code>attachments</code> มีคอลัมน์ <code>note</code></div>
-            <div>3. <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code>password</code> (ตาม hash ใน <code>schema.sql</code> ของ PES ถ้ากรรมการเปลี่ยน ให้ดูคอมเมนต์ในไฟล์)</div>
+            <div>3. <code class="text-emerald-300">http://app.mydomain.lab/login</code> ล็อกอิน <code>admin@ccollege.ac.th</code> รหัส <code class="text-emerald-300">12345678</code></div>
+            <div class="text-slate-400">hash ใน <code>schema.sql</code> ของแอดมินคือ <code class="text-amber-300 break-all">$2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6</code> เป็น bcrypt ของคำว่า <code class="text-emerald-300">12345678</code> ไม่ใช่คำว่า password บัญชีตัวอย่างที่เหลือใช้รหัสเดียวกันแต่คนละ salt</div>
             <div class="text-amber-300">⚠️ MySQL รัน <code>schema.sql</code> เฉพาะตอน volume ยังว่าง ถ้าแก้ schema หลัง Deploy ไปแล้ว ให้รันบน VM2: <code>cd ~/pes-prod &amp;&amp; sudo docker compose down -v</code> แล้วกด Retry job deploy</div>
           </div>
         </div>
@@ -2330,6 +2348,7 @@ curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/s
 sudo apt install -y gitlab-runner
 sudo usermod -aG docker gitlab-runner
 sudo systemctl restart docker
+sudo systemctl restart gitlab-runner
 sudo systemctl enable --now gitlab-runner
 echo "192.168.10.32 gitlab.mydomain.lab app.mydomain.lab" | sudo tee -a /etc/hosts
 
@@ -2591,14 +2610,24 @@ rm -rf .git
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git add -f backend/.env
 git add .
+git status --short
 git commit -m "Deploy PES with 4-stage CI/CD"
 git push -u origin main
+   (.gitignore ตัด .env ออก ถ้าไม่ git add -f backend/.env ขั้น deploy จะ scp ไม่เจอไฟล์)
 
 9. ตรวจผลหลัง Pipeline เขียว:
    - http://api.mydomain.lab/health  -&gt; {"service":"okoak",...}  (ถ้าไม่ได้ ลอง http://192.168.10.32:7000/health)
    - http://192.168.10.32:8081       -&gt; phpMyAdmin เห็น skills_db และ attachments มีคอลัมน์ note
-   - http://app.mydomain.lab/login   -&gt; admin@ccollege.ac.th / password (ตาม hash ใน schema.sql ของ PES)
+   - http://app.mydomain.lab/login   -&gt; admin@ccollege.ac.th / 12345678
+   - password_hash ใน schema.sql (bcrypt $2b$ cost 10 ของคำว่า 12345678 ทั้งชุด คนละ salt):
+     admin@ccollege.ac.th   $2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6
+     eva.me@ccollege.ac.th  $2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm
+     eva.it@ccollege.ac.th  $2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe
+     t.it01@ccollege.ac.th  $2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy
+     t.me01@ccollege.ac.th  $2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC
+     t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW
    - ถ้าแก้ schema.sql หลัง Deploy ไปแล้ว: บน VM2 รัน cd ~/pes-prod &amp;&amp; sudo docker compose down -v แล้ว Retry job deploy</pre>
     </section>
 

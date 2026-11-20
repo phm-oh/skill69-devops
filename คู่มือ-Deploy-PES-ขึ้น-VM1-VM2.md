@@ -111,6 +111,19 @@
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ```
 
+บัญชีตัวอย่างใน `schema.sql` ใช้รหัสตัวอักษร **`12345678`** ทั้งชุด เข้ารหัสแบบ bcrypt `$2b$` cost 10 คำว่า `password` ใช้ล็อกอินไม่ได้
+
+| อีเมล | password_hash ในตาราง `users` |
+| :--- | :--- |
+| `admin@ccollege.ac.th` | `$2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6` |
+| `eva.me@ccollege.ac.th` | `$2b$10$ycxCewoT/qjuiZiDb7hfP.aGEnWZu8rMF3UzRO6QgxgIO7lKLsRSm` |
+| `eva.it@ccollege.ac.th` | `$2b$10$rCg8BVUQSVs51Hb/fwctneQcBfIE0RL5dVRm1bcX5CPyGKyRAxFoe` |
+| `t.it01@ccollege.ac.th` | `$2b$10$V0GTPQ/2Ap5r0nzE49FjfOW7xmXuSPQ8m7P81jwKrFFltwCvBXTsy` |
+| `t.me01@ccollege.ac.th` | `$2b$10$gkmAZQmS5GjA3cgHAzZgN.HZzaH4gKeuTkeJnNoAEFT2OyczRibuC` |
+| `t.acc01@ccollege.ac.th` | `$2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbCxnW` |
+
+hash คนละบรรทัดเพราะ salt ไม่ซ้ำ แต่ถอดกลับได้รหัสเดียวกันคือ `12345678` ถ้ากรรมการเปลี่ยน seed ให้เทียบค่าในไฟล์ที่ได้รับวันนั้น
+
 ---
 
 ### 🛠️ จุดที่ 2: แก้ไฟล์ `backend/.env` (เปิด CORS ให้เรียกข้ามเครื่องได้)
@@ -133,6 +146,8 @@ DB_NAME=skills_db
 JWT_SECRET=testing123
 JWT_EXPIRES=2h
 ```
+
+ไฟล์นี้โดน `.gitignore` ตัดไว้ ตอน push ต้องสั่ง `git add -f backend/.env` ไม่งั้นเครื่อง Runner ไม่มีไฟล์นี้ และขั้น deploy ที่สั่ง `scp backend/.env` จะล้ม
 
 ---
 
@@ -437,7 +452,7 @@ deploy_job:
 ## ส่วนที่ 3: สั่ง Git Push ขึ้น GitLab เพื่อรัน Pipeline อัตโนมัติ
 
 1. เข้าหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`) สร้าง Blank Project ชื่อ **`pes-app`** (เลือก **Public** และติ๊กออก *Initialize repository with a README*)
-2. Runner ที่ลงทะเบียนไว้กับโปรเจกต์ `task-app` ใช้กับ `pes-app` ไม่ได้เอง ให้ไปที่ **Settings → CI/CD → Runners → New project runner** ในโปรเจกต์ `pes-app` (ติ๊ก `[✓] Run untagged jobs`) แล้วเอา token `glrt-...` ตัวใหม่ไปรัน `sudo gitlab-runner register` บน VM1 อีกครั้ง (executor `shell`, description `vm1-shell-runner-pes`) ส่วน SSH Key ของ `gitlab-runner` ใช้ของเดิมได้
+2. Runner ที่ลงทะเบียนไว้กับโปรเจกต์ `task-app` ใช้กับ `pes-app` ไม่ได้เอง ให้ไปที่ **Settings → CI/CD → Runners → New project runner** ในโปรเจกต์ `pes-app` (ติ๊ก `[✓] Run untagged jobs`) แล้วเอา token `glrt-...` ตัวใหม่ไปรัน `sudo gitlab-runner register` บน VM1 อีกครั้ง (executor `shell`, description `vm1-shell-runner-pes`) ส่วน SSH Key ของ `gitlab-runner` ใช้ของเดิมได้ หลัง `sudo usermod -aG docker gitlab-runner` ต้องมี `sudo systemctl restart gitlab-runner` ด้วย เพราะตอนติดตั้ง บริการถูกเปิดไว้ก่อนเข้ากลุ่ม docker ถ้าข้ามบรรทัดนี้ ขั้น build จะขึ้น `permission denied` ที่ `/var/run/docker.sock`
 3. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` บนเครื่อง PC นักเรียน แล้วรันคำสั่งชุดนี้:
 
 ```bash
@@ -449,10 +464,14 @@ git config --global user.email "admin@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git add -f backend/.env
 git add .
+git status --short
 git commit -m "Deploy PES Full-Stack with 4-stage CI/CD pipeline"
 git push -u origin main
 ```
+
+ใน `git status` ต้องเห็น `backend/.env` ถ้าไม่เห็น แปลว่าคำสั่ง `git add -f` ยังไม่ทำงาน อย่าเพิ่ง push
 
 ---
 
@@ -465,7 +484,8 @@ git push -u origin main
 3. **เช็ค phpMyAdmin:** เปิด `http://192.168.10.32:8081` (ผู้ใช้ `root` / รหัส `rootpassword`) $\rightarrow$ เข้าฐานข้อมูล `skills_db` $\rightarrow$ ตาราง `attachments` ต้องมีคอลัมน์ `note`
 4. **เข้าหน้าเว็บระบบประเมินบุคลากร (PES Frontend):**
    - เปิด **`http://app.mydomain.lab/login`** (หรือ `http://192.168.10.32:3000/login`)
-   - ล็อกอินด้วยอีเมล: **`admin@ccollege.ac.th`** | รหัสผ่าน: **`password`** *(ตาม hash ใน `schema.sql` ของ repo PES ถ้ากรรมการเปลี่ยน ให้ดูคอมเมนต์ในไฟล์)*
+   - ล็อกอินด้วยอีเมล: **`admin@ccollege.ac.th`** | รหัสผ่าน: **`12345678`**
+   - ค่า `password_hash` ของแอดมินใน `schema.sql` คือ `$2b$10$f6g9QMzpdIjzUyckEbFLIeuSRKEGJdNSu.TZ3tmegQ5ioSop02og6` ซึ่งเป็น bcrypt ของ `12345678`
    - ต้องเข้าสู่หน้าตารางรายชื่อผู้ใช้ (Users) เมนูซ้ายมีคำว่า `Users`, `Periods`, `API Docs`
    - กดปุ่ม **Create User** สามารถกรอกเพิ่มผู้ใช้ใหม่ได้จริง และหน้า **Upload** สามารถอัปโหลดไฟล์แนบพร้อมบันทึก `note` ได้สมบูรณ์!
 
