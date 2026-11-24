@@ -214,11 +214,14 @@ JWT_EXPIRES=2h
 ## 🚀 STEP 7.1 (จุดเช็คพอยต์ที่ 1): สั่ง Git Push เพื่อ Deploy รอบแรกขึ้น VM2 ทันที!
 
 เมื่อทำครบ 6 จุดของเฟส 1 แล้ว **ให้สั่ง Deploy ขึ้นระบบจริงไว้ก่อนเลยทันที**:
-1. เข้าหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`) สร้าง Blank Project ชื่อ **`pes-app`** (เลือก **Public** และติ๊กออก *Initialize repository with a README*)
-2. ผูก Runner เข้ากับโปรเจกต์ `pes-app` (ไปที่ **Settings $\rightarrow$ CI/CD $\rightarrow$ Runners** กด **Enable for this project** หรือสร้าง Project Runner ใหม่ติ๊ก `[✓] Run untagged jobs` แล้วลงทะเบียนบน VM1)
-3. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` แล้วรันคำสั่งชุดนี้ *(💡 หมายเหตุ: `git config user.email` ของเครื่องที่เขียน `.gitlab-ci.yml` / สั่ง `git push` **ไม่จำเป็นต้องตรงกับ**คนตั้งค่า GitLab Runner ใช้ชื่อและอีเมลอะไรก็ได้)*:
+1. **เช็คโปรเจกต์บนหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`):**
+   - **กรณีคนทำส่วนที่ 5 (GitLab Runner) สร้างโปรเจกต์ชื่อ `pes-app` และผูก Runner ไว้ให้แล้ว:** **ไม่ต้องสร้างโปรเจกต์ใหม่!** ข้ามไปรันคำสั่งข้อ 2 ได้เลยทันที
+   - **กรณีคนทำส่วนที่ 5 เผลอสร้างโปรเจกต์ชื่อ `task-app` ไว้:** ให้สร้าง Blank Project ใหม่ชื่อ **`pes-app`** (เลือก **Public** และติ๊กออก *Initialize repository with a README*) แล้วเข้าไปในโปรเจกต์ `pes-app` $\rightarrow$ **Settings $\rightarrow$ CI/CD $\rightarrow$ Runners** $\rightarrow$ มองหาหัวข้อ *Other available runners* ด้านล่าง แล้วกดปุ่ม **Enable for this project** ที่ตัว Runner เดิมได้เลย (ไม่ต้องลงทะเบียนใหม่บน VM1!)
+2. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` แล้วรันคำสั่งชุดนี้ *(💡 หมายเหตุ: `git config user.email` ของเครื่องที่เขียน `.gitlab-ci.yml` / สั่ง `git push` **ไม่จำเป็นต้องตรงกับ**คนตั้งค่า GitLab Runner ใช้ชื่อและอีเมลอะไรก็ได้)*:
 
 ```bash
+git config --global user.name "Administrator"
+git config --global user.email "admin@mydomain.lab"
 rm -rf .git
 git init
 git switch -c main

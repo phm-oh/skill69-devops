@@ -1133,7 +1133,7 @@ ping gitlab.mydomain.lab</code></pre>
       <div class="p-5 sm:p-6 space-y-6">
         <!-- Step 5.1: GitLab Root Password & Create Project -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-orange-300 text-base">STEP 5.1: ดูรหัสผ่าน root ของ GitLab และสร้าง Project ชื่อ <code class="text-white">task-app</code></h3>
+          <h3 class="font-bold text-orange-300 text-base">STEP 5.1: ดูรหัสผ่าน root ของ GitLab และสร้าง Project ชื่อ <code class="text-emerald-300">pes-app</code> <span class="text-xs text-slate-400 font-normal">(หรือ <code>task-app</code> กรณีซ้อมส่วนที่ 6)</span></h3>
           
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
@@ -1150,7 +1150,7 @@ ping gitlab.mydomain.lab</code></pre>
             <ol class="list-decimal list-inside space-y-1.5">
               <li>ล็อกอินด้วย Username: <code class="text-emerald-300 font-bold">root</code> และ Password ที่ได้จากคำสั่งด้านบน</li>
               <li>คลิกปุ่ม <strong>Create a project</strong> $\rightarrow$ เลือก <strong>Create blank project</strong></li>
-              <li>ช่อง <strong>Project name</strong> พิมพ์: <code class="text-amber-300 font-bold">task-app</code></li>
+              <li>ช่อง <strong>Project name</strong> พิมพ์: <code class="text-emerald-300 font-bold">pes-app</code> <span class="text-amber-300">(แนะนำให้คนทำ Runner สร้างชื่อ <code>pes-app</code> ไว้เลย เพื่อที่คนทำโค้ดในส่วนที่ 7 จะได้สั่ง <code>git push</code> เข้ามาได้ทันทีไม่ต้องสร้างซ้ำ! ยกเว้นถ้าจะซ้อมเว็บจำลองส่วนที่ 6 ค่อยตั้งชื่อ <code>task-app</code>)</span></li>
               <li>ช่อง <strong>Visibility Level</strong> เลือกเป็น <strong class="text-emerald-400">Public</strong> (เพื่อให้ดึงโค้ดและตรวจง่าย)</li>
               <li><strong>สำคัญมาก:</strong> <strong class="text-rose-400 underline">ติ๊กเครื่องหมายถูกออก</strong> จากช่อง <em>"Initialize repository with a README"</em> (เพื่อให้เป็น Repo เปล่า รอรับโค้ดจากเครื่อง PC) $\rightarrow$ กด <strong>Create project</strong></li>
             </ol>
@@ -1161,7 +1161,7 @@ ping gitlab.mydomain.lab</code></pre>
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
           <h3 class="font-bold text-orange-300 text-base">STEP 5.2: สร้าง Project Runner บนหน้าเว็บ GitLab เพื่อเอา Token</h3>
           <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>ในหน้าโปรเจกต์ <code class="text-amber-300">task-app</code> บนเว็บ GitLab ให้ไปที่เมนูซ้ายมือ: <strong>Settings</strong> $\rightarrow$ <strong>CI/CD</strong></li>
+            <li>ในหน้าโปรเจกต์ <code class="text-emerald-300 font-bold">pes-app</code> (หรือ <code class="text-amber-300">task-app</code>) บนเว็บ GitLab ให้ไปที่เมนูซ้ายมือ: <strong>Settings</strong> $\rightarrow$ <strong>CI/CD</strong></li>
             <li>มองหาหัวข้อ <strong>Runners</strong> แล้วกดปุ่ม <strong>Expand</strong> $\rightarrow$ คลิกปุ่ม <strong>New project runner</strong> (หรือ <strong>Create project runner</strong>)</li>
             <li>ในหน้าตั้งค่า Runner:
               <ul class="list-disc list-inside pl-5 mt-1 text-slate-400 space-y-1">
@@ -1924,8 +1924,12 @@ dist</code></pre>
             <span class="text-xs bg-emerald-500 text-slate-950 font-extrabold px-3 py-1 rounded-md">เอาคะแนน CI/CD 4 Stages + เว็บออนไลน์ไว้ในมือก่อน!</span>
           </div>
           <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-200 space-y-1.5">
-            <li>เปิดเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>) สร้าง Blank project ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (เลือก <strong>Public</strong> และติ๊กออก <em>Initialize repository with a README</em>)</li>
-            <li>ผูก Runner เข้ากับโปรเจกต์ <code>pes-app</code>: ไปที่ <strong>Settings &rarr; CI/CD &rarr; Runners</strong> กดปุ่ม <strong>Enable for this project</strong> ที่ตัว Runner เดิม (หรือกด <strong>New project runner</strong> ติ๊ก <code class="text-emerald-300">[x] Run untagged jobs</code> แล้วนำ token <code class="text-amber-300">glrt-...</code> ไปรัน <code>sudo gitlab-runner register</code> บน VM1 อีกตัว)</li>
+            <li><strong>เช็คโปรเจกต์บน GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>):</strong>
+              <ul class="list-disc list-inside pl-5 mt-1 text-slate-300 space-y-1">
+                <li><strong class="text-emerald-300">กรณีคนทำส่วนที่ 5 สร้างโปรเจกต์ชื่อ <code>pes-app</code> และผูก Runner ไว้แล้ว:</strong> <strong>ไม่ต้องสร้างใหม่!</strong> ข้ามไปรันคำสั่ง Git Push ด้านล่างได้เลยทันที</li>
+                <li><strong class="text-amber-300">กรณีคนทำส่วนที่ 5 เผลอสร้างชื่อ <code>task-app</code> ไว้:</strong> ให้สร้าง Blank project ใหม่ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (เลือก <strong>Public</strong>, ติ๊กออก <em>Initialize repository with a README</em>) แล้วเข้าไปที่โปรเจกต์ <code>pes-app</code> &rarr; <strong>Settings &rarr; CI/CD &rarr; Runners</strong> &rarr; มองหาหัวข้อ <em>Other available runners</em> ด้านล่าง แล้วกดปุ่ม <strong>Enable for this project</strong> ที่ตัว Runner เดิมได้เลย (ไม่ต้องลงทะเบียนใหม่บน VM1!)</li>
+              </ul>
+            </li>
             <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong> <span class="text-amber-300">(หมายเหตุ: อีเมลใน <code>git config user.email</code> ของคนทำโค้ดกับคนทำ Runner <strong>ไม่จำเป็นต้องตรงกัน</strong> ใส่อะไรก็ได้ แต่ตอนหน้าต่างเด้งถามรหัส GitLab ให้ใส่ Username = <code>root</code> และรหัสผ่านของ GitLab)</span>:</li>
           </ol>
           <div class="code-box">
@@ -1935,7 +1939,9 @@ dist</code></pre>
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>rm -rf .git
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git config --global user.name "Administrator"
+git config --global user.email "admin@mydomain.lab"
+rm -rf .git
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
@@ -2454,7 +2460,7 @@ sudo docker compose up -d
 1. ดูรหัสผ่าน root ของ GitLab (รันบน VM1):
 sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 
-2. เข้าหน้าเว็บ http://gitlab.mydomain.lab (Login: root) -> สร้าง Blank Project ชื่อ: task-app (เลือก Public และติ๊กออก Initialize repository with a README)
+2. เข้าหน้าเว็บ http://gitlab.mydomain.lab (Login: root) -> สร้าง Blank Project ชื่อ: pes-app (แนะนำให้คนทำ Runner สร้างชื่อ pes-app ไว้เลยเพื่อใช้กับส่วนที่ 7 ได้ทันที หรือสร้าง task-app กรณีซ้อมส่วนที่ 6 | เลือก Public และติ๊กออก Initialize repository with a README)
 3. ไปที่ Settings -> CI/CD -> Runners -> New project runner -> เลือก Linux -> ติ๊ก [x] Run untagged jobs -> Create runner -> คัดลอก Runner authentication token ที่ขึ้นต้น glrt-... (ไม่ใช้ Registration token แบบเก่า; เก็บ token เป็นความลับ)
 
 4. ติดตั้งและลงทะเบียน GitLab Runner บน VM1 (.31):
@@ -2626,7 +2632,9 @@ NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
    - frontend/plugins/axios.client.js (บรรทัด 10): แก้เป็น config.public.apiBase || 'http://api.mydomain.lab'
 
 &gt;&gt;&gt; [STEP 7.1] สั่ง Git Push เพื่อ Deploy รอบที่ 1 ทันที! &lt;&lt;&lt;
-(สร้าง Blank project ชื่อ pes-app บน GitLab + ผูก Runner ก่อนรันชุดนี้ | หมายเหตุ: git config user.email ไม่จำเป็นต้องตรงกับคนตั้ง Runner)
+(ถ้าคนทำส่วนที่ 5 สร้างโปรเจกต์ชื่อ pes-app และผูก Runner ไว้แล้ว ให้รันชุดนี้ได้เลยทันที! แต่ถ้าคนทำส่วนที่ 5 เผลอสร้างชื่อ task-app ไว้ ให้สร้างโปรเจกต์ pes-app แล้วไปที่ Settings -&gt; CI/CD -&gt; Runners กด Enable for this project ที่ตัว Runner เดิม | หมายเหตุ: git config user.email ไม่จำเป็นต้องตรงกับคนตั้ง Runner)
+git config --global user.name "Administrator"
+git config --global user.email "admin@mydomain.lab"
 rm -rf .git
 git init
 git switch -c main
