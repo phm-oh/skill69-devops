@@ -18,7 +18,7 @@
 
 ---
 
-## STEP 7.0: เตรียมโฟลเดอร์ `pes-app` ก่อนเริ่มเฟส 1
+## STEP 7.0: เตรียมโฟลเดอร์ `pes-app` และล้างเส้นแดง Error ใน VS Code ก่อนเริ่มเฟส 1
 
 1. **ดาวน์โหลดเทมเพลตต้นฉบับของกรรมการ:** [https://vecskill.bncc.ac.th/files/PES.zip](https://vecskill.bncc.ac.th/files/PES.zip)
 2. แตกไฟล์ `PES.zip` แล้วคัดลอกโฟลเดอร์ `PES` ออกมาตั้งชื่อใหม่ว่า **`pes-app`**
@@ -26,7 +26,21 @@
    - `backend/node_modules`
    - `frontend/node_modules`
    - `frontend/.nuxt`
-4. เปิดโฟลเดอร์ `pes-app` ในโปรแกรม **VS Code**
+4. เปิดโฟลเดอร์ `pes-app` ในโปรแกรม **VS Code** แล้วเปิด Terminal รันคำสั่งติดตั้งแพ็กเกจและสร้าง Type ของ Nuxt **เพื่อล้างเส้นหยักสีแดง (Error) ใน VS Code ให้หายทั้งหมด** *(ไม่ต้องรัน `npm run dev` เพราะเราจะรันจริงบน Docker ของ VM2)*:
+   - **คนทำ Backend:**
+     ```bash
+     cd backend
+     npm install
+     cd ..
+     ```
+   - **คนทำ Frontend:** *(สำคัญมาก: `npx nuxt prepare` จะสร้าง `.nuxt/tsconfig.json` ทำให้เส้นแดง `defineNuxtConfig`, `useRuntimeConfig`, `process.env` หายไปทันที)*
+     ```bash
+     cd frontend
+     npm install
+     npx nuxt prepare
+     cd ..
+     ```
+   > **💡 ปลอดภัย 100% ไม่กระทบ Docker:** เพราะในจุดที่ 5 เราสร้างไฟล์ `frontend/.dockerignore` ดักไม่ให้ส่ง `node_modules` และ `.nuxt` จากเครื่อง Windows ขึ้นไปกวนตอน Docker Build บน VM1 แล้ว!
 
 ---
 
@@ -186,8 +200,14 @@ JWT_EXPIRES=2h
 ---
 
 ### 🛠️ [เฟส 1] จุดที่ 6: แก้ URL ล็อกอินใน `frontend/nuxt.config.ts` และ `frontend/plugins/axios.client.js`
-1. เปิด **`frontend/nuxt.config.ts`** (บรรทัดที่ 52): แก้จาก `'http://localhost:7000'` $\rightarrow$ เป็น **`'http://api.mydomain.lab'`**
-2. เปิด **`frontend/plugins/axios.client.js`** (บรรทัดที่ 10): แก้จาก `'http://localhost:7000'` $\rightarrow$ เป็น **`'http://api.mydomain.lab'`**
+1. เปิด **`frontend/nuxt.config.ts`** (บรรทัดที่ 52): **ลบ `process.env.NUXT_PUBLIC_API_BASE ||` ออก แล้วแก้ทั้งบรรทัดให้เหลือแค่นี้** (เพื่อตัดปัญหาเส้นแดง `process` ใน VS Code และ Nuxt 3 จะดึงค่า `NUXT_PUBLIC_API_BASE` จาก Docker มาทับให้อัตโนมัติอยู่แล้ว):
+   ```typescript
+   apiBase: 'http://api.mydomain.lab'
+   ```
+2. เปิด **`frontend/plugins/axios.client.js`** (บรรทัดที่ 10): แก้จาก `'http://localhost:7000'` $\rightarrow$ เป็น **`'http://api.mydomain.lab'`**:
+   ```javascript
+   baseURL: config.public.apiBase || 'http://api.mydomain.lab',
+   ```
 
 ---
 
@@ -196,7 +216,7 @@ JWT_EXPIRES=2h
 เมื่อทำครบ 6 จุดของเฟส 1 แล้ว **ให้สั่ง Deploy ขึ้นระบบจริงไว้ก่อนเลยทันที**:
 1. เข้าหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`) สร้าง Blank Project ชื่อ **`pes-app`** (เลือก **Public** และติ๊กออก *Initialize repository with a README*)
 2. ผูก Runner เข้ากับโปรเจกต์ `pes-app` (ไปที่ **Settings $\rightarrow$ CI/CD $\rightarrow$ Runners** กด **Enable for this project** หรือสร้าง Project Runner ใหม่ติ๊ก `[✓] Run untagged jobs` แล้วลงทะเบียนบน VM1)
-3. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` แล้วรันคำสั่งชุดนี้:
+3. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` แล้วรันคำสั่งชุดนี้ *(💡 หมายเหตุ: `git config user.email` ของเครื่องที่เขียน `.gitlab-ci.yml` / สั่ง `git push` **ไม่จำเป็นต้องตรงกับ**คนตั้งค่า GitLab Runner ใช้ชื่อและอีเมลอะไรก็ได้)*:
 
 ```bash
 rm -rf .git

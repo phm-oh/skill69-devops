@@ -550,8 +550,8 @@ user2 ALL=(ALL) NOPASSWD:ALL</code></pre>
             </div>
             <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo chmod 0440 /etc/sudoers.d/users
 sudo nano /etc/ssh/sshd_config
-# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
-if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
 sudo ss -tlnp | grep 2222</code></pre>
           </div>
 
@@ -837,8 +837,8 @@ user2 ALL=(ALL) NOPASSWD:ALL</code></pre>
             </div>
             <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo chmod 0440 /etc/sudoers.d/users
 sudo nano /etc/ssh/sshd_config
-# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
-if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
 sudo ss -tlnp | grep 2222</code></pre>
           </div>
 
@@ -1656,12 +1656,45 @@ git push -u origin main</code></pre>
           </div>
         </div>
 
-        <!-- PES Pre-check on VM1 & VM2 -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: เช็กความพร้อมบน VM2 ก่อนเริ่ม (UFW ปิดแล้ว + มี DNS &amp; NPM ของ <code class="text-white">app</code> และ <code class="text-white">api</code>)</h3>
-          <div class="text-xs sm:text-sm text-slate-300 space-y-1">
-            <div>• บน <strong>VM1 และ VM2</strong> รัน <code class="text-emerald-300">sudo ufw disable</code> ไว้แล้วตั้งแต่ STEP 2.2 และ 3.2 (พอร์ต <code class="text-emerald-300">3000</code>, <code class="text-emerald-300">7000</code>, <code class="text-emerald-300">8081</code> เปิดทะลุอัตโนมัติ)</div>
-            <div>• เช็กว่าทำ STEP 4.1–4.2 ครบ: DNS มี A Record <code class="text-amber-300">app</code> และ <code class="text-amber-300">api</code> ชี้ไป <code class="text-emerald-300">192.168.10.32</code> และใน NPM มี Proxy Host <code class="text-amber-300">app.mydomain.lab</code> &rarr; <code class="text-emerald-300">192.168.10.32:3000</code> กับ <code class="text-amber-300">api.mydomain.lab</code> &rarr; <code class="text-emerald-300">192.168.10.32:7000</code></div>
+        <!-- PES Pre-check on VM1 & VM2 + Local NPM Install / Nuxt Prepare -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-cyan-300 text-base">STEP 7.0: เตรียมโปรเจกต์บนเครื่อง PC ด้วย <code class="text-white">npm install</code> &amp; <code class="text-white">npx nuxt prepare</code> (เพื่อให้เส้นแดง Error ใน VS Code หายทั้งหมด!)</h3>
+          <div class="text-xs sm:text-sm text-slate-300 space-y-1.5">
+            <div>• <strong>ทำไมเปิดโฟลเดอร์ใน VS Code ครั้งแรกแล้วขึ้นขีดแดงเต็มไปหมด (เช่น <code>process.env</code>, <code>defineNuxtConfig</code>, <code>useRuntimeConfig</code> แดง)?</strong> เพราะยังไม่ได้สร้างโฟลเดอร์ Type ของ Nuxt (<code class="text-amber-300">.nuxt</code>) และ <code class="text-amber-300">node_modules</code> บนเครื่อง PC!</div>
+            <div>• ให้เปิด Terminal ใน VS Code (ที่โฟลเดอร์ <code class="text-emerald-300">pes-app</code>) แล้วรันคำสั่งเตรียมโปรเจกต์ทั้ง 2 ฝั่งตามกล่องด้านล่างนี้ก่อนเริ่มแก้โค้ด เส้นแดงจะหายเกลี้ยงทันที:</div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">[PC Terminal] 1. เตรียมฝั่ง Backend (และรันทดสอบหากต้องการ)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>cd backend
+npm install
+# (ถ้ารันทดสอบบนเครื่องตัวเอง ค่อยสั่ง npm run dev)
+cd ..</code></pre>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-cyan-300">[PC Terminal] 2. เตรียมฝั่ง Frontend (สำคัญ! ทำให้เส้นแดงใน VS Code หายหมด)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>cd frontend
+npm install
+npx nuxt prepare
+# (ถ้ารันหน้าเว็บดูบนเครื่องตัวเอง ค่อยสั่ง npm run dev)
+cd ..</code></pre>
+            </div>
+          </div>
+
+          <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
+            💡 <strong>ข้อควรรู้:</strong> เมื่อรัน <code>npm install</code> และ <code>npx nuxt prepare</code> บนเครื่อง PC แล้ว ไม่ต้องลบ <code>node_modules</code> ซ้ำอีก เพียงแค่สร้างไฟล์ <strong><code>frontend/.dockerignore</code> (ในจุดที่ 5.1 ด้านล่าง)</strong> ตัว Docker ตอน Build บนเซิร์ฟเวอร์จะข้ามโฟลเดอร์ <code>node_modules</code> และ <code>.nuxt</code> ของเครื่อง PC ไปเองโดยอัตโนมัติครับ!
           </div>
         </div>
 
@@ -1877,7 +1910,7 @@ dist</code></pre>
           </div>
 
           <ul class="text-xs sm:text-sm text-slate-300 space-y-1.5">
-            <li>• <strong>จุดที่ 6.1 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span></li>
+            <li>• <strong>จุดที่ 6.1 (<code class="text-amber-300">frontend/nuxt.config.ts</code> บรรทัด 52):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับทั้งบรรทัด]</span> จาก <code class="text-rose-300 line-through">apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">apiBase: 'http://api.mydomain.lab'</span> <span class="text-xs text-emerald-300">(ตัดคำว่า <code>process.env...</code> ออกไปเลย จะได้ไม่ขึ้นขีดแดงเตือน TypeScript ใน VS Code และ Nuxt ดึงค่าจาก <code>NUXT_PUBLIC_API_BASE</code> ให้อัตโนมัติอยู่แล้ว!)</span></li>
             <li>• <strong>จุดที่ 6.2 (<code class="text-amber-300">frontend/plugins/axios.client.js</code> บรรทัด 10):</strong> <span class="text-amber-300 font-bold">[✏️ แก้ทับ]</span> จาก <code class="text-rose-300 line-through">'http://localhost:7000'</code> เป็น <span class="hl-inline font-mono">'http://api.mydomain.lab'</span> (เพื่อให้กดปุ่ม Sign in แล้วล็อกอินเข้าหน้าตารางผู้ใช้ได้ทันที!)</li>
           </ul>
         </div>
@@ -1893,7 +1926,7 @@ dist</code></pre>
           <ol class="list-decimal list-inside text-xs sm:text-sm text-slate-200 space-y-1.5">
             <li>เปิดเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>) สร้าง Blank project ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (เลือก <strong>Public</strong> และติ๊กออก <em>Initialize repository with a README</em>)</li>
             <li>ผูก Runner เข้ากับโปรเจกต์ <code>pes-app</code>: ไปที่ <strong>Settings &rarr; CI/CD &rarr; Runners</strong> กดปุ่ม <strong>Enable for this project</strong> ที่ตัว Runner เดิม (หรือกด <strong>New project runner</strong> ติ๊ก <code class="text-emerald-300">[x] Run untagged jobs</code> แล้วนำ token <code class="text-amber-300">glrt-...</code> ไปรัน <code>sudo gitlab-runner register</code> บน VM1 อีกตัว)</li>
-            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong>:</li>
+            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong> <span class="text-amber-300">(หมายเหตุ: อีเมลใน <code>git config user.email</code> ของคนทำโค้ดกับคนทำ Runner <strong>ไม่จำเป็นต้องตรงกัน</strong> ใส่อะไรก็ได้ แต่ตอนหน้าต่างเด้งถามรหัส GitLab ให้ใส่ Username = <code>root</code> และรหัสผ่านของ GitLab)</span>:</li>
           </ol>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
@@ -2200,8 +2233,8 @@ sudo chmod 0440 /etc/sudoers.d/users
 2. เปลี่ยนพอร์ต SSH เป็น 2222:
 sudo nano /etc/ssh/sshd_config
 (ลบ # หน้า Port 22 แล้วแก้เป็น Port 2222)
-# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
-if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
 sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
 3. ปิด UFW บน VM1 (ไม่ต้องจำพอร์ต, status ต้องเป็น inactive):
@@ -2335,8 +2368,8 @@ sudo chmod 0440 /etc/sudoers.d/users
 2. เปลี่ยนพอร์ต SSH เป็น 2222:
 sudo nano /etc/ssh/sshd_config
 (ลบ # หน้า Port 22 แล้วแก้เป็น Port 2222)
-# Ubuntu 24.04 ใช้ ssh.socket: ต้อง daemon-reload + restart ssh.socket ไม่งั้นยังฟังพอร์ต 22
-if systemctl is-active --quiet ssh.socket; then sudo systemctl daemon-reload; sudo systemctl restart ssh.socket; else sudo systemctl restart ssh; fi
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
 sudo ss -tlnp | grep 2222    (ต้องเห็น :2222)
 
 3. ปิด UFW บน VM2 (ชุดเดียวกับ VM1, status ต้องเป็น inactive):
@@ -2530,7 +2563,11 @@ git push -u origin main
   ส่วนที่ 7: โปรเจกต์จริง PES แบ่งเป็น 2 เฟส (เฟส 1 เอาขึ้น Deploy ก่อน -> เฟส 2 เก็บรายละเอียด)
 ================================================================================
 ลิงก์ดาวน์โหลดเทมเพลตต้นฉบับ: https://vecskill.bncc.ac.th/files/PES.zip
-เตรียมโฟลเดอร์: แตกไฟล์ PES.zip คัดลอกออกมาเป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
+เตรียมโฟลเดอร์:
+  1. แตกไฟล์ PES.zip คัดลอกออกมาเป็น pes-app แล้วลบ backend/node_modules, frontend/node_modules, frontend/.nuxt
+  2. เปิดใน VS Code แล้วรันคำสั่งเตรียมแพ็กเกจ (เพื่อล้างเส้นแดง Error ใน VS Code ให้หายขาด ไม่ต้องรัน npm run dev):
+     - คนทำ Backend:  cd backend  -&gt; npm install  -&gt; cd ..
+     - คนทำ Frontend: cd frontend -&gt; npm install  -&gt; npx nuxt prepare -&gt; cd ..
 
 --------------------------------------------------------------------------------
   [เฟสที่ 1] แก้ส่วนสำคัญ 6 จุดเพื่อให้ Deploy ขึ้น VM2 และ Login ผ่านก่อน!
@@ -2585,11 +2622,11 @@ dist
 NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
 
 จุดที่ 6 (แก้ URL ล็อกอินจาก http://localhost:7000 เป็น http://api.mydomain.lab):
-   - frontend/nuxt.config.ts (บรรทัด 52)
-   - frontend/plugins/axios.client.js (บรรทัด 10)
+   - frontend/nuxt.config.ts (บรรทัด 52): แก้ทั้งบรรทัดเป็น apiBase: 'http://api.mydomain.lab' (ตัด process.env ออกเพื่อไม่ให้ VS Code ขึ้นตัวแดง)
+   - frontend/plugins/axios.client.js (บรรทัด 10): แก้เป็น config.public.apiBase || 'http://api.mydomain.lab'
 
 &gt;&gt;&gt; [STEP 7.1] สั่ง Git Push เพื่อ Deploy รอบที่ 1 ทันที! &lt;&lt;&lt;
-(สร้าง Blank project ชื่อ pes-app บน GitLab + ผูก Runner ก่อนรันชุดนี้)
+(สร้าง Blank project ชื่อ pes-app บน GitLab + ผูก Runner ก่อนรันชุดนี้ | หมายเหตุ: git config user.email ไม่จำเป็นต้องตรงกับคนตั้ง Runner)
 rm -rf .git
 git init
 git switch -c main
