@@ -222,7 +222,6 @@ JWT_EXPIRES=2h
 ```bash
 git config --global user.name "Administrator"
 git config --global user.email "admin@mydomain.lab"
-rm -rf .git
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
