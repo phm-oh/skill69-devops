@@ -220,8 +220,8 @@ JWT_EXPIRES=2h
 2. เปิด Terminal ใน VS Code ที่โฟลเดอร์ `pes-app` แล้วรันคำสั่งชุดนี้ *(💡 หมายเหตุ: `git config user.email` ของเครื่องที่เขียน `.gitlab-ci.yml` / สั่ง `git push` **ไม่จำเป็นต้องตรงกับ**คนตั้งค่า GitLab Runner ใช้ชื่อและอีเมลอะไรก็ได้)*:
 
 ```bash
-git config --global user.name "Administrator"
-git config --global user.email "admin@mydomain.lab"
+git config --global user.name "root"
+git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
@@ -231,6 +231,32 @@ git status --short
 git commit -m "Phase 1: Initial deploy PES with 4-stage CI/CD"
 git push -u origin main
 ```
+
+### 🔑 วิธีแก้ปัญหาสั่ง `git push` แล้วติด Login ไม่ผ่าน / `Access denied` บน Windows (ใช้ PAT ชัวร์ 100%)
+
+> **ทำไมหน้างานจริงถึงมักติด Login ตอน Push?**
+> เพราะบนเครื่อง PC Windows ระบบ *Windows Credential Manager* มักจำรหัสเก่าค้างไว้ หรือหน้าต่างป๊อปอัปของ Git ไม่ยอมเด้ง/ไม่รับรหัสผ่านปกติ วิธีแก้ที่ผ่านฉลุย 100% คือใช้ **Personal Access Token (PAT)** ฝังลงใน URL ของ `origin` โดยตรง:
+
+1. **สร้าง Token (PAT) บนหน้าเว็บ GitLab (`http://gitlab.mydomain.lab`):**
+   - คลิกที่ **รูปโปรไฟล์มุมซ้ายบน** $\rightarrow$ เลือก **Edit profile** (หรือ **Preferences**) $\rightarrow$ เมนูซ้ายมือคลิก **Access Tokens** $\rightarrow$ กดปุ่ม **Add new token**
+   - ช่อง **Token name:** พิมพ์ `push-token`
+   - ช่อง **Expiration date:** กดกากบาท `x` ลบวันที่ออก (หรือเลือกวันถัดไป)
+   - หัวข้อ **Select scopes:** ติ๊กถูกที่ **`[x] api`**, **`[x] read_repository`**, และ **`[x] write_repository`** $\rightarrow$ กด **Create personal access token**
+   - คัดลอกรหัส Token ที่ได้ (ขึ้นต้นด้วย **`glpat-...`**)
+
+2. **รันคำสั่งฝัง PAT ลงใน URL ของ `origin` แล้วสั่ง Push ใหม่ทันที:**
+   ```bash
+   git remote set-url origin http://root:glpat-วางโทเคนตรงนี้@gitlab.mydomain.lab/root/pes-app.git
+   git push -u origin main
+   ```
+
+3. **💡 อธิบายโครงสร้างคำสั่งให้เข้าใจง่าย (จะได้ไม่พิมพ์ผิดในห้องแข่ง):**
+   - รูปแบบคือ: `http://<ชื่อผู้ใช้>:<รหัสโทเคน_glpat>@<โดเมน_GitLab>/<เจ้าของโปรเจกต์>/<ชื่อโปรเจกต์>.git`
+   - ตัวอย่างจริง:
+     ```bash
+     git remote set-url origin http://root:glpat-eTOEIhZcgV1Yb9IaduEC7W86MQp1OjEH.01.0w12ju3d6@gitlab.mydomain.lab/root/pes-app.git
+     ```
+   - **จุดสังเกต:** คำข้างหน้าเครื่องหมาย `:` (ก่อน `glpat-...`) จะใส่เป็น `root` หรือชื่ออะไรก็ได้ (เช่น `it`) เพราะ GitLab ตรวจสอบสิทธิ์จากตัวรหัส `glpat-...` ที่อยู่หลัง `:` และหน้า `@` เป็นหลัก และพอสั่ง `set-url` ครั้งเดียวแล้ว ตอนทำเฟส 2 สั่งแค่ `git push` เฉยๆ ก็ผ่านทันทีโดยไม่ต้องตั้งค่าซ้ำครับ!
 
 > **✅ ผลลัพธ์ที่ได้ทันทีหลังจบเฟส 1:**
 > - Pipeline เขียวครบ 4 Stages (`build` $\rightarrow$ `test` $\rightarrow$ `push` $\rightarrow$ `deploy`)

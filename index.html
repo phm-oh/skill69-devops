@@ -1153,6 +1153,14 @@ ping gitlab.mydomain.lab</code></pre>
               <li>ช่อง <strong>Project name</strong> พิมพ์: <code class="text-emerald-300 font-bold">pes-app</code> <span class="text-amber-300">(แนะนำให้คนทำ Runner สร้างชื่อ <code>pes-app</code> ไว้เลย เพื่อที่คนทำโค้ดในส่วนที่ 7 จะได้สั่ง <code>git push</code> เข้ามาได้ทันทีไม่ต้องสร้างซ้ำ! ยกเว้นถ้าจะซ้อมเว็บจำลองส่วนที่ 6 ค่อยตั้งชื่อ <code>task-app</code>)</span></li>
               <li>ช่อง <strong>Visibility Level</strong> เลือกเป็น <strong class="text-emerald-400">Public</strong> (เพื่อให้ดึงโค้ดและตรวจง่าย)</li>
               <li><strong>สำคัญมาก:</strong> <strong class="text-rose-400 underline">ติ๊กเครื่องหมายถูกออก</strong> จากช่อง <em>"Initialize repository with a README"</em> (เพื่อให้เป็น Repo เปล่า รอรับโค้ดจากเครื่อง PC) $\rightarrow$ กด <strong>Create project</strong></li>
+              <li><strong class="text-amber-300">สร้าง Personal Access Token (PAT — <code class="text-white">glpat-...</code>) เตรียมไว้ให้คนทำโค้ดสั่ง <code>git push</code> (แก้ปัญหา Windows ล็อกอิน Git ไม่ผ่าน 100%):</strong>
+                <ul class="list-disc list-inside pl-5 mt-1 text-slate-300 space-y-1">
+                  <li>คลิกที่ <strong>รูปโปรไฟล์มุมซ้ายบน</strong> $\rightarrow$ เลือก <strong>Edit profile</strong> (หรือ <strong>Preferences</strong>) $\rightarrow$ เมนูซ้ายมือคลิก <strong>Access Tokens</strong> $\rightarrow$ กดปุ่ม <strong>Add new token</strong></li>
+                  <li>ช่อง <strong>Token name:</strong> พิมพ์ <code>push-token</code> &bull; ช่อง <strong>Expiration date:</strong> กดกากบาท <code>x</code> ลบวันที่ออก (หรือเลือกวันถัดไป)</li>
+                  <li>หัวข้อ <strong>Select scopes:</strong> ติ๊กถูกที่ <code class="text-emerald-300 font-bold">[x] api</code>, <code class="text-emerald-300 font-bold">[x] read_repository</code> และ <code class="text-emerald-300 font-bold">[x] write_repository</code> $\rightarrow$ กด <strong>Create personal access token</strong></li>
+                  <li>คัดลอกรหัส Token ที่ขึ้นต้นด้วย <code class="text-amber-300 font-bold">glpat-...</code> ส่งให้เครื่อง PC ที่จะสั่ง <code>git push</code> (ดูวิธีใส่ใน <strong>STEP 7.1</strong>)</li>
+                </ul>
+              </li>
             </ol>
           </div>
         </div>
@@ -1589,8 +1597,8 @@ deploy_job:
                 <span>📋 กดเพื่อคัดลอกคำสั่ง Git</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git config --global user.name "Administrator"
-git config --global user.email "admin@mydomain.lab"
+            <pre class="bg-slate-950 p-4 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git config --global user.name "root"
+git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/task-app.git
@@ -1930,7 +1938,7 @@ dist</code></pre>
                 <li><strong class="text-amber-300">กรณีคนทำส่วนที่ 5 เผลอสร้างชื่อ <code>task-app</code> ไว้:</strong> ให้สร้าง Blank project ใหม่ชื่อ <code class="text-emerald-300 font-bold">pes-app</code> (เลือก <strong>Public</strong>, ติ๊กออก <em>Initialize repository with a README</em>) แล้วเข้าไปที่โปรเจกต์ <code>pes-app</code> &rarr; <strong>Settings &rarr; CI/CD &rarr; Runners</strong> &rarr; มองหาหัวข้อ <em>Other available runners</em> ด้านล่าง แล้วกดปุ่ม <strong>Enable for this project</strong> ที่ตัว Runner เดิมได้เลย (ไม่ต้องลงทะเบียนใหม่บน VM1!)</li>
               </ul>
             </li>
-            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong> <span class="text-amber-300">(หมายเหตุ: อีเมลใน <code>git config user.email</code> ของคนทำโค้ดกับคนทำ Runner <strong>ไม่จำเป็นต้องตรงกัน</strong> ใส่อะไรก็ได้ แต่ตอนหน้าต่างเด้งถามรหัส GitLab ให้ใส่ Username = <code>root</code> และรหัสผ่านของ GitLab)</span>:</li>
+            <li>เปิด Terminal ใน VS Code ที่โฟลเดอร์ <code>pes-app</code> แล้วรันคำสั่งด้านล่างเพื่อ <strong>Deploy รอบแรก</strong> <span class="text-amber-300">(หมายเหตุ: อีเมลใน <code>git config user.email</code> ของคนทำโค้ดกับคนทำ Runner <strong>ไม่จำเป็นต้องตรงกัน</strong> ใส่อะไรก็ได้)</span>:</li>
           </ol>
           <div class="code-box">
             <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
@@ -1939,8 +1947,8 @@ dist</code></pre>
                 <span>📋 กดเพื่อคัดลอก</span>
               </button>
             </div>
-            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git config --global user.name "Administrator"
-git config --global user.email "admin@mydomain.lab"
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>git config --global user.name "root"
+git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
@@ -1949,6 +1957,42 @@ git add .
 git status --short
 git commit -m "Phase 1: Initial deploy PES with 4-stage CI/CD"
 git push -u origin main</code></pre>
+          </div>
+
+          <!-- PAT Login Troubleshooting & Explanation Box -->
+          <div class="bg-amber-950/35 border-2 border-amber-500/50 rounded-xl p-4 space-y-3 text-xs sm:text-sm">
+            <div class="font-extrabold text-amber-300 text-sm sm:text-base flex items-center gap-2">
+              <span>🔑 วิธีแก้ปัญหาสั่ง <code>git push</code> แล้วติด Login ไม่ผ่าน / <code>Access denied</code> บน Windows (ใช้ PAT ชัวร์ 100%)</span>
+            </div>
+            <p class="text-slate-200">
+              <strong>ทำไมหน้างานจริงถึงมักติด Login ตอน Push?</strong> เพราะระบบ <em>Windows Credential Manager</em> บนเครื่อง PC มักจำรหัสเก่าค้างไว้ หรือหน้าต่างป๊อปอัปของ Git ไม่ยอมรับรหัสผ่านปกติ วิธีแก้ที่ชัวร์ที่สุดคือใช้ <strong>Personal Access Token (PAT)</strong> ฝังลงใน URL ของ <code>origin</code> โดยตรง (จะไม่เด้งถามรหัสผ่านอีกเลย):
+            </p>
+            <ol class="list-decimal list-inside text-slate-200 space-y-1.5">
+              <li><strong>สร้าง Token (PAT) บนเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>):</strong>
+                <ul class="list-disc list-inside pl-5 mt-1 text-slate-300 space-y-1">
+                  <li>คลิก <strong>รูปโปรไฟล์มุมซ้ายบน</strong> &rarr; <strong>Edit profile</strong> (หรือ <strong>Preferences</strong>) &rarr; เมนูซ้ายคลิก <strong>Access Tokens</strong> &rarr; กด <strong>Add new token</strong></li>
+                  <li>ตั้งชื่อ <code>push-token</code> &bull; ลบวันที่หมดอายุออก (หรือเลือกวันพรุ่งนี้) &bull; ติ๊กถูก <code class="text-emerald-300 font-bold">[x] api</code>, <code class="text-emerald-300 font-bold">[x] read_repository</code>, <code class="text-emerald-300 font-bold">[x] write_repository</code> &rarr; กด <strong>Create personal access token</strong></li>
+                  <li>คัดลอกรหัส Token ที่ได้ ซึ่งจะขึ้นต้นด้วย <code class="text-amber-300 font-bold">glpat-...</code></li>
+                </ul>
+              </li>
+              <li><strong>รันคำสั่งเปลี่ยน URL ของ <code>origin</code> ให้ฝัง Token แล้วสั่ง Push ใหม่ทันที:</strong></li>
+            </ol>
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-amber-300">[PC Terminal] คำสั่งฝัง PAT ลงใน git remote (แก้ปัญหา Login ไม่ผ่าน 100%)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>git remote set-url origin http://root:glpat-วางโทเคนตรงนี้@gitlab.mydomain.lab/root/pes-app.git
+git push -u origin main</code></pre>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 space-y-1">
+              <div class="font-bold text-white">💡 อธิบายโครงสร้างคำสั่งให้เข้าใจง่าย (จะได้ไม่พิมพ์ผิดในห้องแข่ง):</div>
+              <div>&bull; รูปแบบคือ: <code>http://<span class="text-emerald-300">ชื่อผู้ใช้</span>:<span class="text-amber-300">รหัสโทเคน_glpat</span>@<span class="text-cyan-300">โดเมน_GitLab</span>/<span class="text-pink-300">เจ้าของโปรเจกต์/ชื่อโปรเจกต์.git</span></code></div>
+              <div>&bull; ตัวอย่างจริง: <code>git remote set-url origin http://<span class="text-emerald-300">root</span>:<span class="text-amber-300">glpat-eTOEIhZcgV1Yb9IaduEC7W86MQp1OjEH.01.0w12ju3d6</span>@<span class="text-cyan-300">gitlab.mydomain.lab</span>/<span class="text-pink-300">root/pes-app.git</span></code></div>
+              <div>&bull; <strong>จุดสังเกต:</strong> คำข้างหน้าเครื่องหมาย <code>:</code> (ก่อน <code>glpat-...</code>) จะใส่เป็น <code>root</code> หรือชื่ออะไรก็ได้ (เช่น <code>it</code>) เพราะ GitLab ตรวจสอบสิทธิ์จากตัวรหัส <code>glpat-...</code> ที่อยู่หลัง <code>:</code> และหน้า <code>@</code> เป็นหลัก ส่วนพอตั้ง <code>set-url</code> ครั้งเดียวแล้ว ตอนทำเฟส 2 สั่งแค่ <code>git push</code> เฉยๆ ก็ผ่านฉลุยเลย ไม่ต้องตั้งซ้ำครับ!</div>
+            </div>
           </div>
           <div class="text-xs sm:text-sm text-slate-200 bg-slate-900/90 border border-emerald-500/30 rounded-lg p-3 space-y-1">
             <div class="font-bold text-emerald-300">✅ ผลลัพธ์ที่ได้ทันทีหลังจบเฟส 1 (รอ Pipeline เขียวครบ 4 วง):</div>
@@ -2555,8 +2599,8 @@ deploy_job:
       "
 
 --- คำสั่ง Git Push บนเครื่อง PC ---
-git config --global user.name "Administrator"
-git config --global user.email "admin@mydomain.lab"
+git config --global user.name "root"
+git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/task-app.git
@@ -2632,8 +2676,8 @@ NUXT_PUBLIC_API_BASE=http://api.mydomain.lab
 
 &gt;&gt;&gt; [STEP 7.1] สั่ง Git Push เพื่อ Deploy รอบที่ 1 ทันที! &lt;&lt;&lt;
 (ถ้าคนทำส่วนที่ 5 สร้างโปรเจกต์ชื่อ pes-app และผูก Runner ไว้แล้ว ให้รันชุดนี้ได้เลยทันที! แต่ถ้าคนทำส่วนที่ 5 เผลอสร้างชื่อ task-app ไว้ ให้สร้างโปรเจกต์ pes-app แล้วไปที่ Settings -&gt; CI/CD -&gt; Runners กด Enable for this project ที่ตัว Runner เดิม | หมายเหตุ: git config user.email ไม่จำเป็นต้องตรงกับคนตั้ง Runner)
-git config --global user.name "Administrator"
-git config --global user.email "admin@mydomain.lab"
+git config --global user.name "root"
+git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
 git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
@@ -2641,6 +2685,13 @@ git add -f backend/.env
 git add .
 git status --short
 git commit -m "Phase 1: Initial deploy PES with 4-stage CI/CD"
+git push -u origin main
+
+[วิธีแก้กรณีสั่ง git push แล้วติด Login ไม่ผ่านบน Windows — ใช้ PAT (glpat-...) ชัวร์ 100%]
+1. บนเว็บ GitLab คลิก รูปโปรไฟล์มุมซ้ายบน -&gt; Edit profile -&gt; Access Tokens -&gt; Add new token
+2. ตั้งชื่อ push-token, ลบวันหมดอายุออก, ติ๊ก [x] api, [x] read_repository, [x] write_repository -&gt; กด Create personal access token แล้วคัดลอกรหัส glpat-...
+3. รันคำสั่งฝัง PAT ลงใน URL ของ origin แล้วสั่ง Push ใหม่ (ไม่ต้องกรอกรหัสผ่านอีกเลย):
+git remote set-url origin http://root:glpat-วางโทเคนตรงนี้@gitlab.mydomain.lab/root/pes-app.git
 git push -u origin main
 
 --------------------------------------------------------------------------------
