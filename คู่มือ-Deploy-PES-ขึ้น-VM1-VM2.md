@@ -224,7 +224,7 @@ git config --global user.name "root"
 git config --global user.email "root@mydomain.lab"
 git init
 git switch -c main
-git remote add origin http://gitlab.mydomain.lab/root/pes-app.git
+git remote add origin http://root:glpat-วางโทเคนตรงนี้@gitlab.mydomain.lab/root/pes-app.git
 git add -f backend/.env
 git add .
 git status --short
