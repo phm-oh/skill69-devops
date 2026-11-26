@@ -419,15 +419,16 @@ sysctl -p</code></pre>
         </div>
 
         <!-- Step 1.4 -->
-        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5">
-          <h3 class="font-bold text-amber-300 text-base mb-3">STEP 1.4: สร้างเครื่องจำลอง VM1 (101) และ VM2 (102) และตั้ง Start at boot</h3>
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-amber-300 text-base">STEP 1.4: สร้างเครื่องจำลอง VM1 (101) และ VM2 (102) และตั้ง Start at boot</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div class="bg-blue-950/20 border border-blue-500/30 rounded-lg p-3.5">
               <div class="font-bold text-blue-300 mb-1.5">🟦 สเปกการสร้าง VM1 (ID: 101 | Name: gitlab-vm)</div>
               <ul class="space-y-1 text-slate-300 text-xs sm:text-sm">
                 <li>• <strong>OS:</strong> เลือก <code class="text-blue-300">ubuntu.iso</code></li>
                 <li>• <strong>System:</strong> ติ๊กถูก <code class="text-emerald-300">[x] QEMU Guest Agent</code></li>
-                <li>• <strong>Disks:</strong> <code class="text-blue-300">80 GiB</code> | <strong>CPU:</strong> <code class="text-blue-300">4 Cores</code> | <strong>Memory:</strong> <code class="text-blue-300">8192 MiB</code></li>
+                <li>• <strong>Disks (ช่อง Disk size GiB):</strong> <strong class="text-amber-300 underline">แก้จาก 32 เป็น <code>60</code> หรือ <code>80 GiB</code></strong> <span class="text-xs text-amber-200">(ห้ามลืมแก้! เพราะ VM1 ต้องรันทั้ง GitLab + Registry + Build Docker Image)</span></li>
+                <li>• <strong>CPU:</strong> <code class="text-blue-300">4 Cores</code> | <strong>Memory:</strong> <code class="text-blue-300">8192 MiB</code></li>
                 <li>• <strong>Network:</strong> เลือก <code class="text-blue-300">vmbr0</code> และ <strong class="text-rose-400 underline">ติ๊กช่อง Firewall ออก!</strong></li>
                 <li>• <strong>Options $\rightarrow$ Start at boot:</strong> เปลี่ยนเป็น <strong class="text-emerald-400">Yes</strong> (ได้ 1 คะแนน)</li>
               </ul>
@@ -437,11 +438,18 @@ sysctl -p</code></pre>
               <ul class="space-y-1 text-slate-300 text-xs sm:text-sm">
                 <li>• <strong>OS:</strong> เลือก <code class="text-emerald-300">ubuntu.iso</code></li>
                 <li>• <strong>System:</strong> ติ๊กถูก <code class="text-emerald-300">[x] QEMU Guest Agent</code></li>
-                <li>• <strong>Disks:</strong> <code class="text-emerald-300">80 GiB</code> | <strong>CPU:</strong> <code class="text-emerald-300">4 Cores</code> | <strong>Memory:</strong> <code class="text-emerald-300">4096 MiB</code></li>
+                <li>• <strong>Disks (ช่อง Disk size GiB):</strong> <strong class="text-amber-300 underline">แก้จาก 32 เป็น <code>50</code> หรือ <code>80 GiB</code></strong></li>
+                <li>• <strong>CPU:</strong> <code class="text-emerald-300">4 Cores</code> | <strong>Memory:</strong> <code class="text-emerald-300">4096 MiB</code></li>
                 <li>• <strong>Network:</strong> เลือก <code class="text-emerald-300">vmbr0</code> และ <strong class="text-rose-400 underline">ติ๊กช่อง Firewall ออก!</strong></li>
                 <li>• <strong>Options $\rightarrow$ Start at boot:</strong> เปลี่ยนเป็น <strong class="text-emerald-400">Yes</strong> (ได้ 1 คะแนน)</li>
               </ul>
             </div>
+          </div>
+
+          <div class="bg-rose-950/35 border-2 border-rose-500/50 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 space-y-1">
+            <div class="font-extrabold text-rose-300">⚠️ จุดตายที่ทำให้ฮาร์ดดิสก์ VM1 เต็มเร็ว (กับดัก LVM 50% ของ Ubuntu Server):</div>
+            <div>ต่อให้ใน Proxmox ตั้ง Disk size ไว้ 50–80 GB แต่ตอนติดตั้ง Ubuntu หน้า <strong>Guided storage configuration</strong> ถ้าปล่อยให้มันติ๊ก <code class="text-rose-300">[X] Set up this disk as an LVM group</code> ตามค่าเริ่มต้น Ubuntu จะแบ่งพื้นที่ให้ใช้งานจริงแค่ <strong>ครึ่งเดียว (50%)</strong>!</div>
+            <div class="text-emerald-300 font-bold">&rarr; วิธีแก้ที่ง่ายที่สุดตอนลง Ubuntu: ให้เลื่อนลงมากดปุ่ม <code>Spacebar</code> เอาเครื่องหมาย <code>X</code> ออกให้เป็น <code>[ ] Set up this disk as an LVM group</code> แล้วกด Done พื้นที่จะได้เต็ม 100% ของลูกทันที! (ดูวิธีขยายดิสก์กรณีลงแบบ LVM ไปแล้วใน STEP 2.1 ด้านล่าง)</div>
           </div>
         </div>
       </div>
@@ -462,9 +470,43 @@ sysctl -p</code></pre>
       <div class="p-5 sm:p-6 space-y-6">
         <!-- VM1 Step 2.1 & 2.2 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
-          <h3 class="font-bold text-blue-300 text-base">STEP 2.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM1 (192.168.10.31)</h3>
-          <div class="text-sm text-slate-300 bg-blue-950/20 border border-blue-500/20 rounded-lg p-3.5">
-            <strong>ตอนติดตั้งหน้า Console ของ VM1:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-blue-300">192.168.10.0/24</code> | Address: <code class="text-blue-300 font-bold">192.168.10.31</code> | Gateway: <code class="text-blue-300">192.168.10.1</code> | Name servers: <code class="text-blue-300">8.8.8.8</code> และหน้า Profile <strong>อย่าลืมติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
+          <h3 class="font-bold text-blue-300 text-base">STEP 2.1: ติดตั้ง Ubuntu, ปลดล็อกพื้นที่ดิสก์ 100% และตั้งค่า Netplan ของ VM1 (192.168.10.31)</h3>
+          <div class="text-sm text-slate-300 bg-blue-950/20 border border-blue-500/20 rounded-lg p-3.5 space-y-1.5">
+            <div><strong>1. หน้า Network ตอนติดตั้งบน Console ของ VM1:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-blue-300">192.168.10.0/24</code> | Address: <code class="text-blue-300 font-bold">192.168.10.31</code> | Gateway: <code class="text-blue-300">192.168.10.1</code> | Name servers: <code class="text-blue-300">8.8.8.8</code></div>
+            <div><strong>2. หน้า Guided storage configuration (สำคัญมาก ห้ามข้าม!):</strong> เลื่อนลงมาที่บรรทัด <code class="text-amber-300">Set up this disk as an LVM group</code> แล้วกดปุ่ม <strong class="text-emerald-300 underline">Spacebar เอาเครื่องหมาย [X] ออก</strong> ให้กลายเป็น <code class="text-emerald-300 font-bold">[ ] Set up this disk as an LVM group</code> (เพื่อให้ Ubuntu ใช้พื้นที่ดิสก์เต็ม 100% ทั้งลูก ไม่โดนหั่นเหลือครึ่งเดียว!)</div>
+            <div><strong>3. หน้า Profile &amp; SSH:</strong> <strong>อย่าลืมติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong></div>
+          </div>
+
+          <!-- Rescue Box if Disk is Already Full on VM1 -->
+          <div class="bg-amber-950/30 border border-amber-500/40 rounded-xl p-4 space-y-3 text-xs sm:text-sm">
+            <div class="font-bold text-amber-300">🛠️ วิธีแก้ด่วน! กรณีติดตั้ง VM1 แบบ LVM ไปแล้ว หรือฮาร์ดดิสก์ VM1 เต็มกลางคัน (ไม่ต้องลง Ubuntu ใหม่)</div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <div class="code-box">
+                <div class="flex items-center justify-between bg-slate-800/90 px-3 py-2 rounded-t-lg border-b border-slate-700">
+                  <span class="text-xs font-mono text-amber-300">[VM1] 1. ดึงพื้นที่ LVM อีก 50% ที่ถูกกักไว้กลับมาใช้เต็ม 100% ทันที</span>
+                  <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-md transition cursor-pointer">
+                    <span>📋 คัดลอก</span>
+                  </button>
+                </div>
+                <pre class="bg-slate-950 p-3 rounded-b-lg text-xs text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+df -h /</code></pre>
+              </div>
+              <div class="code-box">
+                <div class="flex items-center justify-between bg-slate-800/90 px-3 py-2 rounded-t-lg border-b border-slate-700">
+                  <span class="text-xs font-mono text-amber-300">[VM1] 2. กรณีสั่ง Resize เพิ่มดิสก์ใน Proxmox UI แล้วขยายรับพื้นที่ใหม่</span>
+                  <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-md transition cursor-pointer">
+                    <span>📋 คัดลอก</span>
+                  </button>
+                </div>
+                <pre class="bg-slate-950 p-3 rounded-b-lg text-xs text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code>sudo growpart /dev/sda 3
+sudo pvresize /dev/sda3
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+sudo docker image prune -f &amp;&amp; sudo docker builder prune -f</code></pre>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400">* วิธีเพิ่มขนาดดิสก์บนเว็บ Proxmox โดยไม่ต้องปิดเครื่อง: คลิก <strong>VM1 (101)</strong> &rarr; เมนู <strong>Hardware</strong> &rarr; คลิก <strong>Hard Disk (scsi0)</strong> &rarr; กดปุ่ม <strong>Disk Action</strong> ด้านบน &rarr; เลือก <strong>Resize</strong> &rarr; ใส่จำนวน GiB ที่ต้องการบวกเพิ่ม (เช่น <code>20</code>) แล้วรันกล่องที่ 2 ด้านขวาบน VM1</p>
           </div>
 
           <p class="text-sm text-slate-300">เมื่อติดตั้งเสร็จและล็อกอินเข้า <strong>VM1</strong> แล้ว ให้เปิดแก้ไขไฟล์ Netplan (เช็กชื่อไฟล์ใน <code class="text-blue-300">/etc/netplan/</code> ก่อน):</p>
@@ -751,8 +793,9 @@ sudo nano docker-compose.yml</code></pre>
         <!-- VM2 Step 3.1 -->
         <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
           <h3 class="font-bold text-emerald-300 text-base">STEP 3.1: ติดตั้ง Ubuntu และตั้งค่า Netplan ของ VM2 (192.168.10.32)</h3>
-          <div class="text-sm text-slate-300 bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3.5">
-            <strong>ตอนติดตั้งหน้า Console ของ VM2:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-emerald-300">192.168.10.0/24</code> | Address: <code class="text-emerald-300 font-bold">192.168.10.32</code> | Gateway: <code class="text-emerald-300">192.168.10.1</code> | Name servers: <code class="text-emerald-300">8.8.8.8</code> และหน้า Profile <strong>ติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong>
+          <div class="text-sm text-slate-300 bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3.5 space-y-1">
+            <div><strong>ตอนติดตั้งหน้า Console ของ VM2:</strong> เลือกตั้งค่า IPv4 เป็น <strong>Manual</strong> $\rightarrow$ Subnet: <code class="text-emerald-300">192.168.10.0/24</code> | Address: <code class="text-emerald-300 font-bold">192.168.10.32</code> | Gateway: <code class="text-emerald-300">192.168.10.1</code> | Name servers: <code class="text-emerald-300">8.8.8.8</code></div>
+            <div>• หน้า <strong>Guided storage configuration:</strong> กด <code>Spacebar</code> เอาติ๊กถูกหน้า <code class="text-amber-300">[ ] Set up this disk as an LVM group</code> ออก (จะได้พื้นที่ดิสก์เต็ม 100%) และหน้า Profile <strong>ติ๊ก <code class="text-emerald-300">[x] Install OpenSSH server</code></strong></div>
           </div>
 
           <div class="code-box">
@@ -2222,11 +2265,11 @@ sysctl -p
 [STEP 1.3] สร้าง VM1 (101) และ VM2 (102) บน Proxmox
 1. สร้าง VM1 (ID: 101 | Name: gitlab-vm):
    - OS: ubuntu.iso | System: [x] QEMU Guest Agent
-   - Disks: 80 GiB | CPU: 4 Cores | Memory: 8192 MiB
+   - Disks (ช่อง Disk size GiB): แก้จาก 32 เป็น 60 หรือ 80 GiB (ห้ามลืมแก้!) | CPU: 4 Cores | Memory: 8192 MiB
    - Network: vmbr0 -> **ติ๊กช่อง Firewall ออก**
 2. สร้าง VM2 (ID: 102 | Name: prod-vm):
    - OS: ubuntu.iso | System: [x] QEMU Guest Agent
-   - Disks: 80 GiB | CPU: 4 Cores | Memory: 4096 MiB
+   - Disks (ช่อง Disk size GiB): แก้จาก 32 เป็น 50 หรือ 80 GiB | CPU: 4 Cores | Memory: 4096 MiB
    - Network: vmbr0 -> **ติ๊กช่อง Firewall ออก**
 3. ตั้งเปิดอัตโนมัติ:
    - คลิก VM1 -> Options -> Start at boot -> Yes
@@ -2237,14 +2280,26 @@ sysctl -p
   ส่วนที่ 2: เฉพาะเครื่อง VM1 (IP: 192.168.10.31) -> DNS + GitLab + Registry
 ================================================================================
 
-[STEP 2.1] ติดตั้ง Ubuntu และตั้งค่า Netplan บน VM1
+[STEP 2.1] ติดตั้ง Ubuntu, ปลดล็อกพื้นที่ดิสก์ 100% และตั้งค่า Netplan บน VM1
 1. หน้า Network ตอนติดตั้ง เลือก Edit IPv4 -> Manual:
    - Subnet: 192.168.10.0/24
    - Address: 192.168.10.31
    - Gateway: 192.168.10.1
    - Name servers: 8.8.8.8
-2. หน้า Profile -> ติ๊ก [x] Install OpenSSH server -> ติดตั้งจนเสร็จแล้ว Reboot
-3. ล็อกอินเข้า VM1 แล้วแก้ไฟล์ Netplan:
+2. หน้า Guided storage configuration (สำคัญมาก!):
+   - กด Spacebar เอาเครื่องหมาย [X] หน้า "Set up this disk as an LVM group" ออก ให้เป็น [ ] (เพื่อให้ Ubuntu ใช้พื้นที่เต็ม 100% ทั้งลูก ไม่ถูกหั่นเหลือครึ่งเดียว)
+   - กรณีเผลอลงแบบ LVM ไปแล้วดิสก์เต็ม ให้รันบน VM1 เพื่อดึงพื้นที่ 100% กลับมาใช้ทันที:
+     sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+     sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+     df -h /
+   - กรณีกด Resize เพิ่มดิสก์จากหน้าเว็บ Proxmox (Hardware -> Hard Disk -> Disk Action -> Resize) แล้วขยายดิสก์บน VM1:
+     sudo growpart /dev/sda 3
+     sudo pvresize /dev/sda3
+     sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+     sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+     sudo docker image prune -f && sudo docker builder prune -f
+3. หน้า Profile -> ติ๊ก [x] Install OpenSSH server -> ติดตั้งจนเสร็จแล้ว Reboot
+4. ล็อกอินเข้า VM1 แล้วแก้ไฟล์ Netplan:
 sudo nano /etc/netplan/00-installer-config.yaml
 
 --- เนื้อหาไฟล์ Netplan ของ VM1 ---
