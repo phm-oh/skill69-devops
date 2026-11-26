@@ -145,7 +145,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto">
       <nav class="flex space-x-1.5 py-2 border-t border-slate-800/80 text-xs sm:text-sm font-medium whitespace-nowrap" id="tab-nav">
         <button onclick="switchTab('all')" id="tab-all" class="tab-btn bg-slate-800 text-white px-3 py-2 rounded-lg transition flex items-center gap-1.5 border border-slate-700 cursor-pointer">
-          <span>📚</span> แสดงทั้งหมด (0-6)
+          <span>📚</span> แสดงทั้งหมด (0-8)
         </button>
         <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
           <span>🗺️</span> 0. ผัง IP & ลำดับงาน
@@ -170,6 +170,9 @@
         </button>
         <button onclick="switchTab('pes')" id="tab-pes" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
           <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> 7. แก้โปรเจกต์ PES + Deploy
+        </button>
+        <button onclick="switchTab('judge')" id="tab-judge" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span> 8. กรณีใช้ Server กรรมการ
         </button>
         <a href="manual-tplink-sg3428mp.html#mikrotik" class="tab-btn text-slate-400 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg transition flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> MikroTik
@@ -2222,6 +2225,187 @@ t.acc01@ccollege.ac.th $2b$10$5FALWHRfgaBZC0Az5BAVdeelVK4LgRGyKOmSC0hNI3yU6.PRbC
     </section>
 
     <!-- ===================================================================== -->
+    <!-- SECTION 8: JUDGE REGISTRY SERVER (FALLBACK AFTER 2-HR INTERNET CUT)   -->
+    <!-- ===================================================================== -->
+    <section id="sec-judge" class="section-block bg-slate-900 border-2 border-rose-500/40 rounded-2xl overflow-hidden shadow-xl">
+      <div class="bg-gradient-to-r from-rose-600/30 via-rose-600/10 to-transparent px-6 py-4 border-b border-rose-500/40 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-lg bg-rose-500 text-white font-extrabold text-sm">ส่วนที่ 8 : กรณีใช้ Server กรรมการ</span>
+          <h2 class="text-lg sm:text-xl font-bold text-rose-200">การตั้งค่า <code class="text-white">insecure-registries</code> ดึง Image จาก Server กรรมการ (เมื่อถูกตัดอินเทอร์เน็ตหลังครบ 2 ชั่วโมง)</h2>
+        </div>
+        <span class="text-xs font-mono text-rose-200 bg-rose-950/80 px-3 py-1.5 rounded-md border border-rose-400/30 font-bold">ตามเกณฑ์ข้อ 3.2.5, 3.3.4 และ 3.4.2.9</span>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-6">
+        <!-- Decision Box: When to use / When NOT to use -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <div class="bg-emerald-950/30 border-2 border-emerald-500/50 rounded-xl p-4 space-y-2">
+            <div class="font-extrabold text-emerald-300 text-sm sm:text-base">✅ กรณีที่ 1: ติดตั้งทันภายใน 2 ชั่วโมงแรกที่มีอินเทอร์เน็ต (ไม่ต้องใช้ส่วนที่ 8 นี้!)</div>
+            <ul class="list-disc list-inside text-slate-200 space-y-1">
+              <li>ถ้าใน 2 ชั่วโมงแรกที่กรรมการเปิดอินเทอร์เน็ต เราติดตั้ง VM1, VM2 และสั่ง <code>git push</code> เฟส 1 ผ่านแล้ว <strong>ไม่ต้องใส่ IP กรรมการใน <code>daemon.json</code> เลย!</strong> (ใส่แค่ <code>"192.168.10.31:5000"</code> ของทีมเราตัวเดียวตามคู่มือปกติ)</li>
+              <li><strong>เคล็ดลับตุน Image ไว้ในเครื่องก่อนครบ 2 ชั่วโมง (กันเหนียว 100%):</strong>
+                <ul class="list-disc list-inside pl-5 mt-1 text-emerald-200">
+                  <li>รันบน <strong>VM1</strong>: <code>sudo docker pull node:20-alpine</code></li>
+                  <li>รันบน <strong>VM2</strong>: <code>sudo docker pull mysql:8.0 &amp;&amp; sudo docker pull phpmyadmin:latest</code></li>
+                </ul>
+              </li>
+              <li>เมื่อ Image อยู่ใน Cache ของ VM1 และ VM2 แล้ว ต่อให้หลัง 2 ชั่วโมงกรรมการตัดเน็ตทิ้ง เราก็ Build และ Deploy ในวง LAN ของเราเองได้ตลอดทั้งวันโดยไม่ต้องพึ่ง Server กรรมการเลย!</li>
+            </ul>
+          </div>
+
+          <div class="bg-rose-950/30 border-2 border-rose-500/50 rounded-xl p-4 space-y-2">
+            <div class="font-extrabold text-rose-300 text-sm sm:text-base">⚠️ กรณีที่ 2: เมื่อไหร่ที่ต้องทำตามส่วนที่ 8 นี้?</div>
+            <ul class="list-disc list-inside text-slate-200 space-y-1">
+              <li><strong>หมดเวลาอินเทอร์เน็ต 2 ชั่วโมงแรกแล้ว</strong> แต่ยังดึง Image บางตัว (เช่น <code>node:20-alpine</code>, <code>mysql:8.0</code>, <code>phpmyadmin:latest</code>) ไม่ครบ</li>
+              <li>หรือ <strong>อินเทอร์เน็ตสนามแข่งล่ม/ช้ามาก</strong> จนดึงจาก Docker Hub ไม่ไหว</li>
+              <li>หรือ <strong>ในวันอบรม (วันแรกช่วงบ่าย เกณฑ์ข้อ 3.3.4)</strong> กรรมการกำหนดให้ทดสอบดึง Image จาก <strong>Registry Server ของกรรมการ</strong></li>
+              <li class="text-amber-300 font-semibold">ข้อควรระวัง: ห้ามใส่ IP กรรมการมั่วๆ ตอนที่ยังมีเน็ตดีอยู่ เพราะถ้า Server กรรมการค้างหรือปิดอยู่ Docker จะเสียเวลารอ Timeout นานก่อนสลับไปออกเน็ต!</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- STEP 8.1: 7 Images Checklist & Curl Command -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-rose-300 text-base">STEP 8.1: ตาราง 7 Docker Images &amp; Version ที่ต้องใช้ (สำหรับเช็คกับ Server กรรมการในวันแรกช่วงบ่าย)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-slate-800/90 text-slate-200 border-b border-slate-700">
+                  <th class="p-2.5">#</th>
+                  <th class="p-2.5">ชื่อ Image และ Version (Tag) ที่ใช้จริง</th>
+                  <th class="p-2.5">ใช้ที่เครื่อง</th>
+                  <th class="p-2.5">รายละเอียดสำคัญ (ถ้าในเครื่องกรรมการเป็น Tag อื่น)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 font-mono">
+                <tr>
+                  <td class="p-2.5 text-slate-400">1</td>
+                  <td class="p-2.5 text-amber-300 font-bold">node:20-alpine</td>
+                  <td class="p-2.5 text-blue-300">VM1 (Build PES)</td>
+                  <td class="p-2.5 font-sans text-slate-300">สำคัญสุด! ใช้ใน <code>PES/backend/Dockerfile</code> และ <code>frontend/Dockerfile</code> (ต้องการ Node 20+)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">2</td>
+                  <td class="p-2.5 text-emerald-300 font-bold">mysql:8.0</td>
+                  <td class="p-2.5 text-emerald-300">VM2 (PES DB)</td>
+                  <td class="p-2.5 font-sans text-slate-300">ใช้ใน <code>PES/docker-compose.yml</code></td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">3</td>
+                  <td class="p-2.5 text-emerald-300 font-bold">phpmyadmin:latest</td>
+                  <td class="p-2.5 text-emerald-300">VM2 (PES PMA)</td>
+                  <td class="p-2.5 font-sans text-slate-300">ใช้ใน <code>PES/docker-compose.yml</code> (พอร์ต 8081:80)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">4</td>
+                  <td class="p-2.5 text-blue-300 font-bold">gitlab/gitlab-ce:latest</td>
+                  <td class="p-2.5 text-blue-300">VM1 (~/devops)</td>
+                  <td class="p-2.5 font-sans text-slate-300">GitLab Server ของทีมเรา</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">5</td>
+                  <td class="p-2.5 text-blue-300 font-bold">technitium/dns-server:latest</td>
+                  <td class="p-2.5 text-blue-300">VM1 (~/devops)</td>
+                  <td class="p-2.5 font-sans text-slate-300">DNS Server ของทีมเรา (พอร์ต 53 / 5380)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">6</td>
+                  <td class="p-2.5 text-blue-300 font-bold">registry:2</td>
+                  <td class="p-2.5 text-blue-300">VM1 (~/devops)</td>
+                  <td class="p-2.5 font-sans text-slate-300">Private Docker Registry ของทีมเรา (พอร์ต 5000)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-slate-400">7</td>
+                  <td class="p-2.5 text-emerald-300 font-bold">jc21/nginx-proxy-manager:latest</td>
+                  <td class="p-2.5 text-emerald-300">VM2 (~/npm)</td>
+                  <td class="p-2.5 font-sans text-slate-300">Reverse Proxy (NPM) บน VM2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-rose-300">[VM1 / PC] คำสั่งเช็คว่าใน Registry Server ของกรรมการมี Image และ Version (Tag) อะไรเก็บไว้บ้าง</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code># 1. ดูรายชื่อ Image ทั้งหมดบน Server กรรมการ (เปลี่ยน IP_SERVER_กรรมการ เป็น IP จริง เช่น 172.16.48.10:5000)
+curl http://IP_SERVER_กรรมการ:5000/v2/_catalog
+
+# 2. ดูว่ากรรมการลง Tag (Version) อะไรไว้ในแต่ละ Image
+curl http://IP_SERVER_กรรมการ:5000/v2/node/tags/list
+curl http://IP_SERVER_กรรมการ:5000/v2/mysql/tags/list</code></pre>
+          </div>
+        </div>
+
+        <!-- STEP 8.2: daemon.json & pull+tag -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+          <h3 class="font-bold text-rose-300 text-base">STEP 8.2: เพิ่ม IP ของ Server กรรมการใน <code class="text-white">/etc/docker/daemon.json</code> (ทั้งบน VM1 และ VM2)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">เมื่อต้องการดึง Image จาก Server กรรมการ ให้เปิดไฟล์ <code>sudo nano /etc/docker/daemon.json</code> ทั้งบน <strong>VM1</strong> และ <strong>VM2</strong> แล้วเพิ่ม IP ของกรรมการต่อจาก <code>192.168.10.31:5000</code> ของทีมเรา:</p>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-rose-300">[VM1 &amp; VM2] 1. เนื้อหาไฟล์ /etc/docker/daemon.json (เมื่อเพิ่ม Server กรรมการ)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-sky-300 overflow-x-auto border border-t-0 border-slate-800"><code>{
+  "insecure-registries": [
+    "192.168.10.31:5000",
+    "IP_SERVER_กรรมการ:5000"
+  ],
+  "registry-mirrors": [
+    "http://IP_SERVER_กรรมการ:5000"
+  ]
+}</code></pre>
+              <p class="text-xs text-slate-400 mt-1">* แก้เสร็จแล้วห้ามลืมรัน <code>sudo systemctl restart docker</code> (และบน VM1 รัน <code>sudo systemctl restart gitlab-runner</code> ด้วย)</p>
+            </div>
+
+            <div class="code-box">
+              <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+                <span class="text-xs font-mono text-rose-300">[VM1 &amp; VM2] 2. วิธีดึง Image จากเครื่องกรรมการมาเปลี่ยนป้ายชื่อ (ไม่ต้องแก้โค้ด!)</span>
+                <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                  <span>📋 กดเพื่อคัดลอก</span>
+                </button>
+              </div>
+              <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-emerald-300 overflow-x-auto border border-t-0 border-slate-800"><code># กรณีเครื่องกรรมการไม่ได้เปิดโหมด Mirror แต่เก็บไว้ที่ IP_SERVER_กรรมการ:5000/...
+# ให้ดึงลงมาแล้วสั่ง docker tag ให้เป็นชื่อมาตรฐาน (จะได้ไม่ต้องแก้ Dockerfile!)
+
+# รันบน VM1:
+sudo docker pull IP_SERVER_กรรมการ:5000/node:20-alpine
+sudo docker tag IP_SERVER_กรรมการ:5000/node:20-alpine node:20-alpine
+
+# รันบน VM2:
+sudo docker pull IP_SERVER_กรรมการ:5000/mysql:8.0
+sudo docker tag IP_SERVER_กรรมการ:5000/mysql:8.0 mysql:8.0
+sudo docker pull IP_SERVER_กรรมการ:5000/phpmyadmin:latest
+sudo docker tag IP_SERVER_กรรมการ:5000/phpmyadmin:latest phpmyadmin:latest</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 8.3: MikroTik Port Forwarding if Judges test from WAN -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
+          <h3 class="font-bold text-rose-300 text-base">STEP 8.3: (กรณีพิเศษ) หากกรรมการต้องการตรวจหน้าเว็บจากเครื่องกรรมการฝั่งขา WAN (<code class="text-white">ether1</code>)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">ปกติกรรมการจะเอาสาย LAN มาเสียบตรวจที่สวิตช์ TP-Link ของเรา แต่ถ้ากรรมการต้องการนั่งตรวจหน้าเว็บจากเครื่อง Server กรรมการผ่านสาย WAN (<code>ether1</code> ของ MikroTik) ให้วางคำสั่งนี้ใน <strong>New Terminal ของ MikroTik</strong> เพื่อส่งพอร์ตเว็บเข้าไปที่ VM2 (<code>192.168.10.32</code>):</p>
+          <div class="code-box">
+            <div class="flex items-center justify-between bg-slate-800/90 px-4 py-2 rounded-t-lg border-b border-slate-700">
+              <span class="text-xs font-mono text-rose-300">[MikroTik New Terminal] เปิด Port Forwarding จากขา WAN (ether1) เข้าไปที่ VM2 (.32)</span>
+              <button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs px-3 py-1.5 rounded-md transition cursor-pointer">
+                <span>📋 กดเพื่อคัดลอก</span>
+              </button>
+            </div>
+            <pre class="bg-slate-950 p-3.5 rounded-b-lg text-xs sm:text-sm text-amber-300 overflow-x-auto border border-t-0 border-slate-800"><code>/ip firewall nat add chain=dstnat in-interface=ether1 protocol=tcp dst-port=80,81,443,3000,7000,8080,8081 action=dst-nat to-addresses=192.168.10.32 comment="JUDGE_WAN_TO_VM2"</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
     <!-- SECTION 8: RAW PLAINTEXT VIEW                                         -->
     <!-- ===================================================================== -->
     <section id="sec-raw" class="section-block hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
@@ -2785,7 +2969,56 @@ git push -u origin main
 &gt;&gt;&gt; [STEP 7.2] สั่ง Git Push รอบที่ 2 เพื่อ Auto-Trigger Pipeline อัปเดตระบบ! &lt;&lt;&lt;
 git add .
 git commit -m "Phase 2: Fix admin menu, user creation SSR, and API docs links"
-git push</pre>
+git push
+
+
+================================================================================
+  ส่วนที่ 8: กรณีที่ต้องใช้ Server กรรมการ (Registry สำรองหลังตัดอินเทอร์เน็ต 2 ชั่วโมง)
+================================================================================
+หมายเหตุสำคัญ:
+- ถ้าติดตั้งและดึง Image ทันใน 2 ชั่วโมงแรกที่มีอินเทอร์เน็ตแล้ว ไม่ต้องใส่ IP กรรมการใน daemon.json เลย! (ใช้แค่ "192.168.10.31:5000" ของทีมเราตัวเดียวตามปกติ)
+- เทคนิคดึง Image ตุนเข้าเครื่องไว้ก่อนหมดเวลาเน็ต 2 ชั่วโมงแรก:
+  * รันบน VM1: sudo docker pull node:20-alpine
+  * รันบน VM2: sudo docker pull mysql:8.0 &amp;&amp; sudo docker pull phpmyadmin:latest
+
+[STEP 8.1] รายชื่อ 7 Docker Images &amp; Version ที่ใช้จริง และคำสั่งเช็คเครื่องกรรมการ:
+  1. node:20-alpine                  (ใช้บน VM1 ตอน Build PES)
+  2. mysql:8.0                       (ใช้บน VM2 ใน PES/docker-compose.yml)
+  3. phpmyadmin:latest               (ใช้บน VM2 ใน PES/docker-compose.yml)
+  4. gitlab/gitlab-ce:latest         (ใช้บน VM1 รัน GitLab)
+  5. technitium/dns-server:latest    (ใช้บน VM1 รัน DNS)
+  6. registry:2                      (ใช้บน VM1 รัน Private Registry :5000)
+  7. jc21/nginx-proxy-manager:latest (ใช้บน VM2 รัน NPM Reverse Proxy)
+
+คำสั่งเช็ครายชื่อ Image และ Tag บน Server กรรมการ:
+curl http://IP_SERVER_กรรมการ:5000/v2/_catalog
+curl http://IP_SERVER_กรรมการ:5000/v2/node/tags/list
+curl http://IP_SERVER_กรรมการ:5000/v2/mysql/tags/list
+
+[STEP 8.2] กรณีตัดเน็ตแล้วยังดึง Image ไม่ครบ ให้แก้ /etc/docker/daemon.json (บน VM1 และ VM2):
+{
+  "insecure-registries": [
+    "192.168.10.31:5000",
+    "IP_SERVER_กรรมการ:5000"
+  ],
+  "registry-mirrors": [
+    "http://IP_SERVER_กรรมการ:5000"
+  ]
+}
+(แก้แล้วรัน sudo systemctl restart docker)
+
+กรณีเครื่องกรรมการไม่ได้เปิดโหมด Mirror ให้ดึงตรงแล้วสั่ง docker tag เป็นชื่อมาตรฐาน:
+# บน VM1:
+sudo docker pull IP_SERVER_กรรมการ:5000/node:20-alpine
+sudo docker tag IP_SERVER_กรรมการ:5000/node:20-alpine node:20-alpine
+# บน VM2:
+sudo docker pull IP_SERVER_กรรมการ:5000/mysql:8.0
+sudo docker tag IP_SERVER_กรรมการ:5000/mysql:8.0 mysql:8.0
+sudo docker pull IP_SERVER_กรรมการ:5000/phpmyadmin:latest
+sudo docker tag IP_SERVER_กรรมการ:5000/phpmyadmin:latest phpmyadmin:latest
+
+[STEP 8.3] กรณีกรรมการต้องการตรวจหน้าเว็บจากฝั่งสาย WAN (ether1 ของ MikroTik):
+/ip firewall nat add chain=dstnat in-interface=ether1 protocol=tcp dst-port=80,81,443,3000,7000,8080,8081 action=dst-nat to-addresses=192.168.10.32 comment="JUDGE_WAN_TO_VM2"</pre>
     </section>
 
   </main>
@@ -2970,6 +3203,7 @@ git push</pre>
         runner: document.getElementById('sec-runner'),
         dev: document.getElementById('sec-dev'),
         pes: document.getElementById('sec-pes'),
+        judge: document.getElementById('sec-judge'),
         raw: document.getElementById('sec-raw')
       };
 
@@ -2997,6 +3231,7 @@ git push</pre>
         sections.runner.classList.remove('hidden');
         sections.dev.classList.remove('hidden');
         if (sections.pes) sections.pes.classList.remove('hidden');
+        if (sections.judge) sections.judge.classList.remove('hidden');
       } else if (tab === 'raw') {
         sections.raw.classList.remove('hidden');
       } else if (tab === 'overview') {
