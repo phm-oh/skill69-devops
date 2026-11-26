@@ -1222,6 +1222,7 @@ ping gitlab.mydomain.lab</code></pre>
               </ul>
             </li>
             <li>ระบบจะแสดงค่า <strong>Runner authentication token</strong> (ขึ้นต้นด้วย <code class="text-amber-300">glrt-...</code>) ให้คัดลอกไว้ใช้ในขั้นตอนถัดไป ใช้ค่านี้เท่านั้น ไม่ใช้ Registration token แบบเก่าหรือ token ตัวอย่าง</li>
+            <li><strong class="text-emerald-300">💡 เทคนิคเด็ดในห้องแข่ง (ไม่ต้องท่องจำ URL ติดตั้ง GitLab Runner!):</strong> ในหน้าเดียวกับที่แสดงรหัส <code class="text-amber-300">glrt-...</code> ให้มองหาปุ่มลิงก์สีฟ้าที่เขียนว่า <strong class="text-sky-300 underline"><code>How do I install GitLab Runner?</code></strong> (ภายใต้หัวข้อ Step 1) &rarr; คลิกปุ่มนั้นแล้วเลือก <strong>Linux (<code>amd64</code>)</strong> &rarr; หน้าเว็บ GitLab จะเด้งกล่องคำสั่งติดตั้ง <code>gitlab-runner</code> มาให้กดปุ่ม <strong>Copy</strong> ไปวางใน Terminal ของ VM1 ได้เลยโดยไม่ต้องจำ URL ยาวๆ!</li>
           </ol>
           <p class="text-xs text-slate-400">⚠️ Token ใช้ยืนยันตัว Runner ให้เก็บเป็นความลับ และอย่าวางลงในไฟล์หรือส่งให้ผู้อื่น</p>
           <div class="text-xs text-amber-300 bg-amber-950/25 border border-amber-500/30 rounded-lg p-3">
@@ -1251,6 +1252,19 @@ sudo systemctl restart docker
 sudo systemctl restart gitlab-runner
 sudo systemctl enable --now gitlab-runner</code></pre>
             <p class="text-xs text-amber-300">คำสั่ง <code class="text-white">apt install gitlab-runner</code> เปิดบริการไว้ก่อนเข้ากลุ่ม docker ดังนั้นต้อง <code class="text-white">restart gitlab-runner</code> ด้วย ไม่งั้นขั้น build จะขึ้น permission denied ที่ <code class="text-white">/var/run/docker.sock</code></p>
+          </div>
+
+          <!-- Tip box: How do I install GitLab Runner? without memorizing long URL -->
+          <div class="bg-sky-950/35 border border-sky-500/40 rounded-xl p-4 text-xs sm:text-sm text-slate-200 space-y-2">
+            <div class="font-bold text-sky-300">💡 วิธีติดตั้ง <code>gitlab-runner</code> ในห้องแข่งโดยไม่ต้องท่องจำ URL ยาวๆ (กดก๊อปปี้จากหน้าเว็บ GitLab ของเราเองได้เลย!):</div>
+            <ol class="list-decimal list-inside space-y-1 text-slate-300">
+              <li>บนหน้าเว็บ GitLab (<code class="text-amber-300">http://gitlab.mydomain.lab</code>) หลังจากกด <strong>Create runner</strong> แล้ว ในหน้าจอที่แสดงรหัส <code class="text-amber-300">glrt-...</code> ให้คลิกปุ่มลิงก์ <strong class="text-sky-300 underline"><code>How do I install GitLab Runner?</code></strong></li>
+              <li>ในหน้าต่างป๊อปอัปที่เด้งขึ้นมา เลือกแท็บ <strong>Linux</strong> (สถาปัตยกรรม <code>amd64</code>) แล้วกดปุ่ม <strong>Copy</strong> ชุดคำสั่งในกล่องของ GitLab ไปวางรันใน Terminal ของ <strong>VM1</strong> ได้เลย!</li>
+              <li>เมื่อวางรันชุดคำสั่งจากหน้าเว็บ GitLab เสร็จแล้ว <strong>ห้ามลืมรัน 3 บรรทัดนี้ต่อท้าย</strong> เพื่อให้สิทธิ์ <code>gitlab-runner</code> เรียกใช้ Docker บน VM1 ได้:</li>
+            </ol>
+            <pre class="bg-slate-950 p-3 rounded-lg text-xs text-emerald-300 overflow-x-auto border border-slate-800"><code>sudo usermod -aG docker gitlab-runner
+sudo systemctl restart docker
+sudo systemctl restart gitlab-runner</code></pre>
           </div>
 
           <div class="code-box">
@@ -2562,6 +2576,8 @@ sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 3. ไปที่ Settings -> CI/CD -> Runners -> New project runner -> เลือก Linux -> ติ๊ก [x] Run untagged jobs -> Create runner -> คัดลอก Runner authentication token ที่ขึ้นต้น glrt-... (ไม่ใช้ Registration token แบบเก่า; เก็บ token เป็นความลับ)
 
 4. ติดตั้งและลงทะเบียน GitLab Runner บน VM1 (.31):
+   [เทคนิคไม่ต้องจำ URL ยาวๆ ในห้องแข่ง]: ในหน้าเว็บ GitLab ที่โชว์รหัส glrt-... ให้คลิกปุ่ม "How do I install GitLab Runner?" -> เลือก Linux (amd64) -> กด Copy คำสั่งติดตั้งในหน้าต่างนั้นมาวางรันบน VM1 ได้เลย! แล้วรัน sudo usermod -aG docker gitlab-runner && sudo systemctl restart docker && sudo systemctl restart gitlab-runner ต่อท้าย
+   (หรือใช้วิธี apt มาตรฐานด้านล่างนี้):
 sudo apt update
 sudo apt install -y curl ca-certificates
 curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
